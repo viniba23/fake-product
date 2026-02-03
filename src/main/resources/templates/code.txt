@@ -1,0 +1,1253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.5.9</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.example</groupId>
+	<artifactId>login</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>login</name>
+	<description>Demo project for Spring Boot</description>
+	<properties>
+		<java.version>21</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Add these inside <dependencies> -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.example.login.LoginApplication</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+pom.xml
+
+spring.application.name=login
+server.port=8080
+
+# Database Configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/login_db?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA/Hibernate
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.defer-datasource-initialization=true
+
+# Thymeleaf
+spring.thymeleaf.cache=false
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+spring.thymeleaf.mode=HTML
+spring.thymeleaf.encoding=UTF-8
+
+# Disable schema.sql initialization
+spring.sql.init.mode=never
+# Static resources
+spring.web.resources.static-locations=classpath:/static/
+# Email Configuration
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=viniba23061998@gmail.com
+spring.mail.password=jbps gpvk uzrl rfyo
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.main.allow-bean-definition-overriding=true
+application.properities
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify OTP</title>
+    <style>
+        /* Same styling as forgot-password.html */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Verify OTP</h2>
+        <p th:if="${message}" class="message" th:text="${message}"></p>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form th:action="@{/user/verify-otp}" method="post">
+
+            <input type="hidden" name="email" th:value="${email}">
+            <div class="form-group">
+                <label>Enter OTP sent to your email:</label>
+                <input type="text" name="token" required>
+            </div>
+            <button type="submit">Verify OTP</button>
+        </form>
+    </div>
+</body>
+</html>
+verify-otp.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+        .gender-options {
+            display: flex;
+            gap: 15px;
+        }
+        .gender-options input {
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>User Registration</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form action="/user/register" method="post">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-group">
+                <label>Date of Birth:</label>
+                <input type="date" name="dob" required>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Mobile Number:</label>
+                <input type="text" name="mobile" pattern="[0-9]{10}" required>
+            </div>
+            <div class="form-group">
+                <label>Gender:</label>
+                <div class="gender-options">
+                    <label><input type="radio" name="gender" value="Male" required> Male</label>
+                    <label><input type="radio" name="gender" value="Female"> Female</label>
+                    <label><input type="radio" name="gender" value="Other"> Other</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label>Confirm Password:</label>
+                <input type="password" name="confirmPassword" required>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="/user/login">Login here</a></p>
+    </div>
+</body>
+</html>
+user-register.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+        .message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>User Login</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <p th:if="${message}" class="message" th:text="${message}"></p>
+        <form action="/user/login" method="post">
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <p><a href="/user/forgot-password">Forgot password?</a></p>
+        <p>Don't have an account? <a href="/user/register">Register here</a></p>
+    </div>
+</body>
+</html>
+user-login.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .user-info {
+            text-align: left;
+            margin: 20px 0;
+        }
+        .logout-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Your Dashboard</h2>
+        <div class="user-info" th:if="${user}">
+            <p>Name: <span th:text="${user.username}"></span></p>
+            <p>Email: <span th:text="${user.email}"></span></p>
+        </div>
+        <a href="/user/logout" class="logout-btn">Logout</a>
+    </div>
+</body>
+</html>
+user-dashboard.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reset Password</title>
+    <style>
+        /* Same styling as forgot-password.html */
+    </style>
+</head>
+<body>
+   <div class="container">
+        <h2>Reset Password</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form th:action="@{/user/reset-password}" method="post">
+
+            <input type="hidden" name="token" th:value="${token}">
+            <input type="hidden" name="email" th:value="${email}">
+            <div class="form-group">
+                <label>New Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label>Confirm New Password:</label>
+                <input type="password" name="confirmPassword" required>
+            </div>
+            <button type="submit">Reset Password</button>
+        </form>
+    </div>
+</body>
+</html>
+reset-password.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 100px auto;
+            text-align: center;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Our System</h2>
+        <a href="/user/login" class="btn">User Login</a>
+        <a href="/admin/login" class="btn">Admin Login</a>
+    </div>
+</body>
+</html>
+index.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Forgot Password</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .message {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Forgot Password</h2>
+        <p th:if="${message}" class="message" th:text="${message}"></p>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form th:action="@{/user/forgot-password}" method="post">
+
+            <div class="form-group">
+                <label>Enter your email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <button type="submit">Send OTP</button>
+        </form>
+        <p>Remember your password? <a th:href="@{/user/login}">Login here</a></p>
+    </div>
+</body>
+</html>
+forget-password.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Admin Login</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form action="/admin/login" method="post">
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>
+admin-login.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Admin Dashboard</h2>
+        <p>You have successfully logged in as an admin.</p>
+    </div>
+</body>
+</html>
+admin-dashboard.html
+
+com.example.demo.services
+package com.example.demo.service;
+
+import java.time.LocalDateTime;
+import java.util.Random;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.PasswordResetToken;
+import com.example.demo.model.User;
+import com.example.demo.repo.PasswordResetTokenRepository;
+import com.example.demo.repo.UserRepository;
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private PasswordResetTokenRepository tokenRepository;
+    
+    @Autowired
+    private EmailService emailService;
+    
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+    
+    public User registerUser(User user) {
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            throw new RuntimeException("Email already exists");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+    public void initiatePasswordReset(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            tokenRepository.deleteByEmail(email);
+            
+            String otp = String.format("%06d", new Random().nextInt(999999));
+            
+            PasswordResetToken resetToken = new PasswordResetToken();
+            resetToken.setToken(otp);
+            resetToken.setEmail(email);
+            resetToken.setUser(user);
+            resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(15));
+            tokenRepository.save(resetToken);
+            
+            emailService.sendPasswordResetEmail(email, otp);
+        } else {
+            throw new RuntimeException("Email not found");
+        }
+    }
+
+    public boolean validateResetToken(String token, String email) {
+        PasswordResetToken resetToken = tokenRepository.findByTokenAndEmail(token, email);
+        return resetToken != null && resetToken.getExpiryDate().isAfter(LocalDateTime.now());
+    }
+
+    public void resetPassword(String token, String email, String newPassword) {
+        PasswordResetToken resetToken = tokenRepository.findByTokenAndEmail(token, email);
+        if (resetToken != null && resetToken.getExpiryDate().isAfter(LocalDateTime.now())) {
+            User user = resetToken.getUser();
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+            tokenRepository.delete(resetToken);
+        }
+    }
+
+    public User authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        }
+        return null;
+    }
+}
+userservices.java
+
+package com.example.demo.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+public class EmailService {
+    
+	 @Autowired
+	    private JavaMailSender mailSender;
+
+	    public void sendPasswordResetEmail(String toEmail, String otp) {
+	        SimpleMailMessage message = new SimpleMailMessage();
+	        message.setTo(toEmail);
+	        message.setSubject("Password Reset OTP");
+	        message.setText("Your OTP for password reset is: " + otp + "\n\n" +
+	                       "This OTP is valid for 15 minutes.\n" +
+	                       "If you didn't request this, please ignore this email.");
+	        mailSender.send(message);
+	    }
+}
+emailservice.java
+
+package com.example.demo.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.Admin;
+import com.example.demo.repo.AdminRepository;
+
+import jakarta.annotation.PostConstruct;
+
+@Service
+public class AdminService {
+    @Autowired
+    private AdminRepository adminRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostConstruct
+    public void createDefaultAdmin() {
+        if (adminRepository.count() == 0) {
+            Admin admin = new Admin();
+            admin.setEmail("admin@example.com");
+            admin.setPassword(passwordEncoder.encode("admin123"));
+            adminRepository.save(admin);
+        }
+    }
+
+    public Admin authenticate(String email, String password) {
+        Admin admin = adminRepository.findByEmail(email);
+        if (admin != null && passwordEncoder.matches(password, admin.getPassword())) {
+            return admin;
+        }
+        return null;
+    }
+}
+adminservices.java
+
+com.example.demo.repo
+package com.example.demo.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.model.User;
+
+public interface UserRepository extends JpaRepository<User, Long>{
+	User findByEmailAndPassword(String email, String password);
+    User findByEmail(String email);
+}
+userrepository.java
+package com.example.demo.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.example.demo.model.PasswordResetToken;
+
+public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long>{
+	PasswordResetToken findByToken(String token);
+    PasswordResetToken findByEmail(String email);
+    PasswordResetToken findByTokenAndEmail(String token, String email);
+    @Modifying
+    @Query("DELETE FROM PasswordResetToken t WHERE t.email = :email")
+    void deleteByEmail(@Param("email") String email);
+}
+passwordresettokenrepository.java
+
+package com.example.demo.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.model.Admin;
+
+public interface AdminRepository extends JpaRepository<Admin, Long>{
+	Admin findByEmail(String email);
+    Admin findByEmailAndPassword(String email, String password);
+
+}
+adminrepository.java
+
+com.example.demo.model
+package com.example.demo.model;
+
+import java.time.LocalDate;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
+public class User {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private String username;
+	private String email;
+	private String password;
+	private LocalDate dob;
+	private String mobile;
+	private String gender;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public LocalDate getDob() {
+		return dob;
+	}
+
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+}
+user.java
+
+package com.example.demo.model;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import lombok.Data;
+
+@Data
+@Entity
+public class PasswordResetToken {
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+	    
+	    private String token;
+	    private String email;
+	    private LocalDateTime expiryDate;
+	    
+	    @OneToOne
+	    @JoinColumn(name = "user_id")
+	    private User user;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getToken() {
+			return token;
+		}
+
+		public void setToken(String token) {
+			this.token = token;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
+		public LocalDateTime getExpiryDate() {
+			return expiryDate;
+		}
+
+		public void setExpiryDate(LocalDateTime expiryDate) {
+			this.expiryDate = expiryDate;
+		}
+
+		public User getUser() {
+			return user;
+		}
+
+		public void setUser(User user) {
+			this.user = user;
+		}
+	    
+	    
+	    
+}
+passwordresettoken.java
+
+
+package com.example.demo.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "admin")
+public class Admin {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String email;
+    private String password;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+    
+
+    
+    
+    
+    
+
+}
+admin.java
+
+com.example.demo.controller
+package com.example.demo.controller;
+
+import com.example.demo.model.User;
+import com.example.demo.service.UserService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/user")
+public class UserController {
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @GetMapping("/login")
+    public String loginPage(@RequestParam(value = "error", required = false) String error,
+                           @RequestParam(value = "logout", required = false) String logout,
+                           Model model) {
+    	System.out.println("use from get login");
+
+        if (error != null) {
+        	System.out.println(" from user loginpage");
+            model.addAttribute("error", "Invalid email or password");
+        }
+        if (logout != null) {
+            model.addAttribute("message", "You have been logged out successfully");
+        }
+        return "user-login";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String email,
+                       @RequestParam String password,
+                       HttpSession session,
+                       Model model) {
+        System.out.println("Login attempt for email: " + email);
+        
+        User user = userService.findByEmail(email);
+        System.out.println("User found: " + (user != null));
+        
+        if (user != null) {
+            boolean passwordMatches = passwordEncoder.matches(password, user.getPassword());
+            System.out.println("Password matches: " + passwordMatches);
+            
+            if (passwordMatches) {
+                session.setAttribute("user", user);
+                return "redirect:/user/dashboard";
+            }
+        }
+        System.out.println(" from user login");
+        model.addAttribute("error", "Invalid email or password");
+        return "user-login";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        model.addAttribute("user", user);
+        return "user-dashboard";
+    }
+
+    @GetMapping("/register")
+    public String registerPage() {
+        return "user-register";
+    }
+
+    @PostMapping("/register")
+    public String register(User user, @RequestParam String confirmPassword, Model model) {
+        try {
+            if (!user.getPassword().equals(confirmPassword)) {
+                model.addAttribute("error", "Passwords don't match");
+                return "user-register";
+            }
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userService.registerUser(user);
+            return "redirect:/user/login";
+        } catch (RuntimeException e) {
+        	 System.out.println("wrong password from user login");
+            model.addAttribute("error", e.getMessage());
+            return "user-register";
+        }
+    }
+
+    @GetMapping("/forgot-password")
+    public String showForgotPasswordForm(Model model) {
+        model.addAttribute("message", null);
+        model.addAttribute("error", null);
+        return "forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam("email") String email, Model model) {
+        try {
+            userService.initiatePasswordReset(email);
+            model.addAttribute("email", email);
+            model.addAttribute("message", "We have sent a password reset OTP to your email");
+            return "verify-otp";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "forgot-password";
+        }
+    }
+
+    @GetMapping("/verify-otp")
+    public String showVerifyOtpForm(@RequestParam(value = "email", required = false) String email, Model model) {
+        if (email != null) {
+            model.addAttribute("email", email);
+        }
+        return "verify-otp";
+    }
+
+    @PostMapping("/verify-otp")
+    public String processVerifyOtp(
+            @RequestParam("token") String token,
+            @RequestParam("email") String email,
+            Model model) {
+        
+        if (userService.validateResetToken(token, email)) {
+            model.addAttribute("token", token);
+            model.addAttribute("email", email);
+            return "reset-password";
+        }
+        
+        model.addAttribute("error", "Invalid or expired OTP");
+        model.addAttribute("email", email);
+        return "verify-otp";
+    }
+
+    @GetMapping("/reset-password")
+    public String showResetPasswordForm(
+            @RequestParam("token") String token,
+            @RequestParam("email") String email,
+            Model model) {
+        model.addAttribute("token", token);
+        model.addAttribute("email", email);
+        return "reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String processResetPassword(
+            @RequestParam("token") String token,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            Model model) {
+        
+        try {
+            userService.resetPassword(token, email, password);
+            model.addAttribute("message", "Password reset successfully. Please login with your new password");
+            return "user-login";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("token", token);
+            model.addAttribute("email", email);
+            return "reset-password";
+        }
+    }
+}
+usercontroller.java
+
+package com.example.demo.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+    @GetMapping("/")
+    public String index() {
+        return "index"; // This should match your index.html filename exactly
+    }
+}
+homecontroller.java
+
+package com.example.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.demo.model.Admin;
+import com.example.demo.service.AdminService;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+    @Autowired
+    private AdminService adminService;
+
+    @GetMapping("/login")
+    public String loginPage() {
+    	System.out.println("admin from get login");
+
+        return "admin-login";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String email,
+                       @RequestParam String password,
+                       Model model) {
+    	System.out.println("admin from get login");
+
+        Admin admin = adminService.authenticate(email, password);
+        if (admin != null) {
+            return "admin-dashboard";
+        }
+        model.addAttribute("error", "Invalid credentials");
+        return "admin-login";
+    }
+}
+admincontroller.java
+
+com.example.demo.config
+
+package com.example.demo.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring6.view.ThymeleafViewResolver;
+
+@Configuration
+public class ThymeleafConfig {
+	@Bean
+    public SpringResourceTemplateResolver templateResolver() {
+        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+        templateResolver.setPrefix("classpath:/templates/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode("HTML");
+        templateResolver.setCharacterEncoding("UTF-8");
+        return templateResolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver());
+        return templateEngine;
+    }
+
+    @Bean
+    public ThymeleafViewResolver viewResolver() {
+        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(templateEngine());
+        viewResolver.setCharacterEncoding("UTF-8");
+        return viewResolver;
+    }
+}
+thymleafconfig.java
+
+package com.example.demo.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+public class SecurityConfig {
+    
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/",
+                    "/user/login",
+                    "/admin/login",
+                    "/user/register",
+                    "/user/forgot-password",
+                    "/user/verify-otp",
+                    "/user/reset-password",
+                    "/css/**",
+                    "/js/**"
+                ).permitAll()
+                .requestMatchers("/user/dashboard").hasAnyRole("USER","ADMIN")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                .loginPage("/user/login")
+                .loginProcessingUrl("/user/login")
+                .defaultSuccessUrl("/user/dashboard")
+                .failureUrl("/user/login?error=true")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/user/logout")
+                .logoutSuccessUrl("/user/login?logout")
+                .permitAll()
+            );
+        
+        return http.build();
+    }
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+
+securityconfig.java
+
+com.example.demo
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class LoginApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(LoginApplication.class, args);
+	}
+
+}
+LoginApplication.java
