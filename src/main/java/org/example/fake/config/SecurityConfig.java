@@ -40,7 +40,7 @@ public class SecurityConfig {
                         "/js/**"
                 ).permitAll()
                 .requestMatchers("/user/dashboard").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**").permitAll()
                 .requestMatchers("/user/forgot-password").permitAll()
 
                 .anyRequest().authenticated()
@@ -53,10 +53,15 @@ public class SecurityConfig {
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutUrl("/user/logout")
-                .logoutSuccessUrl("/user/login?logout")
-                .permitAll()
-            );
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/user/login?logout")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                )
+            .sessionManagement(session -> session
+                    .maximumSessions(1)
+                    .maxSessionsPreventsLogin(false)
+                );
         
         return http.build();
     }
@@ -66,13 +71,36 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     
+//    @Bean
+//    public UserDetailsService userDetailsService(UserRepository userRepository) {
+//        return username -> {
+//            User user = userRepository.findByEmail(username);
+//            if (user == null) {
+//                throw new UsernameNotFoundException("User not found");
+//            }
+//            if (!user.isActive()) {
+//                throw new UsernameNotFoundException("User is not activated by admin");
+//            }
+//            return new org.springframework.security.core.userdetails.User(
+//                user.getEmail(),
+//                user.getPassword(),
+//                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+//            );
+//        };
+//    }
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return username -> {
             User user = userRepository.findByEmail(username);
+
             if (user == null) {
                 throw new UsernameNotFoundException("User not found");
             }
+
+            else if (!user.isActive()) {
+                throw new UsernameNotFoundException("Account not activated by admin");
+            }
+
             return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
@@ -80,4 +108,5 @@ public class SecurityConfig {
             );
         };
     }
+
 }

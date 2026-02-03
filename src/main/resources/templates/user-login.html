@@ -35,6 +35,10 @@
     </style>
 </head>
 <body>
+<p class="error" th:if="${error}">
+    Account is not activated. Please contact admin.
+</p>
+
     <div class="container">
         <h2>User Login</h2>
         <p th:if="${error}" class="error" th:text="${error}"></p>

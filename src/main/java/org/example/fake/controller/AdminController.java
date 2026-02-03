@@ -1,53 +1,15 @@
-//package com.example.demo.controller;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
-//
-//import com.example.demo.model.Admin;
-//import com.example.demo.service.AdminService;
-//
-//@Controller
-//@RequestMapping("/admin")
-//public class AdminController {
-//    @Autowired
-//    private AdminService adminService;
-//
-//    @GetMapping("/login")
-//    public String loginPage() {
-//    	System.out.println("admin from get login");
-//
-//        return "admin-login";
-//    }
-//
-//    @PostMapping("/login")
-//    public String login(@RequestParam String email,
-//                       @RequestParam String password,
-//                       Model model) {
-//    	System.out.println("admin from get login");
-//
-//        Admin admin = adminService.authenticate(email, password);
-//        if (admin != null) {
-//            return "admin-dashboard";
-//        }
-//        model.addAttribute("error", "Invalid credentials");
-//        return "admin-login";
-//    }
-//}
 package org.example.fake.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.example.fake.model.User;
+import org.example.fake.repo.UserRepository;
 import org.example.fake.service.AdminService;
 
 @Controller
@@ -55,6 +17,9 @@ import org.example.fake.service.AdminService;
 public class AdminController {
     @Autowired
     private AdminService adminService;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
@@ -147,5 +112,34 @@ public class AdminController {
             model.addAttribute("email", email);
             return "admin-reset-password";
         }
+    }
+    
+    @GetMapping("/users")
+    public String viewUsers(Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        return "admin-users";
+    }
+
+    @GetMapping("/users/deactivate/{id}")
+    public String deactivateUser(@PathVariable Long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setActive(false);
+        userRepository.save(user);
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/users/activate/{id}")
+    public String activateUser(@PathVariable Long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setActive(true);
+        userRepository.save(user);
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/users/view/{id}")
+    public String viewUser(@PathVariable Long id, Model model) {
+        User user = userRepository.findById(id).orElseThrow();
+        model.addAttribute("user", user);
+        return "admin-user-view";
     }
 }
