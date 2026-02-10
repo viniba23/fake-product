@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Manage Products</title>
+
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:95%;
+    margin:30px auto;
+    background:white;
+    padding:20px;
+}
+table {
+    width:100%;
+    border-collapse:collapse;
+}
+th, td {
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+th {
+    background:#343a40;
+    color:white;
+}
+a {
+    padding:6px 10px;
+    text-decoration:none;
+    color:white;
+    border-radius:4px;
+    font-size:14px;
+}
+.view { background:#17a2b8; }
+.edit { background:#007bff; }
+.delete { background:#dc3545; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Manage Products</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Manufacturer</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="p : ${products}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.productName}"></td>
+                <td th:text="${p.price}"></td>
+                <td th:text="${p.quantity}"></td>
+                <td th:text="${p.manufacturer}"></td>
+                <td th:text="${#temporals.format(p.createdAt,'dd-MM-yyyy')}"></td>
+
+                <td>
+                    <a th:href="@{/admin/products/view/{id}(id=${p.id})}" class="view">View</a>
+                    <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="edit">Edit</a>
+                    <a th:href="@{/admin/products/delete/{id}(id=${p.id})}"
+                       class="delete"
+                       onclick="return confirm('Delete this product?')">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

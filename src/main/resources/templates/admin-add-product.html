@@ -1,0 +1,195 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Product Registration</title>
+
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:600px; margin:40px auto; background:white;
+    padding:25px; border-radius:5px;
+}
+label { font-weight:bold; margin-top:10px; display:block; }
+input, textarea {
+    width:100%; padding:8px; margin-top:5px;
+}
+button {
+    margin-top:20px; padding:10px; width:100%;
+    background:#007bff; color:white; border:none;
+}
+.success { color:green; }
+.error { color:red; }
+</style>
+
+<script>
+function validateImages() {
+    const files = document.getElementById("images").files;
+    if (files.length === 0) {
+        alert("Please upload at least one image");
+        return false;
+    }
+    return true;
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Product Registration</h2>
+
+    <p class="success" th:text="${success}"></p>
+    <p class="error" th:text="${error}"></p>
+
+    <form th:action="@{/admin/products/add}" 
+          method="post" 
+          enctype="multipart/form-data"
+          onsubmit="return validateImages()">
+
+        <label>Product Name</label>
+        <input type="text" name="productName" required>
+
+        <label>Price</label>
+        <input type="number" step="0.01" name="price" required>
+
+        <label>Quantity</label>
+        <input type="number" name="quantity" required>
+
+        <label>Manufacturer</label>
+        <input type="text" name="manufacturer" required>
+
+        <label>Manufacturing Date</label>
+        <input type="date" name="manufacturingDate" required>
+
+        <label>Description</label>
+        <textarea name="description"></textarea>
+
+        <label>Product Images (Multiple)</label>
+        <input type="file" id="images" name="images" multiple accept="image/*">
+
+        <button type="submit">Register Product</button>
+    </form>
+</div>
+
+</body>
+</html>
+ -->
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Product Registration</title>
+
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:650px;
+    margin:40px auto;
+    background:white;
+    padding:25px;
+    border-radius:5px;
+}
+label { font-weight:bold; margin-top:10px; display:block; }
+input, textarea {
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+}
+button {
+    margin-top:20px;
+    padding:10px;
+    width:100%;
+    background:#007bff;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+.add-btn {
+    background:#28a745;
+    margin-top:10px;
+}
+.remove-btn {
+    background:#dc3545;
+    margin-top:5px;
+}
+.image-row {
+    margin-top:10px;
+}
+.success { color:green; }
+.error { color:red; }
+</style>
+
+<script>
+function addImageInput() {
+    const container = document.getElementById("imageContainer");
+
+    const div = document.createElement("div");
+    div.className = "image-row";
+
+    div.innerHTML = `
+        <input type="file" name="images" accept="image/*" required>
+        <button type="button" class="remove-btn" onclick="removeImageInput(this)">Remove</button>
+    `;
+
+    container.appendChild(div);
+}
+
+function removeImageInput(btn) {
+    btn.parentElement.remove();
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Product Registration</h2>
+
+    <p class="success" th:text="${success}"></p>
+    <p class="error" th:text="${error}"></p>
+
+    <form th:action="@{/admin/products/add}"
+          method="post"
+          enctype="multipart/form-data">
+
+        <label>Product Name</label>
+        <input type="text" name="productName" required>
+
+        <label>Price</label>
+        <input type="number" step="0.01" name="price" required>
+
+        <label>Quantity</label>
+        <input type="number" name="quantity" required>
+
+        <label>Manufacturer</label>
+        <input type="text" name="manufacturer" required>
+
+        <label>Manufacturing Date</label>
+        <input type="date" name="manufacturingDate" required>
+
+        <label>Description</label>
+        <textarea name="description"></textarea>
+
+        <!-- IMAGE UPLOAD SECTION -->
+        <label>Product Images</label>
+
+        <div id="imageContainer">
+            <!-- First image input -->
+            <div class="image-row">
+                <input type="file" name="images" accept="image/*" required>
+            </div>
+        </div>
+
+        <button type="button" class="add-btn" onclick="addImageInput()">➕ Add Another Image</button>
+
+        <button type="submit">Register Product</button>
+
+    </form>
+</div>
+
+</body>
+</html>
+ 

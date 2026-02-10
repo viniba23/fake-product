@@ -19,75 +19,64 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-    
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
             .csrf(csrf -> csrf.disable())
+
+            // 🚨 VERY IMPORTANT
+            .securityMatcher("/**")
+
             .authorizeHttpRequests(auth -> auth
+
+                // ✅ ADMIN MODULE (IGNORED BY SECURITY)
+                .requestMatchers("/admin/**").permitAll()
+
+                // ✅ PUBLIC USER PAGES
                 .requestMatchers(
-                		"/",
+                        "/",
                         "/user/login",
-                        "/admin/login",
                         "/user/register",
                         "/user/forgot-password",
                         "/user/verify-otp",
                         "/user/reset-password",
-                        "/admin/forgot-password",
-                        "/admin/verify-otp",
-                        "/admin/reset-password",
                         "/css/**",
                         "/js/**"
                 ).permitAll()
-                .requestMatchers("/user/dashboard").hasAnyRole("USER","ADMIN")
-                .requestMatchers("/admin/**").permitAll()
-                .requestMatchers("/user/forgot-password").permitAll()
+
+                // 🔐 USER DASHBOARD ONLY
+                .requestMatchers("/user/dashboard").authenticated()
 
                 .anyRequest().authenticated()
             )
+
+            // USER LOGIN ONLY
             .formLogin(form -> form
                 .loginPage("/user/login")
-                .loginProcessingUrl("/user/login") // This should match your form action
-                .defaultSuccessUrl("/user/dashboard")
+                .loginProcessingUrl("/user/login")
+                .defaultSuccessUrl("/user/dashboard", true)
                 .failureUrl("/user/login?error=true")
-                .permitAll()
             )
+
             .logout(logout -> logout
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/user/login?logout")
-                    .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID")
-                )
-            .sessionManagement(session -> session
-                    .maximumSessions(1)
-                    .maxSessionsPreventsLogin(false)
-                );
-        
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/user/login?logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+            );
+
         return http.build();
     }
-    
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
-//    @Bean
-//    public UserDetailsService userDetailsService(UserRepository userRepository) {
-//        return username -> {
-//            User user = userRepository.findByEmail(username);
-//            if (user == null) {
-//                throw new UsernameNotFoundException("User not found");
-//            }
-//            if (!user.isActive()) {
-//                throw new UsernameNotFoundException("User is not activated by admin");
-//            }
-//            return new org.springframework.security.core.userdetails.User(
-//                user.getEmail(),
-//                user.getPassword(),
-//                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-//            );
-//        };
-//    }
+
+
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return username -> {
