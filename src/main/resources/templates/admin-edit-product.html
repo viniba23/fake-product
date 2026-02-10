@@ -57,14 +57,23 @@ img {
 <textarea name="description" th:text="${product.description}"></textarea>
 
 <h3>Current Images</h3>
-<div>
-<img th:each="img : ${product.images}"
-     th:src="'data:image/jpeg;base64,' + ${img.base64Image}" />
 
+<div>
+    <div th:each="img : ${product.images}" style="display:inline-block;text-align:center;">
+        <img th:src="'data:image/jpeg;base64,' + ${img.base64Image}" />
+
+        <br>
+        <label>
+            <input type="checkbox" name="removeImageIds" th:value="${img.id}">
+            Remove
+        </label>
+    </div>
 </div>
 
-<label>Replace Images (Optional)</label>
+
+<label>Add New Images</label>
 <input type="file" name="images" multiple accept="image/*">
+
 
 <button type="submit">Update Product</button>
 </form>

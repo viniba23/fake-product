@@ -94,10 +94,10 @@ public class ProductController {
     }
     @GetMapping("/edit/{id}")
     public String showEditProduct(@PathVariable Long id, Model model) {
-        Product product = productService.getProductById(id);
-        model.addAttribute("product", product);
+        model.addAttribute("product", productService.getProductById(id));
         return "admin-edit-product";
     }
+
 
     @PostMapping("/edit/{id}")
     public String updateProduct(
@@ -108,8 +108,9 @@ public class ProductController {
             @RequestParam String manufacturer,
             @RequestParam LocalDate manufacturingDate,
             @RequestParam(required = false) String description,
-            @RequestParam(required = false, value = "images") MultipartFile[] images
-    ) throws IOException {
+            @RequestParam(required = false) List<Long> removeImageIds,
+            @RequestParam(required = false) MultipartFile[] images
+    ) throws Exception {
 
         Product product = productService.getProductById(id);
 
@@ -120,16 +121,21 @@ public class ProductController {
         product.setManufacturingDate(manufacturingDate);
         product.setDescription(description);
 
-        // 🔥 Replace images only if new images uploaded
-        if (images != null && images.length > 0 && !images[0].isEmpty()) {
-            List<ProductImage> imageList = new ArrayList<>();
+        // ✅ REMOVE SELECTED OLD IMAGES
+        if (removeImageIds != null && !removeImageIds.isEmpty()) {
+            productService.deleteImagesByIds(removeImageIds);
+        }
+
+        // ✅ ADD NEW IMAGES
+        if (images != null) {
             for (MultipartFile file : images) {
-                ProductImage img = new ProductImage();
-                img.setImageData(file.getBytes());
-                img.setProduct(product);
-                imageList.add(img);
+                if (!file.isEmpty()) {
+                    ProductImage img = new ProductImage();
+                    img.setImageData(file.getBytes());
+                    img.setProduct(product);
+                    product.getImages().add(img);
+                }
             }
-            product.setImages(imageList);
         }
 
         productService.saveProduct(product);

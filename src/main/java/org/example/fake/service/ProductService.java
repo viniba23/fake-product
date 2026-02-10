@@ -4,13 +4,20 @@ import java.util.Base64;
 import java.util.List;
 
 import org.example.fake.model.Product;
+import org.example.fake.repo.ProductImageRepository;
 import org.example.fake.repo.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 @Service
+@Transactional
 public class ProductService {
 	@Autowired
     private ProductRepository productRepository;
+	
+	@Autowired
+    private ProductImageRepository productImageRepository ;
 
     public Product saveProduct(Product product) {
         return productRepository.save(product);
@@ -34,4 +41,12 @@ public class ProductService {
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
+    
+
+    public void deleteImagesByIds(List<Long> imageIds) {
+        productImageRepository.deleteByIdIn(imageIds);
+    }
+
+    
+    
 }
