@@ -131,8 +131,10 @@ body {
         <div class="card-grid">
 
             <div class="card" th:each="p : ${products}">
-                <img th:if="${p.images != null}"
-                     th:src="'data:image/jpeg;base64,' + ${p.images[0].base64Image}" />
+                <img th:if="${p.images != null and #lists.size(p.images) > 0}"
+     th:src="'data:image/jpeg;base64,' + ${p.images[0].base64Image}"
+     alt="Product Image"/>
+
 
                 <h4 th:text="${p.productName}"></h4>
 

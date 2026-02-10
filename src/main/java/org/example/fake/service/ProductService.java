@@ -22,17 +22,51 @@ public class ProductService {
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
+//    public List<Product> getAllProducts() {
+//        return productRepository.findAll();
+//    }
+//
+//    public Product getProductById(Long id) {
+//        Product product = productRepository.findById(id).orElseThrow();
+//
+//        if (product.getImages() != null) {
+//            product.getImages().forEach(img -> {
+//                String base64 = Base64.getEncoder().encodeToString(img.getImageData());
+//                img.setBase64Image(base64);
+//            });
+//        }
+//
+//        return product;
+//    }
+    
+    // ✅ USED BY DASHBOARDS (ADMIN + USER)
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+
+        List<Product> products = productRepository.findAll();
+
+        for (Product product : products) {
+            if (product.getImages() != null) {
+                product.getImages().forEach(img -> {
+                    img.setBase64Image(
+                        Base64.getEncoder().encodeToString(img.getImageData())
+                    );
+                });
+            }
+        }
+
+        return products;
     }
 
+    // ✅ USED BY VIEW / EDIT PAGES
     public Product getProductById(Long id) {
+
         Product product = productRepository.findById(id).orElseThrow();
 
         if (product.getImages() != null) {
             product.getImages().forEach(img -> {
-                String base64 = Base64.getEncoder().encodeToString(img.getImageData());
-                img.setBase64Image(base64);
+                img.setBase64Image(
+                    Base64.getEncoder().encodeToString(img.getImageData())
+                );
             });
         }
 
