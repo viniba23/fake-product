@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Blockchain Product Enrollment</title>
+
+<style>
+body { font-family: Arial; background:#f4f6f9; }
+.container { width:90%; margin:30px auto; background:white; padding:20px; }
+table { width:100%; border-collapse:collapse; }
+th, td { border:1px solid #ddd; padding:10px; text-align:center; }
+th { background:#343a40; color:white; }
+button { padding:6px 12px; background:#28a745; color:white; border:none; }
+.error { color:red; }
+.success { color:green; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Blockchain Product Enrollment</h2>
+
+<p class="success" th:text="${success}"></p>
+<p class="error" th:text="${error}"></p>
+
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Product Name</th>
+<th>Manufacturer</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+<tr th:each="p : ${products}">
+<td th:text="${p.id}"></td>
+<td th:text="${p.productName}"></td>
+<td th:text="${p.manufacturer}"></td>
+<td>
+<form th:action="@{/admin/blockchain/enroll/{id}(id=${p.id})}" method="post">
+<button type="submit">Enroll</button>
+</form>
+</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</body>
+</html>
