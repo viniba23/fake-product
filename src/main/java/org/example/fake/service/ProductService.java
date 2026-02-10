@@ -1,5 +1,6 @@
 package org.example.fake.service;
 
+import java.util.Base64;
 import java.util.List;
 
 import org.example.fake.model.Product;
@@ -19,9 +20,17 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow();
-    }
+        Product product = productRepository.findById(id).orElseThrow();
 
+        if (product.getImages() != null) {
+            product.getImages().forEach(img -> {
+                String base64 = Base64.getEncoder().encodeToString(img.getImageData());
+                img.setBase64Image(base64);
+            });
+        }
+
+        return product;
+    }
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }

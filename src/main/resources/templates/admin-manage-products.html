@@ -68,6 +68,7 @@ a {
                 <td>
                     <a th:href="@{/admin/products/view/{id}(id=${p.id})}" class="view">View</a>
                     <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="edit">Edit</a>
+
                     <a th:href="@{/admin/products/delete/{id}(id=${p.id})}"
                        class="delete"
                        onclick="return confirm('Delete this product?')">Delete</a>

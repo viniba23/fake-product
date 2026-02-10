@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Edit Product</title>
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:650px;
+    margin:40px auto;
+    background:white;
+    padding:25px;
+}
+label { font-weight:bold; display:block; margin-top:10px; }
+input, textarea { width:100%; padding:8px; }
+button {
+    margin-top:20px;
+    padding:10px;
+    width:100%;
+    background:#007bff;
+    color:white;
+    border:none;
+}
+img {
+    width:120px;
+    margin:10px;
+    border:1px solid #ccc;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2>Edit Product</h2>
+
+<form th:action="@{/admin/products/edit/{id}(id=${product.id})}"
+      method="post"
+      enctype="multipart/form-data">
+
+<label>Product Name</label>
+<input type="text" name="productName" th:value="${product.productName}" required>
+
+<label>Price</label>
+<input type="number" step="0.01" name="price" th:value="${product.price}" required>
+
+<label>Quantity</label>
+<input type="number" name="quantity" th:value="${product.quantity}" required>
+
+<label>Manufacturer</label>
+<input type="text" name="manufacturer" th:value="${product.manufacturer}" required>
+
+<label>Manufacturing Date</label>
+<input type="date" name="manufacturingDate"
+       th:value="${product.manufacturingDate}" required>
+
+<label>Description</label>
+<textarea name="description" th:text="${product.description}"></textarea>
+
+<h3>Current Images</h3>
+<div>
+<img th:each="img : ${product.images}"
+     th:src="'data:image/jpeg;base64,' + ${img.base64Image}" />
+
+</div>
+
+<label>Replace Images (Optional)</label>
+<input type="file" name="images" multiple accept="image/*">
+
+<button type="submit">Update Product</button>
+</form>
+
+<a href="/admin/products">⬅ Back</a>
+</div>
+</body>
+</html>

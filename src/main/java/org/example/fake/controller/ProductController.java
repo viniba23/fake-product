@@ -92,6 +92,49 @@ public class ProductController {
         productService.deleteProduct(id);
         return "redirect:/admin/products";
     }
+    @GetMapping("/edit/{id}")
+    public String showEditProduct(@PathVariable Long id, Model model) {
+        Product product = productService.getProductById(id);
+        model.addAttribute("product", product);
+        return "admin-edit-product";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String updateProduct(
+            @PathVariable Long id,
+            @RequestParam String productName,
+            @RequestParam double price,
+            @RequestParam int quantity,
+            @RequestParam String manufacturer,
+            @RequestParam LocalDate manufacturingDate,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false, value = "images") MultipartFile[] images
+    ) throws IOException {
+
+        Product product = productService.getProductById(id);
+
+        product.setProductName(productName);
+        product.setPrice(price);
+        product.setQuantity(quantity);
+        product.setManufacturer(manufacturer);
+        product.setManufacturingDate(manufacturingDate);
+        product.setDescription(description);
+
+        // 🔥 Replace images only if new images uploaded
+        if (images != null && images.length > 0 && !images[0].isEmpty()) {
+            List<ProductImage> imageList = new ArrayList<>();
+            for (MultipartFile file : images) {
+                ProductImage img = new ProductImage();
+                img.setImageData(file.getBytes());
+                img.setProduct(product);
+                imageList.add(img);
+            }
+            product.setImages(imageList);
+        }
+
+        productService.saveProduct(product);
+        return "redirect:/admin/products";
+    }
 
 
 }

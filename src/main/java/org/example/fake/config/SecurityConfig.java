@@ -21,18 +21,16 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
 
-    @Bean
+	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
 
-            // 🚨 VERY IMPORTANT
-            .securityMatcher("/**")
-
+            // 🚨 CRITICAL FIX
             .authorizeHttpRequests(auth -> auth
 
-                // ✅ ADMIN MODULE (IGNORED BY SECURITY)
+                // ✅ FULL ADMIN MODULE FREE ACCESS
                 .requestMatchers("/admin/**").permitAll()
 
                 // ✅ PUBLIC USER PAGES
@@ -47,13 +45,13 @@ public class SecurityConfig {
                         "/js/**"
                 ).permitAll()
 
-                // 🔐 USER DASHBOARD ONLY
+                // 🔐 USER DASHBOARD PROTECTED
                 .requestMatchers("/user/dashboard").authenticated()
 
                 .anyRequest().authenticated()
             )
 
-            // USER LOGIN ONLY
+            // USER LOGIN (ONLY USER)
             .formLogin(form -> form
                 .loginPage("/user/login")
                 .loginProcessingUrl("/user/login")
@@ -75,7 +73,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
