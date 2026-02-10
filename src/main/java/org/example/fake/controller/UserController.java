@@ -33,22 +33,22 @@ public class UserController {
         return "user-login";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard(Model model, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/user/login";
-        }
-        
-        String email = authentication.getName();
-        User user = userService.findByEmail(email);
-        
-        if (user == null) {
-            return "redirect:/user/login";
-        }
-        
-        model.addAttribute("user", user);
-        return "user-dashboard";
-    }
+//    @GetMapping("/dashboard")
+//    public String dashboard(Model model, Authentication authentication) {
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return "redirect:/user/login";
+//        }
+//        
+//        String email = authentication.getName();
+//        User user = userService.findByEmail(email);
+//        
+//        if (user == null) {
+//            return "redirect:/user/login";
+//        }
+//        
+//        model.addAttribute("user", user);
+//        return "user-dashboard";
+//    }
 
     // Registration
     @GetMapping("/register")

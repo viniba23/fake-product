@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Product Details</title>
+
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:800px;
+    margin:30px auto;
+    background:white;
+    padding:20px;
+}
+img {
+    width:150px;
+    height:150px;
+    object-fit:cover;
+    margin:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2 th:text="${product.productName}"></h2>
+
+<p><b>Price:</b> <span th:text="${product.price}"></span></p>
+<p><b>Quantity:</b> <span th:text="${product.quantity}"></span></p>
+<p><b>Manufacturer:</b> <span th:text="${product.manufacturer}"></span></p>
+<p><b>Description:</b> <span th:text="${product.description}"></span></p>
+
+<h3>Images</h3>
+<div>
+    <img th:each="img : ${product.images}"
+         th:src="'data:image/jpeg;base64,' + ${img.base64Image}" />
+</div>
+
+<br>
+<a href="/user/dashboard">⬅ Back</a>
+
+</div>
+
+</body>
+</html>
