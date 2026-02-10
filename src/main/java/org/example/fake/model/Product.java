@@ -33,8 +33,12 @@ public class Product {
 
 	    private LocalDateTime createdAt;
 
-	    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	    private List<ProductImage> images;
+	    @OneToMany(
+	    	    mappedBy = "product",
+	    	    cascade = CascadeType.ALL,
+	    	    orphanRemoval = true   // ⭐ REQUIRED
+	    	)
+	    	private List<ProductImage> images;
 
 
 	    @PrePersist

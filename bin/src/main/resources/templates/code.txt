@@ -1,0 +1,2681 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Admin Login</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form action="/admin/login" method="post">
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <p><a href="/admin/forgot-password">Forgot password?</a></p>
+    </div>
+</body>
+</html>
+ index.html
+spring.application.name=fakeproduct
+server.port=8080
+
+# Database Configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/fake-product?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA/Hibernate
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.defer-datasource-initialization=true
+
+# Thymeleaf
+spring.thymeleaf.cache=false
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+spring.thymeleaf.mode=HTML
+spring.thymeleaf.encoding=UTF-8
+
+# Disable schema.sql initialization
+spring.sql.init.mode=never
+# Static resources
+spring.web.resources.static-locations=classpath:/static/
+# Email Configuration
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=viniba23061998@gmail.com
+spring.mail.password=jbps gpvk uzrl rfyo
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.main.allow-bean-definition-overriding=true
+# Add these properties
+spring.mail.properties.mail.smtp.ssl.trust=*
+spring.mail.properties.mail.smtp.ssl.protocols=TLSv1.2
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=20MB
+ application.properities
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify OTP</title>
+    <style>
+       .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .message {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Verify OTP</h2>
+        <p th:if="${message}" class="message" th:text="${message}"></p>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form th:action="@{/user/verify-otp}" method="post">
+
+            <input type="hidden" name="email" th:value="${email}">
+            <div class="form-group">
+                <label>Enter OTP sent to your email:</label>
+                <input type="text" name="token" required>
+            </div>
+            <button type="submit">Verify OTP</button>
+        </form>
+    </div>
+</body>
+</html> verify-otp.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+        .gender-options {
+            display: flex;
+            gap: 15px;
+        }
+        .gender-options input {
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>User Registration</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form action="/user/register" method="post">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-group">
+                <label>Date of Birth:</label>
+                <input type="date" name="dob" required>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Mobile Number:</label>
+                <input type="text" name="mobile" pattern="[0-9]{10}" required>
+            </div>
+            <div class="form-group">
+                <label>Gender:</label>
+                <div class="gender-options">
+                    <label><input type="radio" name="gender" value="Male" required> Male</label>
+                    <label><input type="radio" name="gender" value="Female"> Female</label>
+                    <label><input type="radio" name="gender" value="Other"> Other</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label>Confirm Password:</label>
+                <input type="password" name="confirmPassword" required>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="/user/login">Login here</a></p>
+    </div>
+</body>
+</html> user-register.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+        .message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<p class="error" th:if="${error}">
+    Account is not activated. Please contact admin.
+</p>
+
+    <div class="container">
+        <h2>User Login</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <p th:if="${message}" class="message" th:text="${message}"></p>
+       <form action="/user/login" method="post">
+    <div class="form-group">
+        <label>Email:</label>
+        <input type="email" name="username" required> <!-- Note: name="username" not "email" -->
+    </div>
+    <div class="form-group">
+        <label>Password:</label>
+        <input type="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+        <p><a href="/user/forgot-password">Forgot password?</a></p>
+        <p>Don't have an account? <a href="/user/register">Register here</a></p>
+    </div>
+</body>
+</html> user-login.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        .user-info {
+            text-align: left;
+            margin: 20px 0;
+        }
+        .logout-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Your Dashboard</h2>
+        <div class="user-info" th:if="${user}">
+            <p>Name: <span th:text="${user.username}"></span></p>
+            <p>Email: <span th:text="${user.email}"></span></p>
+        </div>
+        <a href="/user/logout" class="logout-btn">Logout</a>
+    </div>
+</body>
+</html> user-dashboard.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reset Password</title>
+    <style>
+       .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .message {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+   <div class="container">
+        <h2>Reset Password</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form th:action="@{/user/reset-password}" method="post">
+
+            <input type="hidden" name="token" th:value="${token}">
+            <input type="hidden" name="email" th:value="${email}">
+            <div class="form-group">
+                <label>New Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label>Confirm New Password:</label>
+                <input type="password" name="confirmPassword" required>
+            </div>
+            <button type="submit">Reset Password</button>
+        </form>
+    </div>
+</body>
+</html> reset-password.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Forgot Password</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .message {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Forgot Password</h2>
+        <p th:if="${message}" class="message" th:text="${message}"></p>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form th:action="@{/user/forgot-password}" method="post">
+
+            <div class="form-group">
+                <label>Enter your email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <button type="submit">Send OTP</button>
+        </form>
+
+        <p>Remember your password? <a th:href="@{/user/login}">Login here</a></p>
+    </div>
+</body>
+</html> forget-password.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>View Product</title>
+
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:800px;
+    margin:30px auto;
+    background:white;
+    padding:20px;
+}
+img {
+    width:150px;
+    height:150px;
+    object-fit:cover;
+    margin:10px;
+    border:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2 th:text="${product.productName}"></h2>
+
+    <p><b>Price:</b> <span th:text="${product.price}"></span></p>
+    <p><b>Quantity:</b> <span th:text="${product.quantity}"></span></p>
+    <p><b>Manufacturer:</b> <span th:text="${product.manufacturer}"></span></p>
+    <p><b>Description:</b> <span th:text="${product.description}"></span></p>
+
+    <h3>Product Images</h3>
+    <div>
+        <img th:each="img : ${product.images}"
+             th:src="'data:image/jpeg;base64,' + ${T(java.util.Base64).getEncoder().encodeToString(img.imageData)}"/>
+    </div>
+
+    <br>
+    <a href="/admin/products">⬅ Back to Manage Products</a>
+</div>
+
+</body>
+</html> admin-view-product.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify OTP</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Verify OTP</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form th:action="@{/admin/verify-otp}" method="post">
+            <input type="hidden" name="email" th:value="${email}">
+            <div class="form-group">
+                <label>Enter OTP sent to your email:</label>
+                <input type="text" name="token" required>
+            </div>
+            <button type="submit">Verify OTP</button>
+        </form>
+    </div>
+</body>
+</html> admin-verify-otp.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Details</title>
+</head>
+<body>
+
+<h2>User Details</h2>
+
+<p><b>Name:</b> <span th:text="${user.username}"></span></p>
+<p><b>Email:</b> <span th:text="${user.email}"></span></p>
+<p><b>Mobile:</b> <span th:text="${user.mobile}"></span></p>
+<p><b>Gender:</b> <span th:text="${user.gender}"></span></p>
+<p><b>Status:</b> <span th:text="${user.active ? 'ACTIVE' : 'INACTIVE'}"></span></p>
+
+<a href="/admin/users">Back</a>
+
+</body>
+</html> admin-user-view.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            font-size: 13px;
+        }
+
+        .btn-view {
+            background-color: #007bff;
+        }
+
+        .btn-active {
+            background-color: #28a745;
+        }
+
+        .btn-inactive {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>User Management</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Status</th>
+                <th>Registered On</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.mobile}"></td>
+                <td th:text="${#temporals.format(user.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
+                <td th:text="${user.active ? 'ACTIVE' : 'INACTIVE'}"></td>
+
+                <td>
+                    <a th:href="@{/admin/users/view/{id}(id=${user.id})}"
+                       class="btn btn-view">View</a>
+
+                    <a th:if="${user.active}"
+                       th:href="@{/admin/users/deactivate/{id}(id=${user.id})}"
+                       class="btn btn-inactive">Deactivate</a>
+
+                    <a th:if="${!user.active}"
+                       th:href="@{/admin/users/activate/{id}(id=${user.id})}"
+                       class="btn btn-active">Activate</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html> admin-user.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reset Password</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Reset Password</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form th:action="@{/admin/reset-password}" method="post">
+            <input type="hidden" name="token" th:value="${token}">
+            <input type="hidden" name="email" th:value="${email}">
+            <div class="form-group">
+                <label>New Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label>Confirm New Password:</label>
+                <input type="password" name="confirmPassword" required>
+            </div>
+            <button type="submit">Reset Password</button>
+        </form>
+    </div>
+</body>
+</html> admin-reset-password.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Manage Products</title>
+
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:95%;
+    margin:30px auto;
+    background:white;
+    padding:20px;
+}
+table {
+    width:100%;
+    border-collapse:collapse;
+}
+th, td {
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+th {
+    background:#343a40;
+    color:white;
+}
+a {
+    padding:6px 10px;
+    text-decoration:none;
+    color:white;
+    border-radius:4px;
+    font-size:14px;
+}
+.view { background:#17a2b8; }
+.edit { background:#007bff; }
+.delete { background:#dc3545; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Manage Products</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Manufacturer</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="p : ${products}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.productName}"></td>
+                <td th:text="${p.price}"></td>
+                <td th:text="${p.quantity}"></td>
+                <td th:text="${p.manufacturer}"></td>
+                <td th:text="${#temporals.format(p.createdAt,'dd-MM-yyyy')}"></td>
+
+                <td>
+                    <a th:href="@{/admin/products/view/{id}(id=${p.id})}" class="view">View</a>
+                    <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="edit">Edit</a>
+                    <a th:href="@{/admin/products/delete/{id}(id=${p.id})}"
+                       class="delete"
+                       onclick="return confirm('Delete this product?')">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html> admin-manage-products.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Admin Login</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form action="/admin/login" method="post">
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <p><a href="/admin/forgot-password">Forgot password?</a></p>
+    </div>
+</body>
+</html>
+ admn-login.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Forgot Password</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .message {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Admin Forgot Password</h2>
+        <p th:if="${message}" class="message" th:text="${message}"></p>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form th:action="@{/admin/forgot-password}" method="post">
+            <div class="form-group">
+                <label>Enter your email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <button type="submit">Send OTP</button>
+        </form>
+        <p>Remember your password? <a th:href="@{/admin/login}">Login here</a></p>
+    </div>
+</body>
+</html> admin-forget-password.html
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Admin Dashboard</h2>
+        <p>You have successfully logged in as an admin.</p>
+    </div>
+</body>
+</html>
+ -->
+ 
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        /* Header */
+        .header {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 20px;
+            font-size: 20px;
+        }
+
+        /* Layout */
+        .wrapper {
+            display: flex;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 230px;
+            background-color: #212529;
+            padding-top: 20px;
+        }
+
+        .sidebar h3 {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #adb5bd;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover {
+            background-color: #495057;
+            color: #ffffff;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<div class="header">
+    Fake Product Identification System – Admin Panel
+</div>
+
+<div class="wrapper">
+
+    <!-- Sidebar -->
+  
+
+<div class="sidebar">
+    <h3>ADMIN MENU</h3>
+
+    <!-- Dashboard -->
+    <a href="/admin/dashboard">Dashboard</a>
+
+    <!-- User Management -->
+    <a href="/admin/users">User Management</a>
+
+    <!-- Product Modules -->
+   
+     <a href="/admin/products/add">Product Registration</a>
+    <a href="/admin/products">Manage Products</a>
+
+    <!-- Blockchain -->
+    <a href="/admin/blockchain-enroll">Blockchain Product Enrollment</a>
+
+    <!-- QR Code -->
+    <a href="/admin/generate-qr">QR Code Generation</a>
+
+    <!-- Verification -->
+    <a href="/admin/verification-logs">Verification Monitoring</a>
+
+    <!-- Logout -->
+    <a href="/admin/logout">Logout</a>
+</div>
+
+</div>
+
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="card">
+            <h2>Welcome to Admin Dashboard</h2>
+            <p>You have successfully logged in as an admin.</p>
+            <p>Use the sidebar to manage users and products.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    © 2026 Fake Product Identification System | Admin Module
+</div>
+
+</body>
+</html> admin-dashboard.html
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Product Registration</title>
+
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:600px; margin:40px auto; background:white;
+    padding:25px; border-radius:5px;
+}
+label { font-weight:bold; margin-top:10px; display:block; }
+input, textarea {
+    width:100%; padding:8px; margin-top:5px;
+}
+button {
+    margin-top:20px; padding:10px; width:100%;
+    background:#007bff; color:white; border:none;
+}
+.success { color:green; }
+.error { color:red; }
+</style>
+
+<script>
+function validateImages() {
+    const files = document.getElementById("images").files;
+    if (files.length === 0) {
+        alert("Please upload at least one image");
+        return false;
+    }
+    return true;
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Product Registration</h2>
+
+    <p class="success" th:text="${success}"></p>
+    <p class="error" th:text="${error}"></p>
+
+    <form th:action="@{/admin/products/add}" 
+          method="post" 
+          enctype="multipart/form-data"
+          onsubmit="return validateImages()">
+
+        <label>Product Name</label>
+        <input type="text" name="productName" required>
+
+        <label>Price</label>
+        <input type="number" step="0.01" name="price" required>
+
+        <label>Quantity</label>
+        <input type="number" name="quantity" required>
+
+        <label>Manufacturer</label>
+        <input type="text" name="manufacturer" required>
+
+        <label>Manufacturing Date</label>
+        <input type="date" name="manufacturingDate" required>
+
+        <label>Description</label>
+        <textarea name="description"></textarea>
+
+        <label>Product Images (Multiple)</label>
+        <input type="file" id="images" name="images" multiple accept="image/*">
+
+        <button type="submit">Register Product</button>
+    </form>
+</div>
+
+</body>
+</html>
+ -->
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Product Registration</title>
+
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:650px;
+    margin:40px auto;
+    background:white;
+    padding:25px;
+    border-radius:5px;
+}
+label { font-weight:bold; margin-top:10px; display:block; }
+input, textarea {
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+}
+button {
+    margin-top:20px;
+    padding:10px;
+    width:100%;
+    background:#007bff;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+.add-btn {
+    background:#28a745;
+    margin-top:10px;
+}
+.remove-btn {
+    background:#dc3545;
+    margin-top:5px;
+}
+.image-row {
+    margin-top:10px;
+}
+.success { color:green; }
+.error { color:red; }
+</style>
+
+<script>
+function addImageInput() {
+    const container = document.getElementById("imageContainer");
+
+    const div = document.createElement("div");
+    div.className = "image-row";
+
+    div.innerHTML = `
+        <input type="file" name="images" accept="image/*" required>
+        <button type="button" class="remove-btn" onclick="removeImageInput(this)">Remove</button>
+    `;
+
+    container.appendChild(div);
+}
+
+function removeImageInput(btn) {
+    btn.parentElement.remove();
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Product Registration</h2>
+
+    <p class="success" th:text="${success}"></p>
+    <p class="error" th:text="${error}"></p>
+
+    <form th:action="@{/admin/products/add}"
+          method="post"
+          enctype="multipart/form-data">
+
+        <label>Product Name</label>
+        <input type="text" name="productName" required>
+
+        <label>Price</label>
+        <input type="number" step="0.01" name="price" required>
+
+        <label>Quantity</label>
+        <input type="number" name="quantity" required>
+
+        <label>Manufacturer</label>
+        <input type="text" name="manufacturer" required>
+
+        <label>Manufacturing Date</label>
+        <input type="date" name="manufacturingDate" required>
+
+        <label>Description</label>
+        <textarea name="description"></textarea>
+
+        <!-- IMAGE UPLOAD SECTION -->
+        <label>Product Images</label>
+
+        <div id="imageContainer">
+            <!-- First image input -->
+            <div class="image-row">
+                <input type="file" name="images" accept="image/*" required>
+            </div>
+        </div>
+
+        <button type="button" class="add-btn" onclick="addImageInput()">➕ Add Another Image</button>
+
+        <button type="submit">Register Product</button>
+
+    </form>
+</div>
+
+</body>
+</html>
+ admin-add-product.html
+
+com.example.fake.service
+package org.example.fake.service;
+
+import java.time.LocalDateTime;
+import java.util.Random;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import org.example.fake.model.PasswordResetToken;
+import org.example.fake.model.User;
+import org.example.fake.repo.PasswordResetTokenRepository;
+import org.example.fake.repo.UserRepository;
+
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private PasswordResetTokenRepository tokenRepository;
+    
+    @Autowired
+    private EmailService emailService;
+    
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+    
+    public User registerUser(User user) {
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            throw new RuntimeException("Email already exists");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+   
+
+    @Transactional
+    public void initiatePasswordReset(String email) {
+        System.out.println("[DEBUG] Starting password reset for email: " + email);
+        
+        try {
+            // Step 1: Find user by email
+            System.out.println("[DEBUG] Looking up user with email: " + email);
+            User user = userRepository.findByEmail(email);
+            
+            if (user == null) {
+                System.out.println("[DEBUG] User not found for email: " + email);
+                throw new RuntimeException("Email not found");
+            }
+            System.out.println("[DEBUG] Found user: " + user.getUsername());
+            
+            // Step 2: Delete existing tokens
+            System.out.println("[DEBUG] Deleting existing tokens for email: " + email);
+            tokenRepository.deleteByEmail(email);
+            System.out.println("[DEBUG] Successfully deleted old tokens");
+            
+            // Step 3: Generate new OTP
+            String otp = String.format("%06d", new Random().nextInt(999999));
+            System.out.println("[DEBUG] Generated OTP: " + otp);
+            
+            // Step 4: Create and save new token
+            PasswordResetToken resetToken = new PasswordResetToken();
+            resetToken.setToken(otp);
+            resetToken.setEmail(email);
+            resetToken.setUser(user);
+            resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(15));
+            
+            System.out.println("[DEBUG] Saving new token to database");
+            tokenRepository.save(resetToken);
+            System.out.println("[DEBUG] Token saved successfully");
+            
+            // Step 5: Send email
+            System.out.println("[DEBUG] Attempting to send email to: " + email);
+            emailService.sendPasswordResetEmail(email, otp);
+            System.out.println("[DEBUG] Email sent successfully");
+            
+        } catch (Exception e) {
+            System.out.println("[ERROR] Exception in initiatePasswordReset: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public boolean validateResetToken(String token, String email) {
+        PasswordResetToken resetToken = tokenRepository.findByTokenAndEmail(token, email);
+        return resetToken != null && resetToken.getExpiryDate().isAfter(LocalDateTime.now());
+    }
+
+    public void resetPassword(String token, String email, String newPassword) {
+        PasswordResetToken resetToken = tokenRepository.findByTokenAndEmail(token, email);
+        if (resetToken != null && resetToken.getExpiryDate().isAfter(LocalDateTime.now())) {
+            User user = resetToken.getUser();
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+            tokenRepository.delete(resetToken);
+        }
+    }
+
+    public User authenticate(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        }
+        return null;
+    }
+}
+userservices.java
+package org.example.fake.service;
+
+import java.util.List;
+
+import org.example.fake.model.Product;
+import org.example.fake.repo.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+@Service
+public class ProductService {
+	@Autowired
+    private ProductRepository productRepository;
+
+    public Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).orElseThrow();
+    }
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+} productservices.java
+package org.example.fake.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+public class EmailService {
+    
+	 @Autowired
+	    private JavaMailSender mailSender;
+
+	    public void sendPasswordResetEmail(String toEmail, String otp) {
+	        SimpleMailMessage message = new SimpleMailMessage();
+	        message.setTo(toEmail);
+	        message.setSubject("Password Reset OTP");
+	        message.setText("Your OTP for password reset is: " + otp + "\n\n" +
+	                       "This OTP is valid for 15 minutes.\n" +
+	                       "If you didn't request this, please ignore this email.");
+	        mailSender.send(message);
+	    }
+} emailservice.java
+package org.example.fake.service;
+
+import java.time.LocalDateTime;
+import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import org.example.fake.model.Admin;
+import org.example.fake.model.PasswordResetToken;
+import org.example.fake.repo.AdminRepository;
+import org.example.fake.repo.PasswordResetTokenRepository;
+
+import jakarta.annotation.PostConstruct;
+
+@Service
+public class AdminService {
+    @Autowired
+    private AdminRepository adminRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordResetTokenRepository tokenRepository;
+    
+    @Autowired
+    private EmailService emailService;
+
+    @PostConstruct
+    public void createDefaultAdmin() {
+        if (adminRepository.count() == 0) {
+            Admin admin = new Admin();
+            admin.setEmail("vinibca24@gmail.com");
+            admin.setPassword(passwordEncoder.encode("admin"));
+            adminRepository.save(admin);
+        }
+    }
+
+    public Admin authenticate(String email, String password) {
+        Admin admin = adminRepository.findByEmail(email);
+        if (admin != null && passwordEncoder.matches(password, admin.getPassword())) {
+            return admin;
+        }
+        return null;
+    }
+    
+    @Transactional
+    public void initiateAdminPasswordReset(String email) {
+        Admin admin = adminRepository.findByEmail(email);
+        if (admin != null) {
+            // Clear existing tokens first
+            tokenRepository.deleteByEmail(email);
+            
+            // Create new token
+            String otp = String.format("%06d", new Random().nextInt(999999));
+            
+            PasswordResetToken resetToken = new PasswordResetToken();
+            resetToken.setToken(otp);
+            resetToken.setEmail(email);
+            resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(15));
+            
+            tokenRepository.save(resetToken);
+            emailService.sendPasswordResetEmail(email, otp);
+        } else {
+            throw new RuntimeException("Admin email not found");
+        }
+    }
+   
+
+    public boolean validateAdminResetToken(String token, String email) {
+        PasswordResetToken resetToken = tokenRepository.findByTokenAndEmail(token, email);
+        return resetToken != null && resetToken.getExpiryDate().isAfter(LocalDateTime.now());
+    }
+
+    public void resetAdminPassword(String token, String email, String newPassword) {
+        PasswordResetToken resetToken = tokenRepository.findByTokenAndEmail(token, email);
+        if (resetToken != null && resetToken.getExpiryDate().isAfter(LocalDateTime.now())) {
+            Admin admin = adminRepository.findByEmail(email);
+            admin.setPassword(passwordEncoder.encode(newPassword));
+            adminRepository.save(admin);
+            tokenRepository.delete(resetToken);
+        }
+    }
+} adminservices.java
+
+com.example.fake.repo
+package org.example.fake.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import org.example.fake.model.User;
+
+public interface UserRepository extends JpaRepository<User, Long>{
+	User findByEmailAndPassword(String email, String password);
+    User findByEmail(String email);
+} userrepository.java
+package org.example.fake.repo;
+
+import org.example.fake.model.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {
+
+} productrepository.java
+package org.example.fake.repo;
+
+import org.example.fake.model.ProductImage;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductImageRepository extends JpaRepository<ProductImage, Long>{
+
+} productimagerepository.java
+package org.example.fake.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import org.example.fake.model.PasswordResetToken;
+
+@Repository
+public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
+    PasswordResetToken findByToken(String token);
+    PasswordResetToken findByEmail(String email);
+    PasswordResetToken findByTokenAndEmail(String token, String email);
+    
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM PasswordResetToken t WHERE t.email = ?1")
+    void deleteByEmail(String email);
+} passwordresettokenrepository.java
+package org.example.fake.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import org.example.fake.model.Admin;
+
+public interface AdminRepository extends JpaRepository<Admin, Long>{
+	Admin findByEmail(String email);
+    Admin findByEmailAndPassword(String email, String password);
+
+} adminrepository.java
+
+com.example.fake.model
+package org.example.fake.model;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
+public class User {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private String username;
+	private String email;
+	private String password;
+	private LocalDate dob;
+	private String mobile;
+	private String gender;
+	  private boolean active = true;
+	  
+	  
+	  @Column(name = "created_at", nullable = false, updatable = false)
+	    private LocalDateTime createdAt;
+
+	    @PrePersist
+	    protected void onCreate() {
+	        this.createdAt = LocalDateTime.now();
+	    }
+	  
+	  
+	  
+	  
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	  public void setCreatedAt(LocalDateTime createdAt) {
+		  this.createdAt = createdAt;
+	  }
+
+	public boolean isActive() {
+		return active;
+	}
+
+	  public void setActive(boolean active) {
+		  this.active = active;
+	  }
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public LocalDate getDob() {
+		return dob;
+	}
+
+	public void setDob(LocalDate dob) {
+		this.dob = dob;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+} user.java
+package org.example.fake.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "product_images")
+public class ProductImage {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] imageData;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public byte[] getImageData() {
+		return imageData;
+	}
+
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+    
+    
+} productimage.java
+package org.example.fake.model;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+
+@Entity
+@Table(name = "products")
+public class Product {
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+
+	    private String productName;
+	    private double price;
+	    private int quantity;
+	    private String manufacturer;
+	    private LocalDate manufacturingDate;
+
+	    @Column(length = 1000)
+	    private String description;
+
+	    private LocalDateTime createdAt;
+
+	    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	    private List<ProductImage> images;
+
+
+	    @PrePersist
+	    public void onCreate() {
+	        this.createdAt = LocalDateTime.now();
+	    }
+
+	    /* getters & setters */
+
+	    public void setImages(List<ProductImage> images) {
+	        this.images = images;
+	    }
+
+	    public List<ProductImage> getImages() {
+	        return images;
+	    }
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getProductName() {
+			return productName;
+		}
+
+		public void setProductName(String productName) {
+			this.productName = productName;
+		}
+
+		public double getPrice() {
+			return price;
+		}
+
+		public void setPrice(double price) {
+			this.price = price;
+		}
+
+		public int getQuantity() {
+			return quantity;
+		}
+
+		public void setQuantity(int quantity) {
+			this.quantity = quantity;
+		}
+
+		public String getManufacturer() {
+			return manufacturer;
+		}
+
+		public void setManufacturer(String manufacturer) {
+			this.manufacturer = manufacturer;
+		}
+
+		public LocalDate getManufacturingDate() {
+			return manufacturingDate;
+		}
+
+		public void setManufacturingDate(LocalDate manufacturingDate) {
+			this.manufacturingDate = manufacturingDate;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public LocalDateTime getCreatedAt() {
+			return createdAt;
+		}
+
+		public void setCreatedAt(LocalDateTime createdAt) {
+			this.createdAt = createdAt;
+		}
+	    
+	    
+} product.java
+
+package org.example.fake.model;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import lombok.Data;
+
+@Data
+@Entity
+public class PasswordResetToken {
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+	    
+	    private String token;
+	    private String email;
+	    private LocalDateTime expiryDate;
+	    
+	    @OneToOne
+	    @JoinColumn(name = "user_id")
+	    private User user;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getToken() {
+			return token;
+		}
+
+		public void setToken(String token) {
+			this.token = token;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
+		public LocalDateTime getExpiryDate() {
+			return expiryDate;
+		}
+
+		public void setExpiryDate(LocalDateTime expiryDate) {
+			this.expiryDate = expiryDate;
+		}
+
+		public User getUser() {
+			return user;
+		}
+
+		public void setUser(User user) {
+			this.user = user;
+		}
+	    
+	    
+	    
+} passwordresettoken.java
+package org.example.fake.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "admin")
+public class Admin {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String email;
+    private String password;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+    
+
+    
+    
+    
+    
+
+} admin.java
+
+com.example.fake.controller
+
+package org.example.fake.controller;
+
+import org.example.fake.model.User;
+import org.example.fake.service.UserService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequestMapping("/user")
+public class UserController {
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // Login page - only GET method needed (POST handled by Spring Security)
+    @GetMapping("/login")
+    public String loginPage(@RequestParam(value = "error", required = false) String error,
+                           @RequestParam(value = "logout", required = false) String logout,
+                           Model model) {
+        if (error != null) {
+            model.addAttribute("error", "Invalid email or password");
+        }
+        if (logout != null) {
+            model.addAttribute("message", "You have been logged out successfully");
+        }
+        return "user-login";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard(Model model, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/user/login";
+        }
+        
+        String email = authentication.getName();
+        User user = userService.findByEmail(email);
+        
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        
+        model.addAttribute("user", user);
+        return "user-dashboard";
+    }
+
+    // Registration
+    @GetMapping("/register")
+    public String registerPage() {
+        return "user-register";
+    }
+
+    @PostMapping("/register")
+    public String register(User user, @RequestParam String confirmPassword, Model model) {
+        try {
+            if (!user.getPassword().equals(confirmPassword)) {
+                model.addAttribute("error", "Passwords don't match");
+                return "user-register";
+            }
+            userService.registerUser(user);
+            model.addAttribute("message", "Registration successful! Please login.");
+            return "redirect:/user/login";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            return "user-register";
+        }
+    }
+
+
+    @GetMapping("/forgot-password")
+    public String showForgotPasswordForm(Model model) {
+        model.addAttribute("message", null);
+        model.addAttribute("error", null);
+        return "forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(@RequestParam("email") String email, Model model) {
+        try {
+        	 System.out.println("[CONTROLLER] Forgot password request received for email: " + email);
+            userService.initiatePasswordReset(email);
+            model.addAttribute("email", email);
+            model.addAttribute("message", "We have sent a password reset OTP to your email");
+            return "verify-otp";
+        } catch (Exception e) {
+        	System.out.println("[CONTROLLER] Error: " + e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            return "forgot-password";
+        }
+    }
+
+    // OTP Verification
+    @GetMapping("/verify-otp")
+    public String showVerifyOtpForm(@RequestParam(value = "email", required = false) String email, Model model) {
+        if (email != null) {
+            model.addAttribute("email", email);
+        }
+        return "verify-otp";
+    }
+
+    @PostMapping("/verify-otp")
+    public String processVerifyOtp(
+            @RequestParam("token") String token,
+            @RequestParam("email") String email,
+            Model model) {
+        
+        if (userService.validateResetToken(token, email)) {
+            model.addAttribute("token", token);
+            model.addAttribute("email", email);
+            return "reset-password";
+        }
+        
+        model.addAttribute("error", "Invalid or expired OTP");
+        model.addAttribute("email", email);
+        return "verify-otp";
+    }
+
+    // Password Reset
+    @GetMapping("/reset-password")
+    public String showResetPasswordForm(
+            @RequestParam("token") String token,
+            @RequestParam("email") String email,
+            Model model) {
+        model.addAttribute("token", token);
+        model.addAttribute("email", email);
+        return "reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String processResetPassword(
+            @RequestParam("token") String token,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            Model model) {
+        
+        try {
+            userService.resetPassword(token, email, password);
+            model.addAttribute("message", "Password reset successfully. Please login with your new password");
+            return "user-login";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("token", token);
+            model.addAttribute("email", email);
+            return "reset-password";
+        }
+    }
+
+    // Logout is handled by Spring Security config
+} usercontroller.java
+package org.example.fake.controller;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.example.fake.model.Product;
+import org.example.fake.model.ProductImage;
+import org.example.fake.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+@Controller
+@RequestMapping("/admin/products")
+public class ProductController {
+	@Autowired
+    private ProductService productService;
+
+    @GetMapping("/add")
+    public String showAddProductPage() {
+        return "admin-add-product";
+    }
+
+    @PostMapping("/add")
+    public String saveProduct(
+            @RequestParam String productName,
+            @RequestParam double price,
+            @RequestParam int quantity,
+            @RequestParam String manufacturer,
+            @RequestParam LocalDate manufacturingDate,
+            @RequestParam(required = false) String description,
+            @RequestParam("images") MultipartFile[] images,
+            Model model) {
+
+        try {
+            Product product = new Product();
+            product.setProductName(productName);
+            product.setPrice(price);
+            product.setQuantity(quantity);
+            product.setManufacturer(manufacturer);
+            product.setManufacturingDate(manufacturingDate);
+            product.setDescription(description);
+
+            List<ProductImage> imageList = new ArrayList<>();
+
+            for (MultipartFile file : images) {
+                if (!file.isEmpty()) {
+                    ProductImage img = new ProductImage();
+                    img.setImageData(file.getBytes());
+                    img.setProduct(product);
+                    imageList.add(img);
+                }
+            }
+
+            product.setImages(imageList);
+
+            productService.saveProduct(product);
+
+            model.addAttribute("success", "Product registered successfully!");
+            return "admin-add-product";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Failed to save product images");
+            return "admin-add-product";
+        }
+    }
+    
+    @GetMapping
+    public String listProducts(Model model) {
+        model.addAttribute("products", productService.getAllProducts());
+        return "admin-manage-products";
+    }
+
+    @GetMapping("/view/{id}")
+    public String viewProduct(@PathVariable Long id, Model model) {
+        model.addAttribute("product", productService.getProductById(id));
+        return "admin-view-product";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return "redirect:/admin/products";
+    }
+
+
+} productcontroller.java
+package org.example.fake.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+    @GetMapping("/")
+    public String index() {
+        return "index"; // This should match your index.html filename exactly
+    }
+}
+homecontroller.java
+package org.example.fake.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.example.fake.model.User;
+import org.example.fake.repo.UserRepository;
+import org.example.fake.service.AdminService;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+    @Autowired
+    private AdminService adminService;
+    
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping("/login")
+    public String loginPage(@RequestParam(value = "error", required = false) String error,
+                           Model model) {
+        if (error != null) {
+            model.addAttribute("error", "Invalid credentials");
+        }
+        return "admin-login";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestParam String email,
+                       @RequestParam String password,
+                       Model model) {
+        if (adminService.authenticate(email, password) != null) {
+            return "admin-dashboard";
+        }
+        return "redirect:/admin/login?error=true";
+    }
+    
+    @GetMapping("/forgot-password")
+    public String showAdminForgotPasswordForm(Model model) {
+        model.addAttribute("message", null);
+        model.addAttribute("error", null);
+        return "admin-forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String processAdminForgotPassword(@RequestParam("email") String email, Model model) {
+        try {
+            adminService.initiateAdminPasswordReset(email);
+            model.addAttribute("email", email);
+            model.addAttribute("message", "We have sent a password reset OTP to your email");
+            return "admin-verify-otp";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "admin-forgot-password";
+        }
+    }
+
+    @GetMapping("/verify-otp")
+    public String showAdminVerifyOtpForm(@RequestParam(value = "email", required = false) String email, Model model) {
+        if (email != null) {
+            model.addAttribute("email", email);
+        }
+        return "admin-verify-otp";
+    }
+
+    @PostMapping("/verify-otp")
+    public String processAdminVerifyOtp(
+            @RequestParam("token") String token,
+            @RequestParam("email") String email,
+            Model model) {
+        
+        if (adminService.validateAdminResetToken(token, email)) {
+            model.addAttribute("token", token);
+            model.addAttribute("email", email);
+            return "admin-reset-password";
+        }
+        
+        model.addAttribute("error", "Invalid or expired OTP");
+        model.addAttribute("email", email);
+        return "admin-verify-otp";
+    }
+
+    @GetMapping("/reset-password")
+    public String showAdminResetPasswordForm(
+            @RequestParam("token") String token,
+            @RequestParam("email") String email,
+            Model model) {
+        model.addAttribute("token", token);
+        model.addAttribute("email", email);
+        return "admin-reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String processAdminResetPassword(
+            @RequestParam("token") String token,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            Model model) {
+        
+        try {
+            adminService.resetAdminPassword(token, email, password);
+            model.addAttribute("message", "Password reset successfully. Please login with your new password");
+            return "redirect:/admin/login";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("token", token);
+            model.addAttribute("email", email);
+            return "admin-reset-password";
+        }
+    }
+    
+    @GetMapping("/users")
+    public String viewUsers(Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        return "admin-users";
+    }
+
+    @GetMapping("/users/deactivate/{id}")
+    public String deactivateUser(@PathVariable Long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setActive(false);
+        userRepository.save(user);
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/users/activate/{id}")
+    public String activateUser(@PathVariable Long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setActive(true);
+        userRepository.save(user);
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/users/view/{id}")
+    public String viewUser(@PathVariable Long id, Model model) {
+        User user = userRepository.findById(id).orElseThrow();
+        model.addAttribute("user", user);
+        return "admin-user-view";
+    }
+}
+admincontroller.java
+
+com.example.fake.config
+package org.example.fake.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring6.view.ThymeleafViewResolver;
+
+@Configuration
+public class ThymeleafConfig {
+	@Bean
+    public SpringResourceTemplateResolver templateResolver() {
+        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+        templateResolver.setPrefix("classpath:/templates/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode("HTML");
+        templateResolver.setCharacterEncoding("UTF-8");
+        return templateResolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver());
+        return templateEngine;
+    }
+
+    @Bean
+    public ThymeleafViewResolver viewResolver() {
+        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(templateEngine());
+        viewResolver.setCharacterEncoding("UTF-8");
+        return viewResolver;
+    }
+} thymeleafconfig.java
+package org.example.fake.config;
+
+import java.util.Collections;
+
+import org.example.fake.model.User;
+import org.example.fake.repo.UserRepository;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+//import org.example.fake.model.User;
+//import org.example.fake.repo.UserRepository;
+
+@Configuration
+public class SecurityConfig {
+
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http
+            .csrf(csrf -> csrf.disable())
+
+            // 🚨 VERY IMPORTANT
+            .securityMatcher("/**")
+
+            .authorizeHttpRequests(auth -> auth
+
+                // ✅ ADMIN MODULE (IGNORED BY SECURITY)
+                .requestMatchers("/admin/**").permitAll()
+
+                // ✅ PUBLIC USER PAGES
+                .requestMatchers(
+                        "/",
+                        "/user/login",
+                        "/user/register",
+                        "/user/forgot-password",
+                        "/user/verify-otp",
+                        "/user/reset-password",
+                        "/css/**",
+                        "/js/**"
+                ).permitAll()
+
+                // 🔐 USER DASHBOARD ONLY
+                .requestMatchers("/user/dashboard").authenticated()
+
+                .anyRequest().authenticated()
+            )
+
+            // USER LOGIN ONLY
+            .formLogin(form -> form
+                .loginPage("/user/login")
+                .loginProcessingUrl("/user/login")
+                .defaultSuccessUrl("/user/dashboard", true)
+                .failureUrl("/user/login?error=true")
+            )
+
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/user/login?logout")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+            );
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return username -> {
+            User user = userRepository.findByEmail(username);
+
+            if (user == null) {
+                throw new UsernameNotFoundException("User not found");
+            }
+
+            else if (!user.isActive()) {
+                throw new UsernameNotFoundException("Account not activated by admin");
+            }
+
+            return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+            );
+        };
+    }
+
+} securityconfig.java
+
+com.example.fake
+FakeproductApplication.java
+package org.example.fake;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class FakeproductApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(FakeproductApplication.class, args);
+	}
+
+}
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.0.2</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>org.example</groupId>
+	<artifactId>fakeproduct</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>fakeproduct</name>
+	<description>Demo project for Spring Boot</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>21</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-h2console</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+pom.xml

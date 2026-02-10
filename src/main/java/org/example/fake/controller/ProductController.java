@@ -121,9 +121,11 @@ public class ProductController {
         product.setManufacturingDate(manufacturingDate);
         product.setDescription(description);
 
-        // ✅ REMOVE SELECTED OLD IMAGES
+        // ✅ CORRECT WAY TO REMOVE IMAGES
         if (removeImageIds != null && !removeImageIds.isEmpty()) {
-            productService.deleteImagesByIds(removeImageIds);
+            product.getImages().removeIf(
+                img -> removeImageIds.contains(img.getId())
+            );
         }
 
         // ✅ ADD NEW IMAGES
@@ -141,6 +143,7 @@ public class ProductController {
         productService.saveProduct(product);
         return "redirect:/admin/products";
     }
+
 
 
 }

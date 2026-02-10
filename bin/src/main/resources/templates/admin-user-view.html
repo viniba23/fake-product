@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Details</title>
+</head>
+<body>
+
+<h2>User Details</h2>
+
+<p><b>Name:</b> <span th:text="${user.username}"></span></p>
+<p><b>Email:</b> <span th:text="${user.email}"></span></p>
+<p><b>Mobile:</b> <span th:text="${user.mobile}"></span></p>
+<p><b>Gender:</b> <span th:text="${user.gender}"></span></p>
+<p><b>Status:</b> <span th:text="${user.active ? 'ACTIVE' : 'INACTIVE'}"></span></p>
+
+<a href="/admin/users">Back</a>
+
+</body>
+</html>

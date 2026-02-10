@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            font-size: 13px;
+        }
+
+        .btn-view {
+            background-color: #007bff;
+        }
+
+        .btn-active {
+            background-color: #28a745;
+        }
+
+        .btn-inactive {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>User Management</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Status</th>
+                <th>Registered On</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.mobile}"></td>
+                <td th:text="${#temporals.format(user.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
+                <td th:text="${user.active ? 'ACTIVE' : 'INACTIVE'}"></td>
+
+                <td>
+                    <a th:href="@{/admin/users/view/{id}(id=${user.id})}"
+                       class="btn btn-view">View</a>
+
+                    <a th:if="${user.active}"
+                       th:href="@{/admin/users/deactivate/{id}(id=${user.id})}"
+                       class="btn btn-inactive">Deactivate</a>
+
+                    <a th:if="${!user.active}"
+                       th:href="@{/admin/users/activate/{id}(id=${user.id})}"
+                       class="btn btn-active">Activate</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

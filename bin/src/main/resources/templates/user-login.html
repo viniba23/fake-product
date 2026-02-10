@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 50px auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+        .message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<p class="error" th:if="${error}">
+    Account is not activated. Please contact admin.
+</p>
+
+    <div class="container">
+        <h2>User Login</h2>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <p th:if="${message}" class="message" th:text="${message}"></p>
+       <form action="/user/login" method="post">
+    <div class="form-group">
+        <label>Email:</label>
+        <input type="email" name="username" required> <!-- Note: name="username" not "email" -->
+    </div>
+    <div class="form-group">
+        <label>Password:</label>
+        <input type="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+        <p><a href="/user/forgot-password">Forgot password?</a></p>
+        <p>Don't have an account? <a href="/user/register">Register here</a></p>
+    </div>
+</body>
+</html>

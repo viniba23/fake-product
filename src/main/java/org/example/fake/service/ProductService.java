@@ -43,9 +43,9 @@ public class ProductService {
     }
     
 
-    public void deleteImagesByIds(List<Long> imageIds) {
-        productImageRepository.deleteByIdIn(imageIds);
-    }
+//    public void deleteImagesByIds(List<Long> imageIds) {
+//        productImageRepository.deleteByIdIn(imageIds);
+//    }
 
     
     
