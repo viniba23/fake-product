@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>QR Code Generation</title>
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container { width:90%; margin:30px auto; background:white; padding:20px; }
+table { width:100%; border-collapse:collapse; }
+th, td { border:1px solid #ddd; padding:10px; text-align:center; }
+th { background:#343a40; color:white; }
+button { padding:6px 12px; background:#007bff; color:white; border:none; }
+.success { color:green; }
+.error { color:red; }
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2>QR Code Generation</h2>
+
+<p class="success" th:text="${success}"></p>
+<p class="error" th:text="${error}"></p>
+
+<table>
+<tr>
+<th>ID</th>
+<th>Product</th>
+<th>Action</th>
+</tr>
+
+<tr th:each="p : ${products}">
+<td th:text="${p.id}"></td>
+<td th:text="${p.productName}"></td>
+<td>
+<form th:action="@{/admin/qr/generate/{id}(id=${p.id})}" method="post">
+<button type="submit">Generate QR</button>
+</form>
+
+<a th:href="@{/admin/qr/view/{id}(id=${p.id})}"
+   style="margin-left:10px; background:#28a745; padding:6px 12px; color:white;">View</a>
+</td>
+</tr>
+</table>
+</div>
+</body>
+</html>
