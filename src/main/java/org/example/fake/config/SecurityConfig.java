@@ -2,7 +2,9 @@ package org.example.fake.config;
 
 import java.util.Collections;
 
+import org.example.fake.model.Admin;
 import org.example.fake.model.User;
+import org.example.fake.repo.AdminRepository;
 import org.example.fake.repo.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,7 +48,9 @@ public class SecurityConfig {
                 ).permitAll()
 
                 // 🔐 USER DASHBOARD PROTECTED
-                .requestMatchers("/user/dashboard").authenticated()
+//                .requestMatchers("/user/dashboard").authenticated()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user/**").hasRole("USER")
 
                 .anyRequest().authenticated()
             )
@@ -60,11 +64,11 @@ public class SecurityConfig {
             )
 
             .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/user/login?logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-            );
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                );
 
         return http.build();
     }
@@ -74,25 +78,60 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+//    @Bean
+//    public UserDetailsService userDetailsService(UserRepository userRepository) {
+//        return username -> {
+//            User user = userRepository.findByEmail(username);
+//
+//            if (user == null) {
+//                throw new UsernameNotFoundException("User not found");
+//            }
+//
+//            else if (!user.isActive()) {
+//                throw new UsernameNotFoundException("Account not activated by admin");
+//            }
+//
+//            return new org.springframework.security.core.userdetails.User(
+//                user.getEmail(),
+//                user.getPassword(),
+//                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+//            );
+//        };
+//    }
+    
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
+    public UserDetailsService userDetailsService(UserRepository userRepository,
+                                                 AdminRepository adminRepository) {
+
         return username -> {
+
+            // First check Admin
+            Admin admin = adminRepository.findByEmail(username);
+            if (admin != null) {
+                return new org.springframework.security.core.userdetails.User(
+                        admin.getEmail(),
+                        admin.getPassword(),
+                        Collections.singletonList(
+                                new SimpleGrantedAuthority("ROLE_ADMIN")
+                        )
+                );
+            }
+
+            // Then check User
             User user = userRepository.findByEmail(username);
-
-            if (user == null) {
-                throw new UsernameNotFoundException("User not found");
+            if (user != null && user.isActive()) {
+                return new org.springframework.security.core.userdetails.User(
+                        user.getEmail(),
+                        user.getPassword(),
+                        Collections.singletonList(
+                                new SimpleGrantedAuthority("ROLE_USER")
+                        )
+                );
             }
 
-            else if (!user.isActive()) {
-                throw new UsernameNotFoundException("Account not activated by admin");
-            }
-
-            return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-            );
+            throw new UsernameNotFoundException("User not found");
         };
     }
+
 
 }

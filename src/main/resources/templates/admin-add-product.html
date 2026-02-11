@@ -1,81 +1,4 @@
-<!-- <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Product Registration</title>
 
-<style>
-body { background:#f4f6f9; font-family:Arial; }
-.container {
-    width:600px; margin:40px auto; background:white;
-    padding:25px; border-radius:5px;
-}
-label { font-weight:bold; margin-top:10px; display:block; }
-input, textarea {
-    width:100%; padding:8px; margin-top:5px;
-}
-button {
-    margin-top:20px; padding:10px; width:100%;
-    background:#007bff; color:white; border:none;
-}
-.success { color:green; }
-.error { color:red; }
-</style>
-
-<script>
-function validateImages() {
-    const files = document.getElementById("images").files;
-    if (files.length === 0) {
-        alert("Please upload at least one image");
-        return false;
-    }
-    return true;
-}
-</script>
-
-</head>
-
-<body>
-
-<div class="container">
-    <h2>Product Registration</h2>
-
-    <p class="success" th:text="${success}"></p>
-    <p class="error" th:text="${error}"></p>
-
-    <form th:action="@{/admin/products/add}" 
-          method="post" 
-          enctype="multipart/form-data"
-          onsubmit="return validateImages()">
-
-        <label>Product Name</label>
-        <input type="text" name="productName" required>
-
-        <label>Price</label>
-        <input type="number" step="0.01" name="price" required>
-
-        <label>Quantity</label>
-        <input type="number" name="quantity" required>
-
-        <label>Manufacturer</label>
-        <input type="text" name="manufacturer" required>
-
-        <label>Manufacturing Date</label>
-        <input type="date" name="manufacturingDate" required>
-
-        <label>Description</label>
-        <textarea name="description"></textarea>
-
-        <label>Product Images (Multiple)</label>
-        <input type="file" id="images" name="images" multiple accept="image/*">
-
-        <button type="submit">Register Product</button>
-    </form>
-</div>
-
-</body>
-</html>
- -->
  <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -146,6 +69,16 @@ function removeImageInput(btn) {
 <body>
 
 <div class="container">
+ <div style="margin-bottom:20px;">
+        <a href="/admin/dashboard"
+           style="background:#343a40;
+                  color:white;
+                  padding:8px 14px;
+                  text-decoration:none;
+                  border-radius:4px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
     <h2>Product Registration</h2>
 
     <p class="success" th:text="${success}"></p>

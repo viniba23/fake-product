@@ -29,6 +29,11 @@ public class AdminController {
         }
         return "admin-login";
     }
+    
+    @GetMapping("/dashboard")
+    public String showDashboard() {
+        return "admin-dashboard";
+    }
 
     @PostMapping("/login")
     public String login(@RequestParam String email,
