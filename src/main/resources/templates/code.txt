@@ -1,58 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.0.2</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>org.example</groupId>
+	<artifactId>fakeproduct</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>fakeproduct</name>
+	<description>Demo project for Spring Boot</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>21</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-h2console</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+    <groupId>com.google.zxing</groupId>
+    <artifactId>core</artifactId>
+    <version>3.5.3</version>
+</dependency>
+
+<dependency>
+    <groupId>com.google.zxing</groupId>
+    <artifactId>javase</artifactId>
+    <version>3.5.3</version>
+</dependency>
 
 
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Login</title>
-    <style>
-        .container {
-            width: 300px;
-            margin: 50px auto;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #007bff;
-            color: white;
-            border: none;
-        }
-        .error {
-            color: red;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Admin Login</h2>
-        <p th:if="${error}" class="error" th:text="${error}"></p>
-        <form action="/admin/login" method="post">
-            <div class="form-group">
-                <label>Email:</label>
-                <input type="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label>Password:</label>
-                <input type="password" name="password" required>
-            </div>
-            <button type="submit">Login</button>
-        </form>
-        <p><a href="/admin/forgot-password">Forgot password?</a></p>
-    </div>
-</body>
-</html>
- index.html
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+pom.xml
+
 spring.application.name=fakeproduct
 server.port=8080
 
@@ -94,7 +188,8 @@ spring.mail.properties.mail.smtp.ssl.protocols=TLSv1.2
 spring.servlet.multipart.enabled=true
 spring.servlet.multipart.max-file-size=10MB
 spring.servlet.multipart.max-request-size=20MB
- application.properities
+
+application.properities
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -147,7 +242,8 @@ spring.servlet.multipart.max-request-size=20MB
         </form>
     </div>
 </body>
-</html> verify-otp.html
+</html>
+verify-otp.html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -230,7 +326,56 @@ spring.servlet.multipart.max-request-size=20MB
         <p>Already have an account? <a href="/user/login">Login here</a></p>
     </div>
 </body>
-</html> user-register.html
+</html>
+user-register.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Product Details</title>
+
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:800px;
+    margin:30px auto;
+    background:white;
+    padding:20px;
+}
+img {
+    width:150px;
+    height:150px;
+    object-fit:cover;
+    margin:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2 th:text="${product.productName}"></h2>
+
+<p><b>Price:</b> <span th:text="${product.price}"></span></p>
+<p><b>Quantity:</b> <span th:text="${product.quantity}"></span></p>
+<p><b>Manufacturer:</b> <span th:text="${product.manufacturer}"></span></p>
+<p><b>Description:</b> <span th:text="${product.description}"></span></p>
+
+<h3>Images</h3>
+<div>
+    <img th:each="img : ${product.images}"
+         th:src="'data:image/jpeg;base64,' + ${img.base64Image}" />
+</div>
+
+<br>
+<a href="/user/dashboard">⬅ Back</a>
+
+</div>
+
+</body>
+</html>
+user-product-view.html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -292,45 +437,168 @@ spring.servlet.multipart.max-request-size=20MB
         <p>Don't have an account? <a href="/user/register">Register here</a></p>
     </div>
 </body>
-</html> user-login.html
+</html>
+user-login.html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>User Dashboard</title>
-    <style>
-        .container {
-            width: 300px;
-            margin: 50px auto;
-            text-align: center;
-        }
-        .user-info {
-            text-align: left;
-            margin: 20px 0;
-        }
-        .logout-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #dc3545;
-            color: white;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>User Dashboard</title>
+
+<style>
+body {
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f4f6f9;
+}
+
+/* HEADER */
+.header {
+    background:#343a40;
+    color:white;
+    padding:15px 20px;
+    font-size:20px;
+}
+
+/* LAYOUT */
+.wrapper {
+    display:flex;
+    min-height:calc(100vh - 100px);
+}
+
+/* SIDEBAR */
+.sidebar {
+    width:230px;
+    background:#212529;
+    padding-top:20px;
+}
+
+.sidebar h3 {
+    color:white;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.sidebar a {
+    display:block;
+    padding:12px 20px;
+    color:#adb5bd;
+    text-decoration:none;
+}
+
+.sidebar a:hover {
+    background:#495057;
+    color:white;
+}
+
+/* CONTENT */
+.content {
+    flex:1;
+    padding:30px;
+}
+
+/* PRODUCT CARD */
+.card-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:20px;
+}
+
+.card {
+    background:white;
+    border-radius:5px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    padding:15px;
+    text-align:center;
+}
+
+.card img {
+    width:100%;
+    height:150px;
+    object-fit:cover;
+}
+
+.card h4 {
+    margin:10px 0;
+}
+
+.card a {
+    display:inline-block;
+    margin-top:10px;
+    padding:8px 14px;
+    background:#007bff;
+    color:white;
+    text-decoration:none;
+    border-radius:4px;
+}
+
+/* FOOTER */
+.footer {
+    background:#343a40;
+    color:white;
+    text-align:center;
+    padding:10px;
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h2>Welcome to Your Dashboard</h2>
-        <div class="user-info" th:if="${user}">
-            <p>Name: <span th:text="${user.username}"></span></p>
-            <p>Email: <span th:text="${user.email}"></span></p>
-        </div>
-        <a href="/user/logout" class="logout-btn">Logout</a>
+
+<!-- HEADER -->
+<div class="header">
+    Fake Product Identification System – User Panel
+</div>
+
+<div class="wrapper">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h3>USER MENU</h3>
+        <a href="/user/dashboard">Dashboard</a>
+        <a href="/user/scan-qr">Scan QR Code</a>
+        <a href="/user/verify-product">Verify Product</a>
+        <a href="/user/products">View Products</a>
+        <a href="/user/history">Verification History</a>
+        <a href="/logout">Logout</a>
     </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <h2>Welcome, <span th:text="${user.username}"></span></h2>
+        <p>Select a product to view details</p>
+
+        <!-- PRODUCT LIST -->
+        <div class="card-grid">
+
+            <div class="card" th:each="p : ${products}">
+                <img th:if="${p.images != null and #lists.size(p.images) > 0}"
+     th:src="'data:image/jpeg;base64,' + ${p.images[0].base64Image}"
+     alt="Product Image"/>
+
+
+                <h4 th:text="${p.productName}"></h4>
+
+                <a th:href="@{/user/products/view/{id}(id=${p.id})}">
+                    View Product
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    © 2026 Fake Product Identification System | User Module
+</div>
+
 </body>
-</html> user-dashboard.html
+</html>
+user-dashboard.html
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -387,7 +655,42 @@ spring.servlet.multipart.max-request-size=20MB
         </form>
     </div>
 </body>
-</html> reset-password.html
+</html>
+reset-password.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <style>
+        .container {
+            width: 300px;
+            margin: 100px auto;
+            text-align: center;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Our System</h2>
+        <a href="/user/login" class="btn">User Login</a>
+        <a href="/admin/login" class="btn">Admin Login</a>
+    </div>
+</body>
+</html>
+index.html
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -441,7 +744,8 @@ spring.servlet.multipart.max-request-size=20MB
         <p>Remember your password? <a th:href="@{/user/login}">Login here</a></p>
     </div>
 </body>
-</html> forget-password.html
+</html>
+forget-password.html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -478,8 +782,9 @@ img {
 
     <h3>Product Images</h3>
     <div>
-        <img th:each="img : ${product.images}"
-             th:src="'data:image/jpeg;base64,' + ${T(java.util.Base64).getEncoder().encodeToString(img.imageData)}"/>
+       <img th:each="img : ${product.images}"
+     th:src="'data:image/jpeg;base64,' + ${img.base64Image}" />
+
     </div>
 
     <br>
@@ -487,7 +792,8 @@ img {
 </div>
 
 </body>
-</html> admin-view-product.html
+</html>
+admin-view-product.html
 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
@@ -536,7 +842,8 @@ img {
         </form>
     </div>
 </body>
-</html> admin-verify-otp.html
+</html>
+admin-verify-otp.html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -544,7 +851,16 @@ img {
     <title>User Details</title>
 </head>
 <body>
-
+ <div style="margin-bottom:20px;">
+        <a href="/admin/dashboard"
+           style="background:#343a40;
+                  color:white;
+                  padding:8px 14px;
+                  text-decoration:none;
+                  border-radius:4px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
 <h2>User Details</h2>
 
 <p><b>Name:</b> <span th:text="${user.username}"></span></p>
@@ -556,7 +872,9 @@ img {
 <a href="/admin/users">Back</a>
 
 </body>
-</html> admin-user-view.html
+</html>
+admin-user-view.html
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -620,6 +938,17 @@ img {
 <body>
 
 <div class="container">
+
+ <div style="margin-bottom:20px;">
+        <a href="/admin/dashboard"
+           style="background:#343a40;
+                  color:white;
+                  padding:8px 14px;
+                  text-decoration:none;
+                  border-radius:4px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
     <h2>User Management</h2>
 
     <table>
@@ -662,7 +991,40 @@ img {
 </div>
 
 </body>
-</html> admin-user.html
+</html>
+admin-users.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Details</title>
+</head>
+<body>
+ <div style="margin-bottom:20px;">
+        <a href="/admin/dashboard"
+           style="background:#343a40;
+                  color:white;
+                  padding:8px 14px;
+                  text-decoration:none;
+                  border-radius:4px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
+<h2>User Details</h2>
+
+<p><b>Name:</b> <span th:text="${user.username}"></span></p>
+<p><b>Email:</b> <span th:text="${user.email}"></span></p>
+<p><b>Mobile:</b> <span th:text="${user.mobile}"></span></p>
+<p><b>Gender:</b> <span th:text="${user.gender}"></span></p>
+<p><b>Status:</b> <span th:text="${user.active ? 'ACTIVE' : 'INACTIVE'}"></span></p>
+
+<a href="/admin/users">Back</a>
+
+</body>
+</html>
+admin-user-view.html
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -715,7 +1077,86 @@ img {
         </form>
     </div>
 </body>
-</html> admin-reset-password.html
+</html>
+admin-reset-password.html
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>View QR</title>
+</head>
+<body style="text-align:center; padding:40px;">
+
+<h2>Product QR Code</h2>
+
+<img th:src="'data:image/png;base64,' + ${qrImage}" />
+
+<br><br>
+<a href="/admin/qr">⬅ Back</a>
+
+</body>
+</html>
+admin-qr-view.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>QR Code Generation</title>
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container { width:90%; margin:30px auto; background:white; padding:20px; }
+table { width:100%; border-collapse:collapse; }
+th, td { border:1px solid #ddd; padding:10px; text-align:center; }
+th { background:#343a40; color:white; }
+button { padding:6px 12px; background:#007bff; color:white; border:none; }
+.success { color:green; }
+.error { color:red; }
+</style>
+</head>
+
+<body>
+<div class="container">
+ <div style="margin-bottom:20px;">
+        <a href="/admin/dashboard"
+           style="background:#343a40;
+                  color:white;
+                  padding:8px 14px;
+                  text-decoration:none;
+                  border-radius:4px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
+<h2>QR Code Generation</h2>
+
+<p class="success" th:text="${success}"></p>
+<p class="error" th:text="${error}"></p>
+
+<table>
+<tr>
+<th>ID</th>
+<th>Product</th>
+<th>Action</th>
+</tr>
+
+<tr th:each="p : ${products}">
+<td th:text="${p.id}"></td>
+<td th:text="${p.productName}"></td>
+<td>
+<form th:action="@{/admin/qr/generate/{id}(id=${p.id})}" method="post">
+<button type="submit">Generate QR</button>
+</form>
+
+<a th:href="@{/admin/qr/view/{id}(id=${p.id})}"
+   style="margin-left:10px; background:#28a745; padding:6px 12px; color:white;">View</a>
+</td>
+</tr>
+</table>
+</div>
+</body>
+</html>
+admin-qr-generate.html
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -760,7 +1201,16 @@ a {
 
 <div class="container">
     <h2>Manage Products</h2>
-
+ <div style="margin-bottom:20px;">
+        <a href="/admin/dashboard"
+           style="background:#343a40;
+                  color:white;
+                  padding:8px 14px;
+                  text-decoration:none;
+                  border-radius:4px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
     <table>
         <thead>
             <tr>
@@ -786,6 +1236,7 @@ a {
                 <td>
                     <a th:href="@{/admin/products/view/{id}(id=${p.id})}" class="view">View</a>
                     <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="edit">Edit</a>
+
                     <a th:href="@{/admin/products/delete/{id}(id=${p.id})}"
                        class="delete"
                        onclick="return confirm('Delete this product?')">Delete</a>
@@ -796,7 +1247,8 @@ a {
 </div>
 
 </body>
-</html> admin-manage-products.html
+</html>
+admin-manage-products.html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -849,8 +1301,8 @@ a {
     </div>
 </body>
 </html>
- admn-login.html
-<!DOCTYPE html>
+ admin-login.html
+ <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -901,7 +1353,105 @@ a {
         <p>Remember your password? <a th:href="@{/admin/login}">Login here</a></p>
     </div>
 </body>
-</html> admin-forget-password.html
+</html>
+admin-forget-password.html
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Edit Product</title>
+<style>
+body { background:#f4f6f9; font-family:Arial; }
+.container {
+    width:650px;
+    margin:40px auto;
+    background:white;
+    padding:25px;
+}
+label { font-weight:bold; display:block; margin-top:10px; }
+input, textarea { width:100%; padding:8px; }
+button {
+    margin-top:20px;
+    padding:10px;
+    width:100%;
+    background:#007bff;
+    color:white;
+    border:none;
+}
+img {
+    width:120px;
+    margin:10px;
+    border:1px solid #ccc;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+ <div style="margin-bottom:20px;">
+        <a href="/admin/dashboard"
+           style="background:#343a40;
+                  color:white;
+                  padding:8px 14px;
+                  text-decoration:none;
+                  border-radius:4px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
+<h2>Edit Product</h2>
+
+<form th:action="@{/admin/products/edit/{id}(id=${product.id})}"
+      method="post"
+      enctype="multipart/form-data">
+
+<label>Product Name</label>
+<input type="text" name="productName" th:value="${product.productName}" required>
+
+<label>Price</label>
+<input type="number" step="0.01" name="price" th:value="${product.price}" required>
+
+<label>Quantity</label>
+<input type="number" name="quantity" th:value="${product.quantity}" required>
+
+<label>Manufacturer</label>
+<input type="text" name="manufacturer" th:value="${product.manufacturer}" required>
+
+<label>Manufacturing Date</label>
+<input type="date" name="manufacturingDate"
+       th:value="${product.manufacturingDate}" required>
+
+<label>Description</label>
+<textarea name="description" th:text="${product.description}"></textarea>
+
+<h3>Current Images</h3>
+
+<div>
+    <div th:each="img : ${product.images}" style="display:inline-block;text-align:center;">
+        <img th:src="'data:image/jpeg;base64,' + ${img.base64Image}" />
+
+        <br>
+        <label>
+            <input type="checkbox" name="removeImageIds" th:value="${img.id}">
+
+            Remove
+        </label>
+    </div>
+</div>
+
+
+<label>Add New Images</label>
+<input type="file" name="images" multiple accept="image/*">
+
+
+<button type="submit">Update Product</button>
+</form>
+
+<a href="/admin/products">⬅ Back</a>
+</div>
+</body>
+</html>
+admin-edit-product.html
+
 <!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -1029,10 +1579,12 @@ a {
     <a href="/admin/products">Manage Products</a>
 
     <!-- Blockchain -->
-    <a href="/admin/blockchain-enroll">Blockchain Product Enrollment</a>
+    <a href="/admin/blockchain">Blockchain Product Enrollment</a>
+
 
     <!-- QR Code -->
-    <a href="/admin/generate-qr">QR Code Generation</a>
+  <a href="/admin/qr">QR Code Generation</a>
+
 
     <!-- Verification -->
     <a href="/admin/verification-logs">Verification Monitoring</a>
@@ -1061,85 +1613,74 @@ a {
 </div>
 
 </body>
-</html> admin-dashboard.html
-<!-- <!DOCTYPE html>
+</html>
+admin-dashboard.html
+
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Product Registration</title>
+<title>Blockchain Product Enrollment</title>
 
 <style>
-body { background:#f4f6f9; font-family:Arial; }
-.container {
-    width:600px; margin:40px auto; background:white;
-    padding:25px; border-radius:5px;
-}
-label { font-weight:bold; margin-top:10px; display:block; }
-input, textarea {
-    width:100%; padding:8px; margin-top:5px;
-}
-button {
-    margin-top:20px; padding:10px; width:100%;
-    background:#007bff; color:white; border:none;
-}
-.success { color:green; }
+body { font-family: Arial; background:#f4f6f9; }
+.container { width:90%; margin:30px auto; background:white; padding:20px; }
+table { width:100%; border-collapse:collapse; }
+th, td { border:1px solid #ddd; padding:10px; text-align:center; }
+th { background:#343a40; color:white; }
+button { padding:6px 12px; background:#28a745; color:white; border:none; }
 .error { color:red; }
+.success { color:green; }
 </style>
-
-<script>
-function validateImages() {
-    const files = document.getElementById("images").files;
-    if (files.length === 0) {
-        alert("Please upload at least one image");
-        return false;
-    }
-    return true;
-}
-</script>
-
 </head>
 
 <body>
 
 <div class="container">
-    <h2>Product Registration</h2>
+ <div style="margin-bottom:20px;">
+        <a href="/admin/dashboard"
+           style="background:#343a40;
+                  color:white;
+                  padding:8px 14px;
+                  text-decoration:none;
+                  border-radius:4px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
+<h2>Blockchain Product Enrollment</h2>
 
-    <p class="success" th:text="${success}"></p>
-    <p class="error" th:text="${error}"></p>
+<p class="success" th:text="${success}"></p>
+<p class="error" th:text="${error}"></p>
 
-    <form th:action="@{/admin/products/add}" 
-          method="post" 
-          enctype="multipart/form-data"
-          onsubmit="return validateImages()">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Product Name</th>
+<th>Manufacturer</th>
+<th>Action</th>
+</tr>
+</thead>
 
-        <label>Product Name</label>
-        <input type="text" name="productName" required>
+<tbody>
+<tr th:each="p : ${products}">
+<td th:text="${p.id}"></td>
+<td th:text="${p.productName}"></td>
+<td th:text="${p.manufacturer}"></td>
+<td>
+<form th:action="@{/admin/blockchain/enroll/{id}(id=${p.id})}" method="post">
+<button type="submit">Enroll</button>
+</form>
+</td>
+</tr>
+</tbody>
+</table>
 
-        <label>Price</label>
-        <input type="number" step="0.01" name="price" required>
-
-        <label>Quantity</label>
-        <input type="number" name="quantity" required>
-
-        <label>Manufacturer</label>
-        <input type="text" name="manufacturer" required>
-
-        <label>Manufacturing Date</label>
-        <input type="date" name="manufacturingDate" required>
-
-        <label>Description</label>
-        <textarea name="description"></textarea>
-
-        <label>Product Images (Multiple)</label>
-        <input type="file" id="images" name="images" multiple accept="image/*">
-
-        <button type="submit">Register Product</button>
-    </form>
 </div>
-
 </body>
 </html>
- -->
+admin-blockchain-entroll.html
+
  <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -1210,6 +1751,16 @@ function removeImageInput(btn) {
 <body>
 
 <div class="container">
+ <div style="margin-bottom:20px;">
+        <a href="/admin/dashboard"
+           style="background:#343a40;
+                  color:white;
+                  padding:8px 14px;
+                  text-decoration:none;
+                  border-radius:4px;">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
     <h2>Product Registration</h2>
 
     <p class="success" th:text="${success}"></p>
@@ -1257,8 +1808,8 @@ function removeImageInput(btn) {
 </body>
 </html>
  admin-add-product.html
-
-com.example.fake.service
+ 
+ org.example.fake.service
 package org.example.fake.service;
 
 import java.time.LocalDateTime;
@@ -1374,35 +1925,164 @@ public class UserService {
         return null;
     }
 }
-userservices.java
+userservice.java
+
 package org.example.fake.service;
 
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.util.Optional;
 
+import org.example.fake.model.BlockchainProduct;
 import org.example.fake.model.Product;
+import org.example.fake.model.ProductQRCode;
+import org.example.fake.repo.BlockchainProductRepository;
+import org.example.fake.repo.ProductQRCodeRepository;
 import org.example.fake.repo.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+
 @Service
+public class QRCodeService {
+	 @Autowired
+	    private ProductRepository productRepo;
+
+	    @Autowired
+	    private BlockchainProductRepository blockchainRepo;
+
+	    @Autowired
+	    private ProductQRCodeRepository qrRepo;
+
+	    public void generateQRCode(Long productId) throws Exception {
+
+	        if (qrRepo.existsByProductId(productId)) {
+	            throw new RuntimeException("QR Code already generated");
+	        }
+
+	        Product product = productRepo.findById(productId)
+	                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+	        BlockchainProduct bc = blockchainRepo.findAll()
+	                .stream()
+	                .filter(b -> b.getProduct().getId().equals(productId))
+	                .findFirst()
+	                .orElseThrow(() -> new RuntimeException("Product not enrolled in blockchain"));
+
+	        String qrData =
+	                "PRODUCT_ID=" + product.getId() +
+	                "|HASH=" + bc.getProductHash();
+
+	        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+	        BitMatrix bitMatrix = qrCodeWriter.encode(qrData, BarcodeFormat.QR_CODE, 250, 250);
+
+	        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+
+	        ProductQRCode qr = new ProductQRCode();
+	        qr.setProduct(product);
+	        qr.setQrImage(outputStream.toByteArray());
+
+	        qrRepo.save(qr);
+	    }
+
+	    public Optional<ProductQRCode> getQRCode(Long productId) {
+	        return qrRepo.findByProductId(productId);
+	    }
+
+}
+qrcodeservice.java
+package org.example.fake.service;
+
+import java.util.Base64;
+import java.util.List;
+
+import org.example.fake.model.Product;
+import org.example.fake.repo.ProductImageRepository;
+import org.example.fake.repo.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
+@Service
+@Transactional
 public class ProductService {
 	@Autowired
     private ProductRepository productRepository;
+	
+	@Autowired
+    private ProductImageRepository productImageRepository ;
 
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
+//    public List<Product> getAllProducts() {
+//        return productRepository.findAll();
+//    }
+//
+//    public Product getProductById(Long id) {
+//        Product product = productRepository.findById(id).orElseThrow();
+//
+//        if (product.getImages() != null) {
+//            product.getImages().forEach(img -> {
+//                String base64 = Base64.getEncoder().encodeToString(img.getImageData());
+//                img.setBase64Image(base64);
+//            });
+//        }
+//
+//        return product;
+//    }
+    
+    // ✅ USED BY DASHBOARDS (ADMIN + USER)
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+
+        List<Product> products = productRepository.findAll();
+
+        for (Product product : products) {
+            if (product.getImages() != null) {
+                product.getImages().forEach(img -> {
+                    img.setBase64Image(
+                        Base64.getEncoder().encodeToString(img.getImageData())
+                    );
+                });
+            }
+        }
+
+        return products;
     }
 
+    // ✅ USED BY VIEW / EDIT PAGES
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow();
-    }
 
+        Product product = productRepository.findById(id).orElseThrow();
+
+        if (product.getImages() != null) {
+            product.getImages().forEach(img -> {
+                img.setBase64Image(
+                    Base64.getEncoder().encodeToString(img.getImageData())
+                );
+            });
+        }
+
+        return product;
+    }
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
-} productservices.java
+    
+
+//    public void deleteImagesByIds(List<Long> imageIds) {
+//        productImageRepository.deleteByIdIn(imageIds);
+//    }
+
+    
+    
+}
+productservice.java
+
 package org.example.fake.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1425,7 +2105,72 @@ public class EmailService {
 	                       "If you didn't request this, please ignore this email.");
 	        mailSender.send(message);
 	    }
-} emailservice.java
+}
+emailservice.java
+
+package org.example.fake.service;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.UUID;
+
+import org.example.fake.model.BlockchainProduct;
+import org.example.fake.model.Product;
+import org.example.fake.repo.BlockchainProductRepository;
+import org.example.fake.repo.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+
+public class BlockchainService {
+
+	@Autowired
+    private BlockchainProductRepository blockchainRepo;
+
+    @Autowired
+    private ProductRepository productRepo;
+
+    public void enrollProduct(Long productId) throws Exception {
+
+        if (blockchainRepo.existsByProductId(productId)) {
+            throw new RuntimeException("Product already enrolled in blockchain");
+        }
+
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        String productHash = generateHash(
+                product.getId() +
+                product.getProductName() +
+                product.getManufacturer() +
+                product.getManufacturingDate()
+        );
+
+        BlockchainProduct bp = new BlockchainProduct();
+        bp.setProduct(product);
+        bp.setProductHash(productHash);
+
+        // 🔹 Simulated blockchain values
+        bp.setBlockNumber("BLOCK-" + UUID.randomUUID().toString().substring(0, 8));
+        bp.setTransactionHash("TX-" + UUID.randomUUID().toString());
+
+        blockchainRepo.save(bp);
+    }
+
+    private String generateHash(String input) throws Exception {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hashBytes = digest.digest(input.getBytes(StandardCharsets.UTF_8));
+
+        StringBuilder hex = new StringBuilder();
+        for (byte b : hashBytes) {
+            hex.append(String.format("%02x", b));
+        }
+        return hex.toString();
+    }
+}
+blockchainservice.java
+
 package org.example.fake.service;
 
 import java.time.LocalDateTime;
@@ -1511,9 +2256,11 @@ public class AdminService {
             tokenRepository.delete(resetToken);
         }
     }
-} adminservices.java
+}
+adminservice.java
 
-com.example.fake.repo
+org.example.fake.repo
+
 package org.example.fake.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -1523,7 +2270,9 @@ import org.example.fake.model.User;
 public interface UserRepository extends JpaRepository<User, Long>{
 	User findByEmailAndPassword(String email, String password);
     User findByEmail(String email);
-} userrepository.java
+}
+userrepository.java
+
 package org.example.fake.repo;
 
 import org.example.fake.model.Product;
@@ -1531,15 +2280,39 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-} productrepository.java
+}
+productrepository.java
 package org.example.fake.repo;
+
+import java.util.Optional;
+
+import org.example.fake.model.ProductQRCode;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductQRCodeRepository extends JpaRepository<ProductQRCode, Long>{
+	boolean existsByProductId(Long productId);
+
+    Optional<ProductQRCode> findByProductId(Long productId);
+}
+productqrcoderepository.java
+
+package org.example.fake.repo;
+
+import java.util.List;
 
 import org.example.fake.model.ProductImage;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+
+import jakarta.transaction.Transactional;
 
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long>{
+//	@Modifying
+//    @Transactional
+//    void deleteByIdIn(List<Long> ids);
+}
+productimagerepository
 
-} productimagerepository.java
 package org.example.fake.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -1560,7 +2333,18 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
     @Transactional
     @Query("DELETE FROM PasswordResetToken t WHERE t.email = ?1")
     void deleteByEmail(String email);
-} passwordresettokenrepository.java
+}
+passwordresettokenrepository.java
+package org.example.fake.repo;
+
+import org.example.fake.model.BlockchainProduct;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BlockchainProductRepository extends JpaRepository<BlockchainProduct, Long>{
+	boolean existsByProductId(Long productId);
+}
+blockchainproductrepository.java
+
 package org.example.fake.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -1571,9 +2355,484 @@ public interface AdminRepository extends JpaRepository<Admin, Long>{
 	Admin findByEmail(String email);
     Admin findByEmailAndPassword(String email, String password);
 
-} adminrepository.java
+}
+adminrepository.java
 
-com.example.fake.model
+org.example.fake.model
+package org.example.fake.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "admin")
+public class Admin {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String email;
+    private String password;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+    
+
+    
+    
+    
+    
+
+}
+admin.java
+
+package org.example.fake.model;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "blockchain_products")
+public class BlockchainProduct {
+	
+	  @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+
+	    private String productHash;
+	    private String blockNumber;
+	    private String transactionHash;
+
+	    private LocalDateTime enrolledAt;
+
+	    @OneToOne
+	    @JoinColumn(name = "product_id")
+	    private Product product;
+
+	    @PrePersist
+	    public void onCreate() {
+	        this.enrolledAt = LocalDateTime.now();
+	    }
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getProductHash() {
+			return productHash;
+		}
+
+		public void setProductHash(String productHash) {
+			this.productHash = productHash;
+		}
+
+		public String getBlockNumber() {
+			return blockNumber;
+		}
+
+		public void setBlockNumber(String blockNumber) {
+			this.blockNumber = blockNumber;
+		}
+
+		public String getTransactionHash() {
+			return transactionHash;
+		}
+
+		public void setTransactionHash(String transactionHash) {
+			this.transactionHash = transactionHash;
+		}
+
+		public LocalDateTime getEnrolledAt() {
+			return enrolledAt;
+		}
+
+		public void setEnrolledAt(LocalDateTime enrolledAt) {
+			this.enrolledAt = enrolledAt;
+		}
+
+		public Product getProduct() {
+			return product;
+		}
+
+		public void setProduct(Product product) {
+			this.product = product;
+		}
+	    
+	    
+	    
+
+}
+blockchainproduct.java
+package org.example.fake.model;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import lombok.Data;
+
+@Data
+@Entity
+public class PasswordResetToken {
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+	    
+	    private String token;
+	    private String email;
+	    private LocalDateTime expiryDate;
+	    
+	    @OneToOne
+	    @JoinColumn(name = "user_id")
+	    private User user;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getToken() {
+			return token;
+		}
+
+		public void setToken(String token) {
+			this.token = token;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
+		public LocalDateTime getExpiryDate() {
+			return expiryDate;
+		}
+
+		public void setExpiryDate(LocalDateTime expiryDate) {
+			this.expiryDate = expiryDate;
+		}
+
+		public User getUser() {
+			return user;
+		}
+
+		public void setUser(User user) {
+			this.user = user;
+		}
+	    
+	    
+	    
+}
+passwordresettoken.java
+package org.example.fake.model;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+
+@Entity
+@Table(name = "products")
+public class Product {
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+
+	    private String productName;
+	    private double price;
+	    private int quantity;
+	    private String manufacturer;
+	    private LocalDate manufacturingDate;
+
+	    @Column(length = 1000)
+	    private String description;
+
+	    private LocalDateTime createdAt;
+
+	    @OneToMany(
+	    	    mappedBy = "product",
+	    	    cascade = CascadeType.ALL,
+	    	    orphanRemoval = true   // ⭐ REQUIRED
+	    	)
+	    	private List<ProductImage> images;
+
+
+	    @PrePersist
+	    public void onCreate() {
+	        this.createdAt = LocalDateTime.now();
+	    }
+
+	    /* getters & setters */
+
+	    public void setImages(List<ProductImage> images) {
+	        this.images = images;
+	    }
+
+	    public List<ProductImage> getImages() {
+	        return images;
+	    }
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getProductName() {
+			return productName;
+		}
+
+		public void setProductName(String productName) {
+			this.productName = productName;
+		}
+
+		public double getPrice() {
+			return price;
+		}
+
+		public void setPrice(double price) {
+			this.price = price;
+		}
+
+		public int getQuantity() {
+			return quantity;
+		}
+
+		public void setQuantity(int quantity) {
+			this.quantity = quantity;
+		}
+
+		public String getManufacturer() {
+			return manufacturer;
+		}
+
+		public void setManufacturer(String manufacturer) {
+			this.manufacturer = manufacturer;
+		}
+
+		public LocalDate getManufacturingDate() {
+			return manufacturingDate;
+		}
+
+		public void setManufacturingDate(LocalDate manufacturingDate) {
+			this.manufacturingDate = manufacturingDate;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public LocalDateTime getCreatedAt() {
+			return createdAt;
+		}
+
+		public void setCreatedAt(LocalDateTime createdAt) {
+			this.createdAt = createdAt;
+		}
+	    
+	    
+}
+product.java
+package org.example.fake.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+
+@Entity
+@Table(name = "product_images")
+public class ProductImage {
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] imageData;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+    
+    @Transient
+    private String base64Image;
+
+    public String getBase64Image() {
+        return base64Image;
+    }
+
+    public void setBase64Image(String base64Image) {
+        this.base64Image = base64Image;
+    }
+
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public byte[] getImageData() {
+		return imageData;
+	}
+
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+    
+    
+}
+
+productimage.java
+
+
+package org.example.fake.model;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "product_qr_codes")
+public class ProductQRCode {
+
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+
+	    @Lob
+	    @Column(columnDefinition = "LONGBLOB")
+	    private byte[] qrImage;
+
+	    @OneToOne
+	    @JoinColumn(name = "product_id")
+	    private Product product;
+
+	    private LocalDateTime createdAt;
+
+	    @PrePersist
+	    public void onCreate() {
+	        this.createdAt = LocalDateTime.now();
+	    }
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public byte[] getQrImage() {
+			return qrImage;
+		}
+
+		public void setQrImage(byte[] qrImage) {
+			this.qrImage = qrImage;
+		}
+
+		public Product getProduct() {
+			return product;
+		}
+
+		public void setProduct(Product product) {
+			this.product = product;
+		}
+
+		public LocalDateTime getCreatedAt() {
+			return createdAt;
+		}
+
+		public void setCreatedAt(LocalDateTime createdAt) {
+			this.createdAt = createdAt;
+		}
+	    
+	    
+	    
+}
+productqrcode.java
+
 package org.example.fake.model;
 
 import java.time.LocalDate;
@@ -1686,295 +2945,49 @@ public class User {
 		this.gender = gender;
 	}
 
-} user.java
-package org.example.fake.model;
+}
+user.java
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+org.example.fake.controller
+package org.example.fake.controller;
 
-@Entity
-@Table(name = "product_images")
-public class ProductImage {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+import org.example.fake.model.User;
+import org.example.fake.service.ProductService;
+import org.example.fake.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] imageData;
+@Controller
+@RequestMapping("/user")
+public class UserProductController {
+	@Autowired
+    private ProductService productService;
+	
+	@Autowired
+	private UserService userService;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @GetMapping("/dashboard")
+    public String dashboard(Model model, Authentication auth) {
 
-	public Long getId() {
-		return id;
-	}
+        User user = userService.findByEmail(auth.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("products", productService.getAllProducts());
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+        return "user-dashboard";
+    }
 
-	public byte[] getImageData() {
-		return imageData;
-	}
-
-	public void setImageData(byte[] imageData) {
-		this.imageData = imageData;
-	}
-
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
-	}
-    
-    
-} productimage.java
-package org.example.fake.model;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-
-@Entity
-@Table(name = "products")
-public class Product {
-	 @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id;
-
-	    private String productName;
-	    private double price;
-	    private int quantity;
-	    private String manufacturer;
-	    private LocalDate manufacturingDate;
-
-	    @Column(length = 1000)
-	    private String description;
-
-	    private LocalDateTime createdAt;
-
-	    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	    private List<ProductImage> images;
-
-
-	    @PrePersist
-	    public void onCreate() {
-	        this.createdAt = LocalDateTime.now();
-	    }
-
-	    /* getters & setters */
-
-	    public void setImages(List<ProductImage> images) {
-	        this.images = images;
-	    }
-
-	    public List<ProductImage> getImages() {
-	        return images;
-	    }
-
-		public Long getId() {
-			return id;
-		}
-
-		public void setId(Long id) {
-			this.id = id;
-		}
-
-		public String getProductName() {
-			return productName;
-		}
-
-		public void setProductName(String productName) {
-			this.productName = productName;
-		}
-
-		public double getPrice() {
-			return price;
-		}
-
-		public void setPrice(double price) {
-			this.price = price;
-		}
-
-		public int getQuantity() {
-			return quantity;
-		}
-
-		public void setQuantity(int quantity) {
-			this.quantity = quantity;
-		}
-
-		public String getManufacturer() {
-			return manufacturer;
-		}
-
-		public void setManufacturer(String manufacturer) {
-			this.manufacturer = manufacturer;
-		}
-
-		public LocalDate getManufacturingDate() {
-			return manufacturingDate;
-		}
-
-		public void setManufacturingDate(LocalDate manufacturingDate) {
-			this.manufacturingDate = manufacturingDate;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public void setDescription(String description) {
-			this.description = description;
-		}
-
-		public LocalDateTime getCreatedAt() {
-			return createdAt;
-		}
-
-		public void setCreatedAt(LocalDateTime createdAt) {
-			this.createdAt = createdAt;
-		}
-	    
-	    
-} product.java
-
-package org.example.fake.model;
-
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import lombok.Data;
-
-@Data
-@Entity
-public class PasswordResetToken {
-	 @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id;
-	    
-	    private String token;
-	    private String email;
-	    private LocalDateTime expiryDate;
-	    
-	    @OneToOne
-	    @JoinColumn(name = "user_id")
-	    private User user;
-
-		public Long getId() {
-			return id;
-		}
-
-		public void setId(Long id) {
-			this.id = id;
-		}
-
-		public String getToken() {
-			return token;
-		}
-
-		public void setToken(String token) {
-			this.token = token;
-		}
-
-		public String getEmail() {
-			return email;
-		}
-
-		public void setEmail(String email) {
-			this.email = email;
-		}
-
-		public LocalDateTime getExpiryDate() {
-			return expiryDate;
-		}
-
-		public void setExpiryDate(LocalDateTime expiryDate) {
-			this.expiryDate = expiryDate;
-		}
-
-		public User getUser() {
-			return user;
-		}
-
-		public void setUser(User user) {
-			this.user = user;
-		}
-	    
-	    
-	    
-} passwordresettoken.java
-package org.example.fake.model;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "admin")
-public class Admin {
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String email;
-    private String password;
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-    
-
-    
-    
-    
-    
-
-} admin.java
-
-com.example.fake.controller
+    @GetMapping("/products/view/{id}")
+    public String viewProduct(@PathVariable Long id, Model model) {
+        model.addAttribute("product", productService.getProductById(id));
+        return "user-product-view";
+    }
+}
+userproductcontroller.java
 
 package org.example.fake.controller;
 
@@ -2011,22 +3024,22 @@ public class UserController {
         return "user-login";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard(Model model, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/user/login";
-        }
-        
-        String email = authentication.getName();
-        User user = userService.findByEmail(email);
-        
-        if (user == null) {
-            return "redirect:/user/login";
-        }
-        
-        model.addAttribute("user", user);
-        return "user-dashboard";
-    }
+//    @GetMapping("/dashboard")
+//    public String dashboard(Model model, Authentication authentication) {
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return "redirect:/user/login";
+//        }
+//        
+//        String email = authentication.getName();
+//        User user = userService.findByEmail(email);
+//        
+//        if (user == null) {
+//            return "redirect:/user/login";
+//        }
+//        
+//        model.addAttribute("user", user);
+//        return "user-dashboard";
+//    }
 
     // Registration
     @GetMapping("/register")
@@ -2130,7 +3143,113 @@ public class UserController {
     }
 
     // Logout is handled by Spring Security config
-} usercontroller.java
+}
+usercontroller.java
+/*
+ * Copyright 2002-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.web.bind.annotation;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.springframework.core.annotation.AliasFor;
+
+/**
+ * Annotation for mapping HTTP {@code POST} requests onto specific handler
+ * methods.
+ *
+ * <p>Specifically, {@code @PostMapping} is a <em>composed annotation</em> that
+ * acts as a shortcut for {@code @RequestMapping(method = RequestMethod.POST)}.
+ *
+ * <p><strong>NOTE:</strong> This annotation cannot be used in conjunction with
+ * other {@code @RequestMapping} annotations that are declared on the same method.
+ * If multiple {@code @RequestMapping} annotations are detected on the same method,
+ * a warning will be logged, and only the first mapping will be used. This applies
+ * to {@code @RequestMapping} as well as composed {@code @RequestMapping} annotations
+ * such as {@code @GetMapping}, {@code @PutMapping}, etc.
+ *
+ * @author Sam Brannen
+ * @since 4.3
+ * @see GetMapping
+ * @see PutMapping
+ * @see DeleteMapping
+ * @see PatchMapping
+ * @see RequestMapping
+ */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@RequestMapping(method = RequestMethod.POST)
+public @interface PostMapping {
+
+	/**
+	 * Alias for {@link RequestMapping#name}.
+	 */
+	@AliasFor(annotation = RequestMapping.class)
+	String name() default "";
+
+	/**
+	 * Alias for {@link RequestMapping#value}.
+	 */
+	@AliasFor(annotation = RequestMapping.class)
+	String[] value() default {};
+
+	/**
+	 * Alias for {@link RequestMapping#path}.
+	 */
+	@AliasFor(annotation = RequestMapping.class)
+	String[] path() default {};
+
+	/**
+	 * Alias for {@link RequestMapping#params}.
+	 */
+	@AliasFor(annotation = RequestMapping.class)
+	String[] params() default {};
+
+	/**
+	 * Alias for {@link RequestMapping#headers}.
+	 */
+	@AliasFor(annotation = RequestMapping.class)
+	String[] headers() default {};
+
+	/**
+	 * Alias for {@link RequestMapping#consumes}.
+	 */
+	@AliasFor(annotation = RequestMapping.class)
+	String[] consumes() default {};
+
+	/**
+	 * Alias for {@link RequestMapping#produces}.
+	 */
+	@AliasFor(annotation = RequestMapping.class)
+	String[] produces() default {};
+
+	/**
+	 * Alias for {@link RequestMapping#version()}.
+	 */
+	@AliasFor(annotation = RequestMapping.class)
+	String version() default "";
+
+}
+qrcodecontroller.java
+
 package org.example.fake.controller;
 
 import java.io.IOException;
@@ -2225,9 +3344,82 @@ public class ProductController {
         productService.deleteProduct(id);
         return "redirect:/admin/products";
     }
+    @GetMapping("/edit/{id}")
+    public String showEditProduct(@PathVariable Long id, Model model) {
+        model.addAttribute("product", productService.getProductById(id));
+        return "admin-edit-product";
+    }
 
 
-} productcontroller.java
+    @PostMapping("/edit/{id}")
+    public String updateProduct(
+            @PathVariable Long id,
+            @RequestParam String productName,
+            @RequestParam double price,
+            @RequestParam int quantity,
+            @RequestParam String manufacturer,
+            @RequestParam LocalDate manufacturingDate,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) List<Long> removeImageIds,
+            @RequestParam(required = false) MultipartFile[] images
+    ) throws Exception {
+
+        Product product = productService.getProductById(id);
+
+        product.setProductName(productName);
+        product.setPrice(price);
+        product.setQuantity(quantity);
+        product.setManufacturer(manufacturer);
+        product.setManufacturingDate(manufacturingDate);
+        product.setDescription(description);
+
+        // ✅ CORRECT WAY TO REMOVE IMAGES
+        if (removeImageIds != null && !removeImageIds.isEmpty()) {
+            product.getImages().removeIf(
+                img -> removeImageIds.contains(img.getId())
+            );
+        }
+
+        // ✅ ADD NEW IMAGES
+        if (images != null) {
+            for (MultipartFile file : images) {
+                if (!file.isEmpty()) {
+                    ProductImage img = new ProductImage();
+                    img.setImageData(file.getBytes());
+                    img.setProduct(product);
+                    product.getImages().add(img);
+                }
+            }
+        }
+
+        productService.saveProduct(product);
+        return "redirect:/admin/products";
+    }
+
+
+
+}
+productcontroller.java
+package org.example.fake.controller;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class LoginSuccessController {
+	@GetMapping("/default-success")
+    public String loginSuccess(Authentication authentication) {
+
+        if (authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return "redirect:/admin/dashboard";
+        }
+
+        return "redirect:/user/dashboard";
+    }
+}
+loginsuccescontroller.java
 package org.example.fake.controller;
 
 import org.springframework.stereotype.Controller;
@@ -2241,6 +3433,48 @@ public class HomeController {
     }
 }
 homecontroller.java
+package org.example.fake.controller;
+
+import org.example.fake.service.BlockchainService;
+import org.example.fake.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/admin/blockchain")
+public class BlockchainController {
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private BlockchainService blockchainService;
+
+    @GetMapping
+    public String showBlockchainPage(Model model) {
+        model.addAttribute("products", productService.getAllProducts());
+        return "admin-blockchain-enroll";
+    }
+
+    @PostMapping("/enroll/{id}")
+    public String enrollProduct(@PathVariable Long id, Model model) {
+        try {
+            blockchainService.enrollProduct(id);
+            model.addAttribute("success", "Product enrolled in blockchain successfully");
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+
+        model.addAttribute("products", productService.getAllProducts());
+        return "admin-blockchain-enroll";
+    }
+}
+blockchancontroller.java
 package org.example.fake.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2271,6 +3505,11 @@ public class AdminController {
             model.addAttribute("error", "Invalid credentials");
         }
         return "admin-login";
+    }
+    
+    @GetMapping("/dashboard")
+    public String showDashboard() {
+        return "admin-dashboard";
     }
 
     @PostMapping("/login")
@@ -2386,9 +3625,9 @@ public class AdminController {
         return "admin-user-view";
     }
 }
-admincontroller.java
+admincontoller.java
 
-com.example.fake.config
+org.example.fake.config
 package org.example.fake.config;
 
 import org.springframework.context.annotation.Bean;
@@ -2423,12 +3662,16 @@ public class ThymeleafConfig {
         viewResolver.setCharacterEncoding("UTF-8");
         return viewResolver;
     }
-} thymeleafconfig.java
+}
+thymeleadconfig.java
+
 package org.example.fake.config;
 
 import java.util.Collections;
 
+import org.example.fake.model.Admin;
 import org.example.fake.model.User;
+import org.example.fake.repo.AdminRepository;
 import org.example.fake.repo.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -2447,18 +3690,16 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
 
-    @Bean
+	@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
 
-            // 🚨 VERY IMPORTANT
-            .securityMatcher("/**")
-
+            // 🚨 CRITICAL FIX
             .authorizeHttpRequests(auth -> auth
 
-                // ✅ ADMIN MODULE (IGNORED BY SECURITY)
+                // ✅ FULL ADMIN MODULE FREE ACCESS
                 .requestMatchers("/admin/**").permitAll()
 
                 // ✅ PUBLIC USER PAGES
@@ -2473,13 +3714,15 @@ public class SecurityConfig {
                         "/js/**"
                 ).permitAll()
 
-                // 🔐 USER DASHBOARD ONLY
-                .requestMatchers("/user/dashboard").authenticated()
+                // 🔐 USER DASHBOARD PROTECTED
+//                .requestMatchers("/user/dashboard").authenticated()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user/**").hasRole("USER")
 
                 .anyRequest().authenticated()
             )
 
-            // USER LOGIN ONLY
+            // USER LOGIN (ONLY USER)
             .formLogin(form -> form
                 .loginPage("/user/login")
                 .loginProcessingUrl("/user/login")
@@ -2488,11 +3731,11 @@ public class SecurityConfig {
             )
 
             .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/user/login?logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-            );
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                );
 
         return http.build();
     }
@@ -2502,180 +3745,61 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
+//    @Bean
+//    public UserDetailsService userDetailsService(UserRepository userRepository) {
+//        return username -> {
+//            User user = userRepository.findByEmail(username);
+//
+//            if (user == null) {
+//                throw new UsernameNotFoundException("User not found");
+//            }
+//
+//            else if (!user.isActive()) {
+//                throw new UsernameNotFoundException("Account not activated by admin");
+//            }
+//
+//            return new org.springframework.security.core.userdetails.User(
+//                user.getEmail(),
+//                user.getPassword(),
+//                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+//            );
+//        };
+//    }
+    
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
+    public UserDetailsService userDetailsService(UserRepository userRepository,
+                                                 AdminRepository adminRepository) {
+
         return username -> {
+
+            // First check Admin
+            Admin admin = adminRepository.findByEmail(username);
+            if (admin != null) {
+                return new org.springframework.security.core.userdetails.User(
+                        admin.getEmail(),
+                        admin.getPassword(),
+                        Collections.singletonList(
+                                new SimpleGrantedAuthority("ROLE_ADMIN")
+                        )
+                );
+            }
+
+            // Then check User
             User user = userRepository.findByEmail(username);
-
-            if (user == null) {
-                throw new UsernameNotFoundException("User not found");
+            if (user != null && user.isActive()) {
+                return new org.springframework.security.core.userdetails.User(
+                        user.getEmail(),
+                        user.getPassword(),
+                        Collections.singletonList(
+                                new SimpleGrantedAuthority("ROLE_USER")
+                        )
+                );
             }
 
-            else if (!user.isActive()) {
-                throw new UsernameNotFoundException("Account not activated by admin");
-            }
-
-            return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-            );
+            throw new UsernameNotFoundException("User not found");
         };
     }
 
-} securityconfig.java
-
-com.example.fake
-FakeproductApplication.java
-package org.example.fake;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class FakeproductApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(FakeproductApplication.class, args);
-	}
 
 }
-
-
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.2</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>org.example</groupId>
-	<artifactId>fakeproduct</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>fakeproduct</name>
-	<description>Demo project for Spring Boot</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
-	<properties>
-		<java.version>21</java.version>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-h2console</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webmvc-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-crypto</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
-
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
-</project>
-pom.xml
+securityconfig.java

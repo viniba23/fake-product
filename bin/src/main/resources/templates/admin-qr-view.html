@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>View QR</title>
+</head>
+<body style="text-align:center; padding:40px;">
+
+<h2>Product QR Code</h2>
+
+<img th:src="'data:image/png;base64,' + ${qrImage}" />
+
+<br><br>
+<a href="/admin/qr">⬅ Back</a>
+
+</body>
+</html>
