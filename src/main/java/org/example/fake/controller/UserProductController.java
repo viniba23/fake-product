@@ -1,6 +1,11 @@
 package org.example.fake.controller;
 
+import java.util.Base64;
+import java.util.Optional;
+
+import org.example.fake.model.Product;
 import org.example.fake.model.User;
+import org.example.fake.repo.ProductQRCodeRepository;
 import org.example.fake.service.ProductService;
 import org.example.fake.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +35,33 @@ public class UserProductController {
         return "user-dashboard";
     }
 
+//    @GetMapping("/products/view/{id}")
+//    public String viewProduct(@PathVariable Long id, Model model) {
+//        model.addAttribute("product", productService.getProductById(id));
+//        return "user-product-view";
+//    }
+    @Autowired
+    private ProductQRCodeRepository qrRepo;
+
     @GetMapping("/products/view/{id}")
     public String viewProduct(@PathVariable Long id, Model model) {
-        model.addAttribute("product", productService.getProductById(id));
+
+        Product product = productService.getProductById(id);
+
+        if (product == null) {
+            return "redirect:/user/dashboard";
+        }
+
+        model.addAttribute("product", product);
+
+        // Load QR if exists
+        qrRepo.findByProductId(id).ifPresent(qr -> {
+            model.addAttribute("qrImage",
+                    Base64.getEncoder().encodeToString(qr.getQrImage()));
+        });
+
         return "user-product-view";
     }
+
+    
 }

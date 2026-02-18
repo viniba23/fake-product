@@ -37,6 +37,20 @@ img {
     <img th:each="img : ${product.images}"
          th:src="'data:image/jpeg;base64,' + ${img.base64Image}" />
 </div>
+<h3>Product QR Code</h3>
+
+<div th:if="${qrImage != null}">
+    <img th:src="'data:image/png;base64,' + ${qrImage}" />
+
+    <br><br>
+
+    <a th:href="'data:image/png;base64,' + ${qrImage}"
+       download="product-qr.png"
+       style="padding:8px 15px;background:#007bff;color:white;text-decoration:none;">
+        Download QR
+    </a>
+</div>
+
 
 <br>
 <a href="/user/dashboard">⬅ Back</a>
