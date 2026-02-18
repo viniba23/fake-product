@@ -1,7 +1,9 @@
 package org.example.fake.controller;
 
-import java.io.IOException;
+import java.awt.image.BufferedImage;
 import java.util.Optional;
+
+import javax.imageio.ImageIO;
 
 import org.example.fake.model.BlockchainProduct;
 import org.example.fake.model.Product;
@@ -16,9 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 
 @Controller
 @RequestMapping("/user")
@@ -36,7 +35,7 @@ public class UserQRController {
         return "user-scan-qr";
     }
 
-    // Handle uploaded QR
+    // Upload QR Image Scan
     @PostMapping("/scan-qr")
     public String scanQR(@RequestParam("file") MultipartFile file,
                          Model model) {
@@ -55,9 +54,28 @@ public class UserQRController {
             Result result =
                     new MultiFormatReader().decode(bitmap);
 
-            String qrText = result.getText();
+            return processQR(result.getText(), model);
 
-            // Example:
+        } catch (Exception e) {
+            model.addAttribute("error", "Invalid QR Code");
+            return "user-scan-result";
+        }
+    }
+
+    // Live Camera Scan
+    @GetMapping("/scan-qr-live")
+    public String scanLive(@RequestParam("data") String qrText,
+                           Model model) {
+
+        return processQR(qrText, model);
+    }
+
+    // Common QR Processing Logic
+    private String processQR(String qrText, Model model) {
+
+        try {
+
+            // Expected Format:
             // PRODUCT_ID=1|HASH=abc123
 
             String[] parts = qrText.split("\\|");
@@ -77,9 +95,7 @@ public class UserQRController {
             }
 
             Optional<BlockchainProduct> bcOpt =
-                    blockchainRepo.findAll().stream()
-                    .filter(b -> b.getProduct().getId().equals(productId))
-                    .findFirst();
+                    blockchainRepo.findByProduct_Id(productId);
 
             if (bcOpt.isEmpty()) {
                 model.addAttribute("error",
@@ -87,7 +103,8 @@ public class UserQRController {
                 return "user-scan-result";
             }
 
-            if (bcOpt.get().getProductHash().equals(scannedHash)) {
+            if (bcOpt.get().getProductHash()
+                    .equals(scannedHash)) {
 
                 model.addAttribute("success",
                         "AUTHENTIC PRODUCT ✅");
@@ -101,7 +118,7 @@ public class UserQRController {
 
         } catch (Exception e) {
             model.addAttribute("error",
-                    "Invalid QR Code");
+                    "Invalid QR Format!");
         }
 
         return "user-scan-result";

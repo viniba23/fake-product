@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Scan QR Code</title>
@@ -29,3 +29,236 @@
 
 </body>
 </html>
+ -->
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Scan QR Code</title>
+
+    <style>
+        body {
+            text-align:center;
+            padding:40px;
+            font-family:Arial;
+        }
+
+        video {
+            width:350px;
+            border:2px solid #333;
+            border-radius:8px;
+        }
+
+        button {
+            padding:10px 20px;
+            margin-top:15px;
+            background:#007bff;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+
+        button:hover {
+            background:#0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h2>📷 Scan Product QR Code</h2>
+
+<video id="video" autoplay></video>
+<br>
+<button onclick="capture()">Capture & Verify</button>
+
+<br><br>
+<a href="/user/dashboard">⬅ Back</a>
+
+<script>
+
+const video = document.getElementById("video");
+
+// Open Camera
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+    video.srcObject = stream;
+})
+.catch(err => {
+    alert("Camera access denied or not available.");
+});
+
+function capture() {
+
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    context.drawImage(video, 0, 0);
+
+    canvas.toBlob(blob => {
+
+        const formData = new FormData();
+        formData.append("file", blob);
+
+        fetch("/user/scan-qr", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+        });
+
+    }, "image/png");
+}
+
+</script>
+
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Scan QR Code</title>
+
+    <style>
+        body {
+            text-align:center;
+            padding:40px;
+            font-family:Arial;
+        }
+
+        video {
+            width:350px;
+            border:2px solid #333;
+            border-radius:8px;
+        }
+
+        button {
+            padding:10px 20px;
+            margin-top:10px;
+            background:#007bff;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+
+        button:hover {
+            background:#0056b3;
+        }
+
+        .section {
+            margin-top:40px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>📷 Scan Product QR Code</h2>
+
+<!-- ================= CAMERA SECTION ================= -->
+
+<div class="section">
+    <h3>Live Camera Scan</h3>
+
+    <video id="video" autoplay></video>
+    <br>
+    <button onclick="capture()">Capture & Verify</button>
+</div>
+
+<hr style="margin:40px 0;">
+
+<!-- ================= UPLOAD SECTION ================= -->
+
+<div class="section">
+    <h3>Upload QR Image</h3>
+
+    <form id="uploadForm">
+        <input type="file" name="file" id="fileInput"
+               accept="image/*" required>
+        <br>
+        <button type="submit">Upload & Verify</button>
+    </form>
+</div>
+
+<br><br>
+<a href="/user/dashboard">⬅ Back</a>
+
+<script>
+
+// ================= CAMERA =================
+
+const video = document.getElementById("video");
+
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+    video.srcObject = stream;
+})
+.catch(err => {
+    alert("Camera not available.");
+});
+
+function capture() {
+
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    context.drawImage(video, 0, 0);
+
+    canvas.toBlob(blob => {
+
+        sendToServer(blob);
+
+    }, "image/png");
+}
+
+// ================= UPLOAD =================
+
+document.getElementById("uploadForm")
+.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select an image");
+        return;
+    }
+
+    sendToServer(file);
+});
+
+// ================= COMMON SEND FUNCTION =================
+
+function sendToServer(file) {
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch("/user/scan-qr", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.text())
+    .then(html => {
+        document.open();
+        document.write(html);
+        document.close();
+    });
+}
+
+</script>
+
+</body>
+</html>
+
