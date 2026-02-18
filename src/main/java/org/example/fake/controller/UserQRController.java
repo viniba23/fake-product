@@ -123,4 +123,51 @@ public class UserQRController {
 
         return "user-scan-result";
     }
+    
+    @GetMapping("/verify-product")
+    public String showVerifyPage() {
+        return "user-verify-product";
+    }
+
+    @PostMapping("/verify-product")
+    public String verifyProduct(@RequestParam Long productId,
+                                @RequestParam String productHash,
+                                Model model) {
+
+        Optional<Product> productOpt =
+                productRepo.findById(productId);
+
+        if (productOpt.isEmpty()) {
+            model.addAttribute("error",
+                    "Product not found!");
+            return "user-verify-result";
+        }
+
+        Optional<BlockchainProduct> bcOpt =
+                blockchainRepo.findByProduct_Id(productId);
+
+        if (bcOpt.isEmpty()) {
+            model.addAttribute("error",
+                    "Product not enrolled in blockchain!");
+            return "user-verify-result";
+        }
+
+        if (bcOpt.get().getProductHash()
+                .equals(productHash)) {
+
+            model.addAttribute("success",
+                    "AUTHENTIC PRODUCT ✅");
+            model.addAttribute("product",
+                    productOpt.get());
+
+        } else {
+
+            model.addAttribute("error",
+                    "FAKE PRODUCT ❌");
+
+        }
+
+        return "user-verify-result";
+    }
+
 }

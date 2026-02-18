@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Verification Result</title>
+</head>
+<body style="text-align:center;padding:50px;font-family:Arial;">
+
+<h2>Verification Result</h2>
+
+<div th:if="${success}">
+    <h3 style="color:green;" th:text="${success}"></h3>
+
+    <div th:if="${product != null}">
+        <p><strong>Product:</strong>
+            <span th:text="${product.productName}"></span></p>
+    </div>
+</div>
+
+<div th:if="${error}">
+    <h3 style="color:red;" th:text="${error}"></h3>
+</div>
+
+<br><br>
+<a href="/user/dashboard">Go to Dashboard</a>
+
+</body>
+</html>

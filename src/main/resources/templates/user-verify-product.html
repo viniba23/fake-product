@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Verify Product</title>
+
+    <style>
+        body { font-family: Arial; background:#f4f6f9; }
+        .container {
+            width:500px;
+            margin:50px auto;
+            background:white;
+            padding:30px;
+            text-align:center;
+        }
+        input {
+            width:90%;
+            padding:10px;
+            margin:10px 0;
+        }
+        button {
+            padding:10px 20px;
+            background:#007bff;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<h2>Verify Product</h2>
+
+<form th:action="@{/user/verify-product}" method="post">
+
+    <input type="number"
+           name="productId"
+           placeholder="Enter Product ID"
+           required>
+
+    <input type="text"
+           name="productHash"
+           placeholder="Enter Product Hash"
+           required>
+
+    <br>
+    <button type="submit">Verify</button>
+
+</form>
+
+<br>
+<a href="/user/dashboard">⬅ Back</a>
+
+</div>
+
+</body>
+</html>
