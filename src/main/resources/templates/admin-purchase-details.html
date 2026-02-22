@@ -1,0 +1,30 @@
+<h2>All User Purchases</h2>
+
+<table border="1">
+<tr>
+<th> ID</th>
+<th>User Name</th>
+<th>User ID</th>
+<th>Product ID</th>
+<th>Quantity</th>
+<th>Total</th>
+<th>Payment</th>
+<th>Status</th>
+<th>Date</th>
+</tr>
+
+<tr th:each="p : ${purchases}">
+<td th:text="${p.id}"></td>
+<td th:text="${userMap[p.userId]?.username}"></td>
+<td th:text="${p.userId}"></td>
+<td th:text="${p.productId}"></td>
+<td th:text="${p.quantity}"></td>
+<td th:text="${p.totalAmount}"></td>
+<td th:text="${p.paymentMethod}"></td>
+<td th:text="${p.status}"></td>
+<td th:text="${p.purchaseDate}"></td>
+</tr>
+</table>
+
+<br>
+<a href="/admin/dashboard">⬅ Back</a>

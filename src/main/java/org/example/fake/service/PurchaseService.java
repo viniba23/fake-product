@@ -42,4 +42,8 @@ purchaseRepo.save(purchase);
     public List<Purchase> getPurchasesByUser(Long userId) {
         return purchaseRepo.findByUserId(userId);
     }
+    
+    public List<Purchase> getAllPurchases() {
+        return purchaseRepo.findAll();
+    }
 }

@@ -8,9 +8,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.example.fake.model.Cart;
+import org.example.fake.model.Purchase;
 import org.example.fake.model.User;
 import org.example.fake.repo.UserRepository;
 import org.example.fake.service.AdminService;
+import org.example.fake.service.CartService;
+import org.example.fake.service.ProductService;
+import org.example.fake.service.PurchaseService;
+import org.example.fake.service.UserService;
 
 @Controller
 @RequestMapping("/admin")
@@ -20,6 +31,18 @@ public class AdminController {
     
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private CartService cartService;
+
+    @Autowired
+    private PurchaseService purchaseService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
@@ -146,5 +169,41 @@ public class AdminController {
         User user = userRepository.findById(id).orElseThrow();
         model.addAttribute("user", user);
         return "admin-user-view";
+    }
+    
+    @GetMapping("/cart-details")
+    public String viewAllCartDetails(Model model) {
+
+        List<Cart> cartItems = cartService.getAllCartItems();
+
+        Map<Long, User> userMap = new HashMap<>();
+
+        for (Cart c : cartItems) {
+            User user = userService.getUserById(c.getUserId());
+            userMap.put(c.getUserId(), user);
+        }
+
+        model.addAttribute("cartItems", cartItems);
+        model.addAttribute("userMap", userMap);
+
+        return "admin-cart-details";
+    }
+    
+    @GetMapping("/purchase-details")
+    public String viewAllPurchases(Model model) {
+
+        List<Purchase> purchases = purchaseService.getAllPurchases();
+
+        Map<Long, User> userMap = new HashMap<>();
+
+        for (Purchase p : purchases) {
+            User user = userService.getUserById(p.getUserId());
+            userMap.put(p.getUserId(), user);
+        }
+
+        model.addAttribute("purchases", purchases);
+        model.addAttribute("userMap", userMap);
+
+        return "admin-purchase-details";
     }
 }

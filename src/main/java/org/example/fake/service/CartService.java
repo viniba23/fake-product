@@ -55,4 +55,8 @@ public class CartService {
     public void deleteCart(Long cartId) {
         cartRepo.deleteById(cartId);
     }
+    
+    public List<Cart> getAllCartItems() {
+        return cartRepo.findAll();
+    }
 }
