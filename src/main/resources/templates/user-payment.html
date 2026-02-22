@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Page</title>
+    <style>
+        body { font-family:Arial; background:#f4f6f9; }
+        .container {
+            width:500px;
+            margin:40px auto;
+            background:white;
+            padding:30px;
+        }
+        input, select, button {
+            width:100%;
+            padding:10px;
+            margin-top:10px;
+        }
+        .total {
+            font-size:20px;
+            color:green;
+        }
+        .payment-box {
+            display:none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<h2>Complete Payment</h2>
+
+<p><strong>Product:</strong> <span th:text="${product.productName}"></span></p>
+<p><strong>Quantity:</strong> <span th:text="${quantity}"></span></p>
+
+<p class="total">
+Total Amount: ₹ <span th:text="${totalAmount}"></span>
+</p>
+
+<form method="post" th:action="@{/user/process-payment}">
+
+    <input type="hidden" name="productId" th:value="${product.id}">
+    <input type="hidden" name="quantity" th:value="${quantity}">
+    <input type="hidden" name="totalAmount" th:value="${totalAmount}">
+
+    <label>Customer Name</label>
+    <input type="text" name="customerName" required>
+
+    <label>Mobile Number</label>
+    <input type="text" name="mobileNumber" required>
+
+    <label>Delivery Address</label>
+    <input type="text" name="address" required>
+
+    <label>Select Payment Method</label>
+    <select name="paymentMethod" id="paymentMethod" required onchange="showPaymentFields()">
+        <option value="">-- Select --</option>
+        <option value="UPI">UPI</option>
+        <option value="GPAY">Google Pay</option>
+        <option value="CARD">Credit/Debit Card</option>
+        <option value="NETBANKING">Net Banking</option>
+    </select>
+
+    <!-- UPI -->
+    <div id="upiBox" class="payment-box">
+        <label>Enter UPI ID</label>
+        <input type="text" name="upiId" placeholder="example@upi">
+    </div>
+
+    <!-- GPAY -->
+    <div id="gpayBox" class="payment-box">
+        <label>Enter Google Pay Number</label>
+        <input type="text" name="gpayNumber" placeholder="10-digit mobile">
+    </div>
+
+    <!-- CARD -->
+    <div id="cardBox" class="payment-box">
+        <label>Card Number</label>
+        <input type="text" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX">
+
+        <label>Expiry Date</label>
+        <input type="text" name="expiry" placeholder="MM/YY">
+
+        <label>CVV</label>
+        <input type="password" name="cvv" placeholder="123">
+    </div>
+
+    <!-- NETBANKING -->
+    <div id="netBankingBox" class="payment-box">
+        <label>Select Bank</label>
+        <select name="bankName">
+            <option value="SBI">SBI</option>
+            <option value="HDFC">HDFC</option>
+            <option value="ICICI">ICICI</option>
+            <option value="Axis">Axis Bank</option>
+        </select>
+    </div>
+
+    <button type="submit">Pay Now</button>
+
+</form>
+
+</div>
+
+<script>
+function showPaymentFields() {
+
+    let method = document.getElementById("paymentMethod").value;
+
+    document.getElementById("upiBox").style.display = "none";
+    document.getElementById("gpayBox").style.display = "none";
+    document.getElementById("cardBox").style.display = "none";
+    document.getElementById("netBankingBox").style.display = "none";
+
+    if(method === "UPI") {
+        document.getElementById("upiBox").style.display = "block";
+    }
+    else if(method === "GPAY") {
+        document.getElementById("gpayBox").style.display = "block";
+    }
+    else if(method === "CARD") {
+        document.getElementById("cardBox").style.display = "block";
+    }
+    else if(method === "NETBANKING") {
+        document.getElementById("netBankingBox").style.display = "block";
+    }
+}
+</script>
+
+</body>
+</html>

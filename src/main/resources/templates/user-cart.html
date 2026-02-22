@@ -1,0 +1,50 @@
+<h2>My Cart</h2>
+
+<table border="1">
+<tr>
+<th>ID</th>
+<th>Product</th>
+<th>Product id</th>
+<th>Price</th>
+<th>Quantity</th>
+<th>Total</th>
+<th>Actions</th>
+</tr>
+
+<tr th:each="item : ${cartItems}">
+<td th:text="${item.id}"></td>
+
+<td th:text="${item.product.productName}"></td>
+<td th:text="${item.product.id}"></td>
+
+<td th:text="${item.product.price}"></td>
+
+<td th:text="${item.quantity}"></td>
+
+<td th:text="${item.product.price * item.quantity}"></td>
+
+<td>
+
+    <!-- BUY NOW BUTTON -->
+    <form th:action="@{/user/cart/buy}" method="post" style="display:inline;">
+        <input type="hidden" name="cartId" th:value="${item.id}">
+        <button type="submit" style="background:green;color:white;">
+            Buy Now
+        </button>
+    </form>
+
+    <!-- REMOVE BUTTON -->
+    <form th:action="@{/user/cart/remove}" method="post" style="display:inline;">
+        <input type="hidden" name="cartId" th:value="${item.id}">
+        <button type="submit" style="background:red;color:white;">
+            Remove
+        </button>
+    </form>
+
+</td>
+
+</tr>
+</table>
+
+<br>
+<a href="/user/dashboard">⬅ Back</a>

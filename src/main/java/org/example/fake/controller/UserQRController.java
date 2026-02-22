@@ -70,12 +70,66 @@ public class UserQRController {
         return processQR(qrText, model);
     }
 
-    // Common QR Processing Logic
+//    // Common QR Processing Logic
+//    private String processQR(String qrText, Model model) {
+//
+//        try {
+//
+//            // Expected Format:
+//            // PRODUCT_ID=1|HASH=abc123
+//
+//            String[] parts = qrText.split("\\|");
+//
+//            Long productId =
+//                    Long.parseLong(parts[0].split("=")[1]);
+//
+//            String scannedHash =
+//                    parts[1].split("=")[1];
+//
+//            Optional<Product> productOpt =
+//                    productRepo.findById(productId);
+//
+//            if (productOpt.isEmpty()) {
+//                model.addAttribute("error", "Product not found!");
+//                return "user-scan-result";
+//            }
+//
+//            Optional<BlockchainProduct> bcOpt =
+//                    blockchainRepo.findByProduct_Id(productId);
+//
+//            if (bcOpt.isEmpty()) {
+//                model.addAttribute("error",
+//                        "Product not enrolled in blockchain!");
+//                return "user-scan-result";
+//            }
+//
+//            if (bcOpt.get().getProductHash()
+//                    .equals(scannedHash)) {
+//
+//                model.addAttribute("success",
+//                        "AUTHENTIC PRODUCT ✅");
+//                model.addAttribute("product",
+//                        productOpt.get());
+//
+//            } else {
+//                model.addAttribute("error",
+//                        "FAKE PRODUCT ❌");
+//            }
+//
+//        } catch (Exception e) {
+//            model.addAttribute("error",
+//                    "Invalid QR Format!");
+//        }
+//
+//        return "user-scan-result";
+//    }
+//    
+    
     private String processQR(String qrText, Model model) {
 
         try {
 
-            // Expected Format:
+            // Expected format:
             // PRODUCT_ID=1|HASH=abc123
 
             String[] parts = qrText.split("\\|");
@@ -103,27 +157,43 @@ public class UserQRController {
                 return "user-scan-result";
             }
 
-            if (bcOpt.get().getProductHash()
-                    .equals(scannedHash)) {
+            String originalHash = bcOpt.get().getProductHash();
+
+            if (originalHash.equals(scannedHash)) {
 
                 model.addAttribute("success",
                         "AUTHENTIC PRODUCT ✅");
+
                 model.addAttribute("product",
                         productOpt.get());
 
+                model.addAttribute("productId",
+                        productId);
+
+                model.addAttribute("blockchainHash",
+                        originalHash);
+
             } else {
+
                 model.addAttribute("error",
                         "FAKE PRODUCT ❌");
+
+                model.addAttribute("productId",
+                        productId);
+
+                model.addAttribute("blockchainHash",
+                        scannedHash);
             }
 
         } catch (Exception e) {
+
             model.addAttribute("error",
                     "Invalid QR Format!");
+
         }
 
         return "user-scan-result";
     }
-    
     @GetMapping("/verify-product")
     public String showVerifyPage() {
         return "user-verify-product";

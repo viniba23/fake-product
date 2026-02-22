@@ -2,8 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Verification Result</title>
+
+    <style>
+        body { text-align:center; padding:50px; font-family:Arial; }
+        .btn {
+            padding:10px 20px;
+            background:#007bff;
+            color:white;
+            text-decoration:none;
+            border:none;
+            cursor:pointer;
+        }
+    </style>
 </head>
-<body style="text-align:center;padding:50px;font-family:Arial;">
+<body>
 
 <h2>Verification Result</h2>
 
@@ -13,6 +25,14 @@
     <div th:if="${product != null}">
         <p><strong>Product:</strong>
             <span th:text="${product.productName}"></span></p>
+
+        <br>
+
+        <!-- Purchase Button -->
+        <a th:href="@{/user/products/purchase/{id}(id=${product.id})}"
+           class="btn">
+            Purchase Product
+        </a>
     </div>
 </div>
 

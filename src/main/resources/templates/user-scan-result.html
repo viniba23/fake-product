@@ -1,26 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Scan Result</title>
+    <title>Verification Result</title>
+
+    <style>
+        body { font-family: Arial; text-align:center; padding:50px; }
+        .box {
+            width:500px;
+            margin:auto;
+            padding:30px;
+            background:white;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+        .success { color:green; }
+        .error { color:red; }
+        .info {
+            text-align:left;
+            margin-top:20px;
+        }
+        .hash-box {
+            word-break: break-all;
+            background:#f4f6f9;
+            padding:10px;
+            font-size:12px;
+        }
+    </style>
 </head>
-<body style="text-align:center;padding:50px;font-family:Arial;">
+<body>
+
+<div class="box">
 
 <h2>Verification Result</h2>
 
 <div th:if="${success}">
-    <h3 style="color:green;" th:text="${success}"></h3>
-    <div th:if="${product != null}">
-        <p><strong>Product:</strong>
+    <h3 class="success" th:text="${success}"></h3>
+
+    <div class="info">
+        <p><strong>Product Name:</strong>
             <span th:text="${product.productName}"></span></p>
+
+        <p><strong>Product ID:</strong>
+            <span th:text="${productId}"></span></p>
+
+        <p><strong>Blockchain Hash:</strong></p>
+        <div class="hash-box"
+             th:text="${blockchainHash}">
+        </div>
     </div>
 </div>
 
 <div th:if="${error}">
-    <h3 style="color:red;" th:text="${error}"></h3>
+    <h3 class="error" th:text="${error}"></h3>
 </div>
 
 <br><br>
 <a href="/user/dashboard">Go to Dashboard</a>
+
+</div>
 
 </body>
 </html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Purchase Product</title>
+
+    <style>
+        body { font-family:Arial; background:#f4f6f9; }
+        .container {
+            width:700px;
+            margin:30px auto;
+            background:white;
+            padding:30px;
+        }
+        img {
+            width:150px;
+            height:150px;
+            object-fit:cover;
+            margin:10px;
+        }
+        input {
+            width:60px;
+            padding:5px;
+        }
+        button {
+            padding:10px 20px;
+            background:#007bff;
+            color:white;
+            border:none;
+            cursor:pointer;
+            margin:10px 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<h2 th:text="${product.productName}"></h2>
+
+<p><b>Price:</b> <span th:text="${product.price}"></span></p>
+<p><b>Available Quantity:</b> <span th:text="${product.quantity}"></span></p>
+<p><b>Manufacturer:</b> <span th:text="${product.manufacturer}"></span></p>
+<p><b>Description:</b> <span th:text="${product.description}"></span></p>
+
+<h3>Images</h3>
+<div>
+    <img th:each="img : ${product.images}"
+         th:src="'data:image/jpeg;base64,' + ${img.base64Image}" />
+</div>
+
+<hr>
+
+<div th:if="${product.quantity > 0}">
+
+    <!-- ADD TO CART -->
+    <form method="post" th:action="@{/user/cart/add}">
+        <input type="hidden" name="productId"
+               th:value="${product.id}" />
+
+        <label>Quantity:</label>
+        <input type="number" name="quantity"
+               min="1"
+               th:attr="max=${product.quantity}"
+               value="1" required>
+
+        <br><br>
+
+        <button type="submit">Add to Cart</button>
+    </form>
+
+    <!-- BUY NOW -->
+    <form method="post" th:action="@{/user/buy-now}">
+        <input type="hidden" name="productId"
+               th:value="${product.id}" />
+
+        <input type="number" name="quantity"
+               min="1"
+               th:attr="max=${product.quantity}"
+               value="1" required>
+
+        <br><br>
+
+        <button type="submit">Buy Now</button>
+    </form>
+
+</div>
+
+<!-- OUT OF STOCK MESSAGE -->
+<div th:if="${product.quantity == 0}">
+    <h3 style="color:red;">Out of Stock ❌</h3>
+</div>
+
+<br>
+<a href="/user/dashboard">⬅ Back</a>
+
+</div>
+
+</body>
+</html>
