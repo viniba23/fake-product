@@ -14,13 +14,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.example.fake.model.Cart;
+import org.example.fake.model.Product;
 import org.example.fake.model.Purchase;
+import org.example.fake.model.Review;
 import org.example.fake.model.User;
 import org.example.fake.repo.UserRepository;
 import org.example.fake.service.AdminService;
 import org.example.fake.service.CartService;
 import org.example.fake.service.ProductService;
 import org.example.fake.service.PurchaseService;
+import org.example.fake.service.ReviewService;
 import org.example.fake.service.UserService;
 
 @Controller
@@ -43,7 +46,8 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private ReviewService reviewService;
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
                            Model model) {
@@ -205,5 +209,36 @@ public class AdminController {
         model.addAttribute("userMap", userMap);
 
         return "admin-purchase-details";
+    }
+    
+    @GetMapping("/reviews")
+    public String viewPendingReviews(Model model) {
+
+        List<Review> reviews = reviewService.getPendingReviews();
+
+        Map<Long, User> userMap = new HashMap<>();
+        Map<Long, Product> productMap = new HashMap<>();
+
+        for (Review r : reviews) {
+            userMap.put(r.getUserId(),
+                    userService.getUserById(r.getUserId()));
+
+            productMap.put(r.getProductId(),
+                    productService.getProductById(r.getProductId()));
+        }
+
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("userMap", userMap);
+        model.addAttribute("productMap", productMap);
+
+        return "admin-review-list";
+    }
+    
+    @PostMapping("/reviews/approve")
+    public String approveReview(@RequestParam Long reviewId) {
+
+        reviewService.approveReview(reviewId);
+
+        return "redirect:/admin/reviews";
     }
 }

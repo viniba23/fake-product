@@ -50,7 +50,28 @@ img {
         Download QR
     </a>
 </div>
+<h3>Customer Reviews</h3>
 
+<div th:if="${reviews != null and !reviews.isEmpty()}">
+
+    <div th:each="review : ${reviews}" 
+         style="border-bottom:1px solid #ddd;padding:10px 0;">
+
+        <p>
+            <b th:text="${review.rating} + ' ⭐'"></b>
+        </p>
+
+        <p th:text="${review.comment}"></p>
+
+        <small th:text="${review.reviewDate}"></small>
+
+    </div>
+
+</div>
+
+<div th:if="${reviews == null or reviews.isEmpty()}">
+    <p>No reviews yet.</p>
+</div>
 
 <br>
 <a href="/user/dashboard">⬅ Back</a>

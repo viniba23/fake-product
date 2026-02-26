@@ -8,6 +8,7 @@ import java.util.List;
 import org.example.fake.model.Product;
 import org.example.fake.model.ProductImage;
 import org.example.fake.service.ProductService;
+import org.example.fake.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductController {
 	@Autowired
     private ProductService productService;
+	
+	@Autowired
+	private ReviewService reviewService;
 
     @GetMapping("/add")
     public String showAddProductPage() {
@@ -81,12 +85,16 @@ public class ProductController {
         return "admin-manage-products";
     }
 
+//    @GetMapping("/view/{id}")
+//    public String viewProduct(@PathVariable Long id, Model model) {
+//        model.addAttribute("product", productService.getProductById(id));
+//        return "admin-view-product";
+//    }
     @GetMapping("/view/{id}")
     public String viewProduct(@PathVariable Long id, Model model) {
         model.addAttribute("product", productService.getProductById(id));
         return "admin-view-product";
     }
-
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);

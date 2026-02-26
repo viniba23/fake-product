@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Pending Reviews</title>
+<style>
+body { font-family:Arial; padding:40px; background:#f4f6f9; }
+table { width:100%; background:white; }
+th { background:#343a40; color:white; padding:10px; }
+td { padding:10px; text-align:center; }
+img { width:60px; height:60px; object-fit:cover; border-radius:6px; }
+button { padding:5px 10px; background:green; color:white; border:none; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<h2>Pending Product Reviews</h2>
+
+<table border="1">
+<tr>
+<th>ID</th>
+<th>User Name</th>
+<th>Email</th>
+<th>Product</th>
+<th>Image</th>
+<th>Rating</th>
+<th>Comment</th>
+<th>Action</th>
+</tr>
+
+<tr th:each="r : ${reviews}">
+
+<td th:text="${r.id}"></td>
+
+<!-- User Details -->
+<td th:text="${userMap[r.userId]?.username}"></td>
+<td th:text="${userMap[r.userId]?.email}"></td>
+
+<!-- Product Details -->
+<td th:text="${productMap[r.productId]?.productName}"></td>
+
+<td>
+    <img th:if="${productMap[r.productId] != null 
+                 and productMap[r.productId].images != null 
+                 and !productMap[r.productId].images.isEmpty()}"
+         th:src="'data:image/jpeg;base64,' + ${productMap[r.productId].images[0].base64Image}">
+</td>
+
+<td th:text="${r.rating} + ' ⭐'"></td>
+<td th:text="${r.comment}"></td>
+
+<td>
+    <form method="post" th:action="@{/admin/reviews/approve}">
+        <input type="hidden" name="reviewId" th:value="${r.id}">
+        <button type="submit">Approve</button>
+    </form>
+</td>
+
+</tr>
+
+</table>
+<hr>
+<h3>Approved Reviews</h3>
+
+<p>
+    <b>Average Rating:</b>
+    <span th:text="${averageRating}"></span> ⭐
+    (<span th:text="${reviewCount}"></span> Reviews)
+</p>
+
+<div th:if="${reviews != null and !reviews.isEmpty()}">
+
+    <div th:each="review : ${reviews}"
+         style="border-bottom:1px solid #ddd;padding:10px 0;">
+
+        <p>
+            <b th:text="${review.rating} + ' ⭐'"></b>
+        </p>
+
+        <p th:text="${review.comment}"></p>
+
+        <small th:text="${review.reviewDate}"></small>
+
+    </div>
+
+</div>
+
+<div th:if="${reviews == null or reviews.isEmpty()}">
+    <p>No approved reviews yet.</p>
+</div>
+<br>
+<a href="/admin/dashboard">⬅ Back</a>
+
+</body>
+</html>

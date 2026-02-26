@@ -102,7 +102,10 @@ a:hover {
 <body>
 
 <h2>My Purchases</h2>
-
+<div th:if="${param.reviewed}" 
+     style="color:red;text-align:center;margin-bottom:15px;">
+    You already reviewed this product.
+</div>
 <table border="1">
 <tr>
 <th>ID</th>
@@ -114,6 +117,7 @@ a:hover {
 <th>Payment</th>
 <th>Status</th>
 <th>Date</th>
+<th>Review</th>
 </tr>
 
 <tr th:each="p : ${purchases}">
@@ -144,6 +148,13 @@ a:hover {
     </span>
 </td>
     <td th:text="${p.purchaseDate}"></td>
+   <td>
+    <a th:if="${p.status == 'SUCCESS'}"
+       th:href="@{'/user/review/' + ${p.productId}}"
+       style="background:#4a90e2;color:white;padding:6px 12px;border-radius:6px;text-decoration:none;">
+        Write Review
+    </a>
+</td>
 
 </tr>
 

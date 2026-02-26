@@ -9,11 +9,13 @@ import java.util.Optional;
 import org.example.fake.model.Cart;
 import org.example.fake.model.Product;
 import org.example.fake.model.Purchase;
+import org.example.fake.model.Review;
 import org.example.fake.model.User;
 import org.example.fake.repo.ProductQRCodeRepository;
 import org.example.fake.service.CartService;
 import org.example.fake.service.ProductService;
 import org.example.fake.service.PurchaseService;
+import org.example.fake.service.ReviewService;
 import org.example.fake.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -30,13 +32,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserProductController {
 	@Autowired
     private ProductService productService;
-	
+	@Autowired
+	private ReviewService reviewService;
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private PurchaseService purchaseService;
 	@Autowired
 	private CartService cartService;
+	
+	
     @GetMapping("/dashboard")
     public String dashboard(Model model, Authentication auth) {
 
@@ -55,25 +60,25 @@ public class UserProductController {
     @Autowired
     private ProductQRCodeRepository qrRepo;
 
-    @GetMapping("/products/view/{id}")
-    public String viewProduct(@PathVariable Long id, Model model) {
-
-        Product product = productService.getProductById(id);
-
-        if (product == null) {
-            return "redirect:/user/dashboard";
-        }
-
-        model.addAttribute("product", product);
-
-        // Load QR if exists
-        qrRepo.findByProductId(id).ifPresent(qr -> {
-            model.addAttribute("qrImage",
-                    Base64.getEncoder().encodeToString(qr.getQrImage()));
-        });
-
-        return "user-product-view";
-    }
+//    @GetMapping("/products/view/{id}")
+//    public String viewProduct(@PathVariable Long id, Model model) {
+//
+//        Product product = productService.getProductById(id);
+//
+//        if (product == null) {
+//            return "redirect:/user/dashboard";
+//        }
+//
+//        model.addAttribute("product", product);
+//
+//        // Load QR if exists
+//        qrRepo.findByProductId(id).ifPresent(qr -> {
+//            model.addAttribute("qrImage",
+//                    Base64.getEncoder().encodeToString(qr.getQrImage()));
+//        });
+//
+//        return "user-product-view";
+//    }
 
     @GetMapping("/products/purchase/{id}")
     public String showPurchasePage(@PathVariable Long id, Model model) {
@@ -250,5 +255,92 @@ public class UserProductController {
         }
 
         return "redirect:/user/cart";
+    }
+    
+    @GetMapping("/review/{productId}")
+    public String showReviewPage(@PathVariable Long productId,
+                                 Authentication auth,
+                                 Model model) {
+
+        if (auth == null) {
+            return "redirect:/login";
+        }
+
+        User user = userService.findByEmail(auth.getName());
+
+        Product product = productService.getProductById(productId);
+
+        if (product == null) {
+            return "redirect:/user/my-purchases";
+        }
+
+        // Optional: Only allow review if purchased
+        boolean purchased = purchaseService
+                .getPurchasesByUser(user.getId())
+                .stream()
+                .anyMatch(p -> p.getProductId().equals(productId));
+
+        if (!purchased) {
+            return "redirect:/user/my-purchases";
+        }
+
+        // Check already reviewed
+        if (reviewService.alreadyReviewed(user.getId(), productId)) {
+            return "redirect:/user/my-purchases?reviewed=true";
+        }
+
+        model.addAttribute("product", product);
+
+        return "user-write-review";
+    }
+    
+    @PostMapping("/review/save")
+    public String saveReview(@RequestParam Long productId,
+                             @RequestParam int rating,
+                             @RequestParam String comment,
+                             Authentication auth) {
+
+        if (auth == null) {
+            return "redirect:/login";
+        }
+
+        User user = userService.findByEmail(auth.getName());
+
+        if (reviewService.alreadyReviewed(user.getId(), productId)) {
+            return "redirect:/user/my-purchases?reviewed=true";
+        }
+
+        Review review = new Review();
+        review.setUserId(user.getId());
+        review.setProductId(productId);
+        review.setRating(rating);
+        review.setComment(comment);
+
+        reviewService.saveReview(review);
+
+        return "redirect:/user/my-purchases";
+    }
+    
+    @GetMapping("/products/view/{id}")
+    public String viewProduct(@PathVariable Long id, Model model) {
+
+        Product product = productService.getProductById(id);
+
+        if (product == null) {
+            return "redirect:/user/dashboard";
+        }
+
+        model.addAttribute("product", product);
+
+        qrRepo.findByProductId(id).ifPresent(qr -> {
+            model.addAttribute("qrImage",
+                    Base64.getEncoder().encodeToString(qr.getQrImage()));
+        });
+
+        // 🔥 Load only APPROVED reviews
+        model.addAttribute("reviews",
+                reviewService.getApprovedReviewsByProduct(id));
+
+        return "user-product-view";
     }
 }
