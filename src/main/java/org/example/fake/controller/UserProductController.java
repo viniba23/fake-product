@@ -321,6 +321,28 @@ public class UserProductController {
         return "redirect:/user/my-purchases";
     }
     
+//    @GetMapping("/products/view/{id}")
+//    public String viewProduct(@PathVariable Long id, Model model) {
+//
+//        Product product = productService.getProductById(id);
+//
+//        if (product == null) {
+//            return "redirect:/user/dashboard";
+//        }
+//
+//        model.addAttribute("product", product);
+//
+//        qrRepo.findByProductId(id).ifPresent(qr -> {
+//            model.addAttribute("qrImage",
+//                    Base64.getEncoder().encodeToString(qr.getQrImage()));
+//        });
+//
+//        // 🔥 Load only APPROVED reviews
+//        model.addAttribute("reviews",
+//                reviewService.getApprovedReviewsByProduct(id));
+//
+//        return "user-product-view";
+//    }
     @GetMapping("/products/view/{id}")
     public String viewProduct(@PathVariable Long id, Model model) {
 
@@ -332,15 +354,45 @@ public class UserProductController {
 
         model.addAttribute("product", product);
 
+        // QR code
         qrRepo.findByProductId(id).ifPresent(qr -> {
             model.addAttribute("qrImage",
                     Base64.getEncoder().encodeToString(qr.getQrImage()));
         });
 
-        // 🔥 Load only APPROVED reviews
-        model.addAttribute("reviews",
-                reviewService.getApprovedReviewsByProduct(id));
+        // Approved reviews
+        List<Review> reviews = reviewService.getApprovedReviewsByProduct(id);
+
+        // ⭐ Create user map
+        Map<Long, User> userMap = new HashMap<>();
+
+        for (Review r : reviews) {
+            userMap.put(r.getUserId(),
+                    userService.getUserById(r.getUserId()));
+        }
+
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("userMap", userMap);
 
         return "user-product-view";
+    }
+    @GetMapping("/my-reviews")
+    public String myReviews(Authentication auth, Model model) {
+
+        User user = userService.findByEmail(auth.getName());
+
+        List<Review> reviews = reviewService.getReviewsByUser(user.getId());
+
+        Map<Long, Product> productMap = new HashMap<>();
+
+        for (Review r : reviews) {
+            Product product = productService.getProductById(r.getProductId());
+            productMap.put(r.getProductId(), product);
+        }
+
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("productMap", productMap);
+
+        return "user-my-reviews";
     }
 }

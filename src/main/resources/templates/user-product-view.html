@@ -54,18 +54,20 @@ img {
 
 <div th:if="${reviews != null and !reviews.isEmpty()}">
 
-    <div th:each="review : ${reviews}" 
-         style="border-bottom:1px solid #ddd;padding:10px 0;">
+   <div th:each="review : ${reviews}" 
+     style="border-bottom:1px solid #ddd;padding:10px 0;">
 
-        <p>
-            <b th:text="${review.rating} + ' ⭐'"></b>
-        </p>
+    <p>
+        <b th:text="${userMap[review.userId]?.username}"></b>
+        &nbsp;|
+        <span th:text="${review.rating} + ' ⭐'"></span>
+    </p>
 
-        <p th:text="${review.comment}"></p>
+    <p th:text="${review.comment}"></p>
 
-        <small th:text="${review.reviewDate}"></small>
+    <small th:text="${review.reviewDate}"></small>
 
-    </div>
+</div>
 
 </div>
 

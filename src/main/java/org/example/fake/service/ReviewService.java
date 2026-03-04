@@ -45,4 +45,8 @@ public class ReviewService {
 	    public List<Review> getReviewsByStatus(String status) {
 	        return reviewRepo.findByStatus(status);
 	    }
+	    
+	    public List<Review> getReviewsByUser(Long userId) {
+	        return reviewRepo.findByUserId(userId);
+	    }
 }
