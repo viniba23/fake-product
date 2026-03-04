@@ -7,9 +7,15 @@ import javax.imageio.ImageIO;
 
 import org.example.fake.model.BlockchainProduct;
 import org.example.fake.model.Product;
+import org.example.fake.model.User;
+import org.example.fake.model.VerificationHistory;
 import org.example.fake.repo.BlockchainProductRepository;
 import org.example.fake.repo.ProductRepository;
+import org.example.fake.service.ProductService;
+import org.example.fake.service.UserService;
+import org.example.fake.service.VerificationHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +34,14 @@ public class UserQRController {
 
     @Autowired
     private BlockchainProductRepository blockchainRepo;
+    @Autowired
+    private ProductService productService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private VerificationHistoryService verificationHistoryService;
     // Show scan page
     @GetMapping("/scan-qr")
     public String showScanPage() {
@@ -199,45 +212,92 @@ public class UserQRController {
         return "user-verify-product";
     }
 
-    @PostMapping("/verify-product")
-    public String verifyProduct(@RequestParam Long productId,
-                                @RequestParam String productHash,
-                                Model model) {
+//    @PostMapping("/verify-product")
+//    public String verifyProduct(@RequestParam Long productId,
+//                                @RequestParam String productHash,
+//                                Model model) {
+//
+//        Optional<Product> productOpt =
+//                productRepo.findById(productId);
+//
+//        if (productOpt.isEmpty()) {
+//            model.addAttribute("error",
+//                    "Product not found!");
+//            return "user-verify-result";
+//        }
+//
+//        Optional<BlockchainProduct> bcOpt =
+//                blockchainRepo.findByProduct_Id(productId);
+//
+//        if (bcOpt.isEmpty()) {
+//            model.addAttribute("error",
+//                    "Product not enrolled in blockchain!");
+//            return "user-verify-result";
+//        }
+//
+//        if (bcOpt.get().getProductHash()
+//                .equals(productHash)) {
+//
+//            model.addAttribute("success",
+//                    "AUTHENTIC PRODUCT ✅");
+//            model.addAttribute("product",
+//                    productOpt.get());
+//
+//        } else {
+//
+//            model.addAttribute("error",
+//                    "FAKE PRODUCT ❌");
+//
+//        }
+//
+//        return "user-verify-result";
+// }
+// 
+	@PostMapping("/verify-product")
+	public String verifyProduct(@RequestParam Long productId, @RequestParam String productHash, Authentication auth,
+			Model model) {
 
-        Optional<Product> productOpt =
-                productRepo.findById(productId);
+		User user = userService.findByEmail(auth.getName());
 
-        if (productOpt.isEmpty()) {
-            model.addAttribute("error",
-                    "Product not found!");
-            return "user-verify-result";
-        }
+		Optional<Product> productOpt = productRepo.findById(productId);
 
-        Optional<BlockchainProduct> bcOpt =
-                blockchainRepo.findByProduct_Id(productId);
+		if (productOpt.isEmpty()) {
+			model.addAttribute("error", "Product not found!");
+			return "user-verify-result";
+		}
 
-        if (bcOpt.isEmpty()) {
-            model.addAttribute("error",
-                    "Product not enrolled in blockchain!");
-            return "user-verify-result";
-        }
+		Optional<BlockchainProduct> bcOpt = blockchainRepo.findByProduct_Id(productId);
 
-        if (bcOpt.get().getProductHash()
-                .equals(productHash)) {
+		if (bcOpt.isEmpty()) {
+			model.addAttribute("error", "Product not enrolled in blockchain!");
+			return "user-verify-result";
+		}
 
-            model.addAttribute("success",
-                    "AUTHENTIC PRODUCT ✅");
-            model.addAttribute("product",
-                    productOpt.get());
+		String result;
 
-        } else {
+		if (bcOpt.get().getProductHash().equals(productHash)) {
 
-            model.addAttribute("error",
-                    "FAKE PRODUCT ❌");
+			result = "ORIGINAL";
 
-        }
+			model.addAttribute("success", "AUTHENTIC PRODUCT ✅");
+			model.addAttribute("product", productOpt.get());
 
-        return "user-verify-result";
-    }
+		} else {
+
+			result = "FAKE";
+
+			model.addAttribute("error", "FAKE PRODUCT ❌");
+		}
+
+// ⭐ SAVE VERIFICATION HISTORY
+		VerificationHistory history = new VerificationHistory();
+		history.setUserId(user.getId());
+		history.setProductId(productId);
+		history.setResult(result);
+
+		verificationHistoryService.saveHistory(history);
+
+		return "user-verify-result";
+	}
 
 }

@@ -11,12 +11,14 @@ import org.example.fake.model.Product;
 import org.example.fake.model.Purchase;
 import org.example.fake.model.Review;
 import org.example.fake.model.User;
+import org.example.fake.model.VerificationHistory;
 import org.example.fake.repo.ProductQRCodeRepository;
 import org.example.fake.service.CartService;
 import org.example.fake.service.ProductService;
 import org.example.fake.service.PurchaseService;
 import org.example.fake.service.ReviewService;
 import org.example.fake.service.UserService;
+import org.example.fake.service.VerificationHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -40,6 +42,8 @@ public class UserProductController {
 	private PurchaseService purchaseService;
 	@Autowired
 	private CartService cartService;
+	@Autowired
+	private VerificationHistoryService verificationHistoryService;
 	
 	
     @GetMapping("/dashboard")
@@ -395,4 +399,28 @@ public class UserProductController {
 
         return "user-my-reviews";
     }
+    @GetMapping("/history")
+    public String verificationHistory(Authentication auth, Model model){
+
+        User user = userService.findByEmail(auth.getName());
+
+        List<VerificationHistory> historyList =
+                verificationHistoryService.getUserHistory(user.getId());
+
+        Map<Long, Product> productMap = new HashMap<>();
+
+        for(VerificationHistory h : historyList){
+
+            Product product =
+                    productService.getProductById(h.getProductId());
+
+            productMap.put(h.getProductId(), product);
+        }
+
+        model.addAttribute("historyList", historyList);
+        model.addAttribute("productMap", productMap);
+
+        return "user-verification-history";
+    }
+    
 }

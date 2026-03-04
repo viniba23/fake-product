@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Verification History</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+padding:40px;
+}
+
+table{
+width:100%;
+background:white;
+border-collapse:collapse;
+}
+
+th{
+background:#007bff;
+color:white;
+padding:10px;
+}
+
+td{
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+img{
+width:60px;
+height:60px;
+object-fit:cover;
+}
+
+.original{
+color:green;
+font-weight:bold;
+}
+
+.fake{
+color:red;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>Verification History</h2>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Product</th>
+<th>Image</th>
+<th>Result</th>
+<th>Date</th>
+<th>View</th>
+</tr>
+
+<tr th:each="h : ${historyList}">
+
+<td th:text="${h.id}"></td>
+
+<td th:text="${productMap[h.productId]?.productName}"></td>
+
+<td>
+<img th:if="${productMap[h.productId] != null 
+and productMap[h.productId].images != null 
+and !productMap[h.productId].images.isEmpty()}"
+th:src="'data:image/jpeg;base64,' + ${productMap[h.productId].images[0].base64Image}">
+</td>
+
+<td>
+<span th:text="${h.result}"
+th:classappend="${h.result == 'ORIGINAL'} ? ' original' : ' fake'">
+</span>
+</td>
+
+<td th:text="${h.verifiedAt}"></td>
+
+<td>
+<a th:href="@{/user/products/view/{id}(id=${h.productId})}">
+View Product
+</a>
+</td>
+
+</tr>
+
+</table>
+
+<br>
+<a href="/user/dashboard">⬅ Back</a>
+
+</body>
+</html>
