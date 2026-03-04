@@ -24,7 +24,8 @@ button { padding:5px 10px; background:green; color:white; border:none; cursor:po
 <th>Image</th>
 <th>Rating</th>
 <th>Comment</th>
-<th>Action</th>
+<th>Approve</th>
+<th>Delete</th>
 </tr>
 
 <tr th:each="r : ${reviews}">
@@ -49,9 +50,24 @@ button { padding:5px 10px; background:green; color:white; border:none; cursor:po
 <td th:text="${r.comment}"></td>
 
 <td>
+    <!-- APPROVE -->
     <form method="post" th:action="@{/admin/reviews/approve}">
         <input type="hidden" name="reviewId" th:value="${r.id}">
-        <button type="submit">Approve</button>
+        <button type="submit" style="background:green;">
+            Approve
+        </button>
+    </form>
+</td>
+
+<td>
+    <!-- DELETE -->
+    <form method="post" th:action="@{/admin/reviews/delete-pending}">
+        <input type="hidden" name="reviewId" th:value="${r.id}">
+        <button type="submit"
+                style="background:red;"
+                onclick="return confirm('Delete this review?')">
+            Delete
+        </button>
     </form>
 </td>
 

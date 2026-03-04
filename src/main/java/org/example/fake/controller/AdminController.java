@@ -241,4 +241,41 @@ public class AdminController {
 
         return "redirect:/admin/reviews";
     }
+    @GetMapping("/reviews/approved")
+    public String viewApprovedReviews(Model model) {
+
+        List<Review> reviews =
+                reviewService.getReviewsByStatus("APPROVED");
+
+        Map<Long, User> userMap = new HashMap<>();
+        Map<Long, Product> productMap = new HashMap<>();
+
+        for (Review r : reviews) {
+            userMap.put(r.getUserId(),
+                    userService.getUserById(r.getUserId()));
+
+            productMap.put(r.getProductId(),
+                    productService.getProductById(r.getProductId()));
+        }
+
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("userMap", userMap);
+        model.addAttribute("productMap", productMap);
+
+        return "admin-approved-reviews";
+    }
+    @PostMapping("/reviews/delete")
+    public String deleteReview(@RequestParam Long reviewId) {
+
+        reviewService.deleteReview(reviewId);
+
+        return "redirect:/admin/reviews/approved";
+    }
+    @PostMapping("/reviews/delete-pending")
+    public String deletePendingReview(@RequestParam Long reviewId) {
+
+        reviewService.deleteReview(reviewId);
+
+        return "redirect:/admin/reviews";
+    }
 }

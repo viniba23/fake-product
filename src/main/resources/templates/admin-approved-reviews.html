@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Approved Reviews</title>
+
+<style>
+body { font-family:Arial; padding:40px; background:#f4f6f9; }
+table { width:100%; background:white; border-collapse: collapse; }
+th { background:#28a745; color:white; padding:10px; }
+td { padding:10px; text-align:center; border:1px solid #ddd; }
+button {
+    padding:5px 10px;
+    background:red;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+img { width:60px; height:60px; object-fit:cover; }
+</style>
+</head>
+<body>
+
+<h2>Approved Product Reviews</h2>
+
+<table>
+<tr>
+<th>ID</th>
+<th>User</th>
+<th>Email</th>
+<th>Product</th>
+<th>Image</th>
+<th>Rating</th>
+<th>Comment</th>
+<th>Date</th>
+<th>Delete</th>
+</tr>
+
+<tr th:each="r : ${reviews}">
+
+<td th:text="${r.id}"></td>
+
+<td th:text="${userMap[r.userId]?.username}"></td>
+<td th:text="${userMap[r.userId]?.email}"></td>
+
+<td th:text="${productMap[r.productId]?.productName}"></td>
+
+<td>
+<img th:if="${productMap[r.productId] != null 
+             and productMap[r.productId].images != null 
+             and !productMap[r.productId].images.isEmpty()}"
+     th:src="'data:image/jpeg;base64,' + ${productMap[r.productId].images[0].base64Image}">
+</td>
+
+<td th:text="${r.rating} + ' ⭐'"></td>
+<td th:text="${r.comment}"></td>
+<td th:text="${r.reviewDate}"></td>
+
+<td>
+<form method="post" th:action="@{/admin/reviews/delete}">
+    <input type="hidden" name="reviewId" th:value="${r.id}">
+    <button type="submit">Delete</button>
+</form>
+</td>
+
+</tr>
+
+</table>
+
+<br>
+<a href="/admin/dashboard">⬅ Back</a>
+
+</body>
+</html>

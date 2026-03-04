@@ -39,4 +39,10 @@ public class ReviewService {
 	            reviewRepo.save(review);   // MUST SAVE AGAIN
 	        }
 	    }
+	    public void deleteReview(Long id) {
+	        reviewRepo.deleteById(id);
+	    }
+	    public List<Review> getReviewsByStatus(String status) {
+	        return reviewRepo.findByStatus(status);
+	    }
 }
