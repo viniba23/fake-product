@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.example.fake.model.BlockchainProduct;
 import org.example.fake.model.Cart;
 import org.example.fake.model.Product;
 import org.example.fake.model.Purchase;
 import org.example.fake.model.Review;
 import org.example.fake.model.User;
 import org.example.fake.model.VerificationHistory;
+import org.example.fake.repo.BlockchainProductRepository;
 import org.example.fake.repo.ProductQRCodeRepository;
 import org.example.fake.service.CartService;
 import org.example.fake.service.ProductService;
@@ -20,6 +22,11 @@ import org.example.fake.service.ReviewService;
 import org.example.fake.service.UserService;
 import org.example.fake.service.VerificationHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +35,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/user")
@@ -44,6 +52,8 @@ public class UserProductController {
 	private CartService cartService;
 	@Autowired
 	private VerificationHistoryService verificationHistoryService;
+	@Autowired
+	private BlockchainProductRepository blockchainRepo;
 	
 	
     @GetMapping("/dashboard")
@@ -422,5 +432,55 @@ public class UserProductController {
 
         return "user-verification-history";
     }
-    
+    @GetMapping("/product-hashes")
+    public String productHashes(Model model){
+
+        List<BlockchainProduct> list =
+                blockchainRepo.findAll();
+
+        Map<Long, Product> productMap = new HashMap<>();
+
+        for(BlockchainProduct bc : list){
+
+            Product product =
+                    productService.getProductById(
+                            bc.getProduct().getId());
+
+            productMap.put(product.getId(), product);
+        }
+
+        model.addAttribute("hashList", list);
+        model.addAttribute("productMap", productMap);
+
+        return "user-product-hashes";
+    }
+    @GetMapping("/download-hash")
+    @ResponseBody
+    public ResponseEntity<byte[]> downloadHash(@RequestParam Long productId)
+            throws Exception {
+
+        Optional<BlockchainProduct> bcOpt =
+                blockchainRepo.findByProduct_Id(productId);
+
+        if(bcOpt.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        String report =
+                "PRODUCT HASH DETAILS\n" +
+                "---------------------------\n" +
+                "Product ID : " + productId + "\n" +
+                "Hash Value : " + bcOpt.get().getProductHash() + "\n";
+
+        byte[] file = report.getBytes();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        headers.setContentDisposition(
+                ContentDisposition.attachment()
+                        .filename("product_hash.txt")
+                        .build());
+
+        return new ResponseEntity<>(file, headers, HttpStatus.OK);
+    }
 }

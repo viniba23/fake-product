@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<title>Product Hash Details</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+padding:40px;
+}
+
+table{
+width:100%;
+background:white;
+border-collapse:collapse;
+}
+
+th{
+background:#007bff;
+color:white;
+padding:10px;
+}
+
+td{
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+.hash{
+font-family:monospace;
+color:#333;
+}
+
+button{
+padding:6px 12px;
+background:green;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>Product Hash Details</h2>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Product</th>
+<th>Product ID</th>
+<th>Hash</th>
+<th>Download</th>
+</tr>
+
+<tr th:each="h : ${hashList}">
+
+<td th:text="${h.id}"></td>
+
+<td th:text="${productMap[h.product.id]?.productName}"></td>
+
+<td th:text="${h.product.id}"></td>
+
+<td class="hash"
+    th:text="${h.productHash}">
+</td>
+
+<td>
+<a th:href="@{/user/download-hash(productId=${h.product.id})}">
+<button>Download</button>
+</a>
+</td>
+
+</tr>
+
+</table>
+
+<br>
+
+<a href="/user/dashboard">⬅ Back</a>
+
+</body>
+</html>
