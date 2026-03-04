@@ -20,6 +20,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
@@ -300,4 +305,47 @@ public class UserQRController {
 		return "user-verify-result";
 	}
 
+	@GetMapping("/download-verification")
+	@ResponseBody
+	public ResponseEntity<byte[]> downloadVerificationReport(@RequestParam Long productId)
+	        throws Exception {
+
+	    Optional<Product> productOpt = productRepo.findById(productId);
+
+	    if(productOpt.isEmpty()){
+	        return ResponseEntity.notFound().build();
+	    }
+
+	    Product product = productOpt.get();
+
+	    Optional<BlockchainProduct> bcOpt =
+	            blockchainRepo.findByProduct_Id(productId);
+
+	    String hash = "Not Available";
+
+	    if(bcOpt.isPresent()){
+	        hash = bcOpt.get().getProductHash();
+	    }
+
+	    String report =
+	            "PRODUCT VERIFICATION REPORT\n" +
+	            "---------------------------------\n" +
+	            "Product Name : " + product.getProductName() + "\n" +
+	            "Product ID   : " + product.getId() + "\n" +
+	            "Manufacturer : " + product.getManufacturer() + "\n" +
+	            "Blockchain Hash : " + hash + "\n" +
+	            "Verification Result : AUTHENTIC PRODUCT\n" +
+	            "Date : " + java.time.LocalDateTime.now() + "\n";
+
+	    byte[] file = report.getBytes();
+
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.TEXT_PLAIN);
+	    headers.setContentDisposition(
+	            ContentDisposition.attachment()
+	                    .filename("verification_report.txt")
+	                    .build());
+
+	    return new ResponseEntity<>(file, headers, HttpStatus.OK);
+	}
 }

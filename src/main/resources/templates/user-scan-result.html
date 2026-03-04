@@ -47,11 +47,17 @@
              th:text="${blockchainHash}">
         </div>
     </div>
+     <a th:href="@{/user/download-verification(productId=${product.id})}"
+           class="btn"
+           style="background:green;">
+           Download Verification Report
+        </a>
 </div>
 
 <div th:if="${error}">
     <h3 class="error" th:text="${error}"></h3>
 </div>
+
 
 <br><br>
 <a href="/user/dashboard">Go to Dashboard</a>
