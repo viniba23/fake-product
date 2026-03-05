@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<title>Verification Monitoring</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f6f9;
+padding:30px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th{
+background:#343a40;
+color:white;
+padding:10px;
+}
+
+td{
+padding:10px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+.success{
+color:green;
+font-weight:bold;
+}
+
+.fake{
+color:red;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Verification Monitoring</h2>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>User</th>
+<th>Product</th>
+<th>Product ID</th>
+<th>Result</th>
+</tr>
+
+<tr th:each="v : ${logs}">
+
+<td th:text="${v.id}"></td>
+
+<td th:text="${userMap[v.userId]?.username}"></td>
+
+<td th:text="${productMap[v.productId]?.productName}"></td>
+
+<td th:text="${v.productId}"></td>
+
+<td th:class="${v.result == 'ORIGINAL'} ? 'success' : 'fake'"
+    th:text="${v.result}">
+</td>
+
+</tr>
+
+</table>
+
+<br>
+
+<a href="/admin/dashboard">⬅ Back</a>
+
+</body>
+</html>

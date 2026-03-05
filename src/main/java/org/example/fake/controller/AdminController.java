@@ -18,6 +18,7 @@ import org.example.fake.model.Product;
 import org.example.fake.model.Purchase;
 import org.example.fake.model.Review;
 import org.example.fake.model.User;
+import org.example.fake.model.VerificationHistory;
 import org.example.fake.repo.UserRepository;
 import org.example.fake.service.AdminService;
 import org.example.fake.service.CartService;
@@ -25,6 +26,7 @@ import org.example.fake.service.ProductService;
 import org.example.fake.service.PurchaseService;
 import org.example.fake.service.ReviewService;
 import org.example.fake.service.UserService;
+import org.example.fake.service.VerificationHistoryService;
 
 @Controller
 @RequestMapping("/admin")
@@ -48,6 +50,9 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private ReviewService reviewService;
+    
+    @Autowired
+    private VerificationHistoryService verificationHistoryService;
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
                            Model model) {
@@ -277,5 +282,33 @@ public class AdminController {
         reviewService.deleteReview(reviewId);
 
         return "redirect:/admin/reviews";
+    }
+    
+    @GetMapping("/verification-logs")
+    public String verificationLogs(Model model) {
+
+        List<VerificationHistory> logs =
+                verificationHistoryService.getAllHistory();
+
+        Map<Long, Product> productMap = new HashMap<>();
+        Map<Long, User> userMap = new HashMap<>();
+
+        for(VerificationHistory h : logs){
+
+            Product product =
+                    productService.getProductById(h.getProductId());
+
+            User user =
+                    userService.getUserById(h.getUserId());
+
+            productMap.put(h.getProductId(), product);
+            userMap.put(h.getUserId(), user);
+        }
+
+        model.addAttribute("logs", logs);
+        model.addAttribute("productMap", productMap);
+        model.addAttribute("userMap", userMap);
+
+        return "admin-verification-logs";
     }
 }

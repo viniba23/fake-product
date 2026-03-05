@@ -18,5 +18,9 @@ public class VerificationHistoryService {
 
 	    public List<VerificationHistory> getUserHistory(Long userId){
 	        return repo.findByUserId(userId);
-}
+	    }
+	    public List<VerificationHistory> getAllHistory(){
+	        return repo.findAll();
+	    }
+	    
 	    }
