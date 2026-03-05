@@ -432,28 +432,28 @@ public class UserProductController {
 
         return "user-verification-history";
     }
-    @GetMapping("/product-hashes")
-    public String productHashes(Model model){
-
-        List<BlockchainProduct> list =
-                blockchainRepo.findAll();
-
-        Map<Long, Product> productMap = new HashMap<>();
-
-        for(BlockchainProduct bc : list){
-
-            Product product =
-                    productService.getProductById(
-                            bc.getProduct().getId());
-
-            productMap.put(product.getId(), product);
-        }
-
-        model.addAttribute("hashList", list);
-        model.addAttribute("productMap", productMap);
-
-        return "user-product-hashes";
-    }
+//    @GetMapping("/product-hashes")
+//    public String productHashes(Model model){
+//
+//        List<BlockchainProduct> list =
+//                blockchainRepo.findAll();
+//
+//        Map<Long, Product> productMap = new HashMap<>();
+//
+//        for(BlockchainProduct bc : list){
+//
+//            Product product =
+//                    productService.getProductById(
+//                            bc.getProduct().getId());
+//
+//            productMap.put(product.getId(), product);
+//        }
+//
+//        model.addAttribute("hashList", list);
+//        model.addAttribute("productMap", productMap);
+//
+//        return "user-product-hashes";
+//    }
     @GetMapping("/download-hash")
     @ResponseBody
     public ResponseEntity<byte[]> downloadHash(@RequestParam Long productId)
@@ -482,5 +482,29 @@ public class UserProductController {
                         .build());
 
         return new ResponseEntity<>(file, headers, HttpStatus.OK);
+    }
+    
+    @GetMapping("/product-hashes")
+    public String viewHashHistory(Authentication auth, Model model){
+
+        User user = userService.findByEmail(auth.getName());
+
+        List<VerificationHistory> hashList =
+                verificationHistoryService.getUserHistory(user.getId());
+
+        Map<Long, Product> productMap = new HashMap<>();
+
+        for(VerificationHistory h : hashList){
+
+            Product product =
+                    productService.getProductById(h.getProductId());
+
+            productMap.put(h.getProductId(), product);
+        }
+
+        model.addAttribute("hashList", hashList);
+        model.addAttribute("productMap", productMap);
+
+        return "user-product-hashing";
     }
 }

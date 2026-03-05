@@ -20,7 +20,7 @@ public class VerificationHistory {
     private Long productId;
 
     private String result; // ORIGINAL / FAKE
-
+    private String productHash; 
     private LocalDateTime verifiedAt;
 
     @PrePersist
@@ -40,4 +40,21 @@ public class VerificationHistory {
     public void setResult(String result){ this.result=result; }
 
     public LocalDateTime getVerifiedAt(){ return verifiedAt; }
+
+	public String getProductHash() {
+		return productHash;
+	}
+
+	public void setProductHash(String productHash) {
+		this.productHash = productHash;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setVerifiedAt(LocalDateTime verifiedAt) {
+		this.verifiedAt = verifiedAt;
+	}
+    
 }

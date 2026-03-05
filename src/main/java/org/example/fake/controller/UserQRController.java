@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.Optional;
 
 import javax.imageio.ImageIO;
-
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.example.fake.model.BlockchainProduct;
 import org.example.fake.model.Product;
 import org.example.fake.model.User;
@@ -179,19 +179,29 @@ public class UserQRController {
 
             if (originalHash.equals(scannedHash)) {
 
-                model.addAttribute("success",
-                        "AUTHENTIC PRODUCT ✅");
+                Product product = productOpt.get();
 
-                model.addAttribute("product",
-                        productOpt.get());
+                // ⭐ Get logged user
+                Authentication auth =
+                        SecurityContextHolder.getContext().getAuthentication();
 
-                model.addAttribute("productId",
-                        productId);
+                User user = userService.findByEmail(auth.getName());
 
-                model.addAttribute("blockchainHash",
-                        originalHash);
+                // ⭐ Save verification history
+                VerificationHistory history = new VerificationHistory();
+                history.setUserId(user.getId());
+                history.setProductId(productId);
+                history.setProductHash(originalHash);
+                history.setResult("ORIGINAL");
 
-            } else {
+                verificationHistoryService.saveHistory(history);
+
+                model.addAttribute("success", "AUTHENTIC PRODUCT ✅");
+                model.addAttribute("product", product);
+                model.addAttribute("blockchainHash", originalHash);
+
+                return "user-scan-result";
+            }else {
 
                 model.addAttribute("error",
                         "FAKE PRODUCT ❌");
