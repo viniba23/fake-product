@@ -38,6 +38,7 @@ public class SecurityConfig {
                 // ✅ PUBLIC USER PAGES
                 .requestMatchers(
                         "/",
+                        "/images/**",
                         "/user/login",
                         "/user/register",
                         "/user/forgot-password",
