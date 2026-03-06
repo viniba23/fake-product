@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -27,5 +27,751 @@
         <a href="/user/login" class="btn">User Login</a>
         <a href="/admin/login" class="btn">Admin Login</a>
     </div>
+</body>
+</html>
+ -->
+ 
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChainVerify – Fake Product Identification Using Blockchain</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green:       #16a34a;
+      --green-light: #22c55e;
+      --green-pale:  #bbf7d0;
+      --green-bg:    #f0fdf4;
+      --green-bg2:   #dcfce7;
+      --white:       #ffffff;
+      --dark:        #052e16;
+      --dark2:       #14532d;
+      --text:        #1a2e1f;
+      --muted:       #4b7a5a;
+      --border:      #bbf7d0;
+      --danger:      #dc2626;
+      --warn:        #d97706;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Space Grotesk',sans-serif;background:var(--green-bg);color:var(--text);overflow-x:hidden;}
+
+    /* ── TOPBAR ── */
+    .topbar{background:var(--dark);color:#86efac;text-align:center;padding:9px;font-size:13px;font-weight:600;letter-spacing:.05em;}
+    .topbar b{background:var(--green-light);color:var(--dark);padding:2px 10px;border-radius:4px;margin-left:8px;font-family:'Rajdhani',sans-serif;font-size:12px;}
+
+    /* ── HEADER ── */
+    header{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.97);border-bottom:2px solid var(--border);backdrop-filter:blur(16px);box-shadow:0 2px 16px rgba(22,163,74,.08);}
+    nav{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:68px;}
+    .logo{display:flex;align-items:center;gap:11px;text-decoration:none;}
+    .logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--green),var(--green-light));border-radius:12px;display:grid;place-items:center;font-size:22px;box-shadow:0 4px 14px rgba(22,163,74,.3);}
+    .logo-text{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--dark2);letter-spacing:.04em;}
+    .logo-text span{color:var(--green);}
+    .nav-links{display:flex;gap:2px;list-style:none;}
+    .nav-links a{display:block;padding:8px 15px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;border-radius:7px;transition:all .2s;}
+    .nav-links a:hover{background:var(--green-bg2);color:var(--green);}
+    .nav-actions{display:flex;gap:10px;align-items:center;}
+    .btn-outline{padding:9px 22px;border:2px solid var(--green);color:var(--green);border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;transition:all .2s;}
+    .btn-outline:hover{background:var(--green);color:#fff;}
+    .btn-fill{padding:10px 22px;background:var(--dark);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;transition:all .2s;border:2px solid var(--dark);}
+    .btn-fill:hover{background:var(--dark2);transform:translateY(-1px);box-shadow:0 6px 18px rgba(5,46,22,.25);}
+
+    /* ══════════════════════════════════
+       HERO
+    ══════════════════════════════════ */
+    .hero{
+      min-height:88vh;
+      display:grid;
+      grid-template-columns:420px 1fr;
+      align-items:center;
+      gap:0;
+      background:#fff;
+      overflow:hidden;
+    }
+
+    /* LEFT — GIF side */
+    .hero-gif-side{
+      background:linear-gradient(160deg,#e0f2fe 0%,#bfdbfe 100%);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:48px 36px;
+      height:100%;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-gif-side::after{
+      content:'';
+      position:absolute;right:-40px;top:0;bottom:0;
+      width:80px;
+      background:linear-gradient(90deg,transparent,#fff);
+      z-index:2;
+    }
+    .gif-bubble{
+      width:260px;height:260px;
+      border-radius:50%;
+      overflow:hidden;
+      border:6px solid #fff;
+      box-shadow:0 16px 48px rgba(37,99,235,.25),0 0 0 12px rgba(37,99,235,.08);
+      position:relative;z-index:1;
+      flex-shrink:0;
+    }
+    .gif-bubble img{
+      width:100%;height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* floating badge */
+    .gif-badge{
+      margin-top:28px;
+      background:#fff;
+      border-radius:14px;
+      padding:14px 20px;
+      display:flex;align-items:center;gap:12px;
+      box-shadow:0 8px 28px rgba(37,99,235,.15);
+      position:relative;z-index:1;
+      width:260px;
+    }
+    .gb-icon{font-size:28px;}
+    .gb-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+    .gb-val{font-size:17px;font-weight:800;color:var(--green);font-family:'Rajdhani',sans-serif;}
+
+    /* live dot */
+    .gif-live{
+      position:absolute;top:24px;left:24px;z-index:3;
+      background:var(--green);color:#fff;
+      font-size:11px;font-weight:700;
+      padding:5px 13px;border-radius:99px;
+      display:flex;align-items:center;gap:6px;
+      letter-spacing:.06em;text-transform:uppercase;
+    }
+    .pulse{width:7px;height:7px;background:#86efac;border-radius:50%;animation:pulse 1.4s infinite;}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
+
+    /* RIGHT — Title side */
+    .hero-title-side{
+      padding:60px 64px 60px 80px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      position:relative;
+    }
+    .hero-title-side::before{
+      content:'';
+      position:absolute;left:0;top:10%;bottom:10%;
+      width:4px;border-radius:4px;
+      background:linear-gradient(180deg,var(--green-light),var(--green),var(--dark2));
+    }
+
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--green-bg2);border:1.5px solid var(--border);
+      color:var(--green);font-size:11px;font-weight:700;
+      letter-spacing:.14em;text-transform:uppercase;
+      padding:6px 16px;border-radius:99px;
+      width:fit-content;margin-bottom:24px;
+      animation:fadeDown .6s ease both;
+    }
+
+    /* BIG TITLE */
+    .hero-main-title{
+      font-family:'Rajdhani',sans-serif;
+      font-weight:700;
+      line-height:1.08;
+      margin-bottom:18px;
+      animation:fadeDown .7s .1s ease both;
+    }
+    .hmt-line1{
+      font-size:clamp(36px,4.5vw,62px);
+      color:var(--dark);
+      display:block;
+    }
+    .hmt-line2{
+      font-size:clamp(42px,5.5vw,76px);
+      color:var(--green);
+      display:block;
+      letter-spacing:-.01em;
+      text-shadow:0 2px 24px rgba(22,163,74,.18);
+    }
+    .hmt-line3{
+      font-size:clamp(28px,3.5vw,50px);
+      color:var(--dark2);
+      display:block;
+    }
+    .hmt-line4{
+      font-size:clamp(32px,4vw,56px);
+      color:var(--text);
+      display:block;
+    }
+    .hmt-using{
+      font-size:clamp(22px,2.8vw,38px);
+      color:var(--muted);
+      display:block;
+    }
+    .hmt-blockchain{
+      font-size:clamp(44px,6vw,82px);
+      color:var(--green);
+      display:block;
+      letter-spacing:.02em;
+      background:linear-gradient(135deg,var(--green),#059669);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    .hero-divider{width:64px;height:5px;background:linear-gradient(90deg,var(--green),var(--green-pale));border-radius:99px;margin:20px 0;animation:fadeDown .7s .15s ease both;}
+
+    .hero-sub{color:var(--muted);font-size:15px;line-height:1.75;max-width:460px;margin-bottom:32px;animation:fadeDown .7s .2s ease both;}
+
+    /* status pills */
+    .status-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;animation:fadeDown .7s .25s ease both;}
+    .sp{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;}
+    .sp.ok{background:#dcfce7;color:var(--green);border:1.5px solid #86efac;}
+    .sp.bad{background:#fee2e2;color:var(--danger);border:1.5px solid #fca5a5;}
+    .sp.pend{background:#fef3c7;color:var(--warn);border:1.5px solid #fcd34d;}
+
+    .hero-cta{display:flex;gap:14px;flex-wrap:wrap;animation:fadeDown .7s .3s ease both;}
+    .cta-main{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--green);color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;box-shadow:0 6px 22px rgba(22,163,74,.35);transition:all .25s;}
+    .cta-main:hover{background:var(--dark2);transform:translateY(-2px);box-shadow:0 10px 30px rgba(22,163,74,.4);}
+    .cta-sec{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border:2px solid var(--border);color:var(--green);border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;background:var(--green-bg);transition:all .25s;}
+    .cta-sec:hover{background:var(--green-bg2);border-color:var(--green);}
+
+    .hero-stats{display:flex;gap:28px;margin-top:40px;padding-top:28px;border-top:2px solid var(--border);animation:fadeDown .7s .4s ease both;}
+    .stat-val{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--green);}
+    .stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:2px;}
+
+    /* ── CATEGORIES ── */
+    .categories{background:#fff;padding:26px 32px;border-top:2px solid var(--border);border-bottom:2px solid var(--border);}
+    .cat-scroll{max-width:1280px;margin:0 auto;display:flex;gap:11px;overflow-x:auto;padding-bottom:4px;}
+    .cat-scroll::-webkit-scrollbar{height:3px;}
+    .cat-scroll::-webkit-scrollbar-thumb{background:var(--green);border-radius:3px;}
+    .cat-pill{flex-shrink:0;display:flex;align-items:center;gap:7px;padding:9px 20px;background:var(--green-bg);border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;text-decoration:none;}
+    .cat-pill:hover,.cat-pill.active{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 4px 14px rgba(22,163,74,.22);}
+
+    /* ── SHARED SECTION STYLES ── */
+    .section-inner{max-width:1280px;margin:0 auto;}
+    .section-label{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.16em;margin-bottom:8px;font-family:'Rajdhani',sans-serif;}
+    .section-title{font-family:'Rajdhani',sans-serif;font-size:clamp(22px,3vw,38px);font-weight:700;color:var(--dark);line-height:1.18;margin-bottom:12px;}
+    .section-title .hl{color:var(--green);}
+    .section-sub{color:var(--muted);font-size:15px;max-width:540px;line-height:1.65;}
+
+    /* ── PRODUCTS ── */
+    .products-section{padding:80px 32px;background:var(--green-bg);}
+    .products-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:20px;}
+    .view-all{display:inline-flex;align-items:center;gap:6px;color:var(--green);font-weight:700;text-decoration:none;font-size:13px;transition:color .2s;}
+    .view-all:hover{color:var(--dark2);}
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:22px;}
+
+    .product-card{background:#fff;border-radius:16px;overflow:hidden;border:1.5px solid var(--border);transition:all .3s;position:relative;}
+    .product-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(22,163,74,.12);border-color:var(--green);}
+    .product-img-wrap{position:relative;background:var(--green-bg2);aspect-ratio:1;overflow:hidden;}
+    .product-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+    .product-card:hover .product-img-wrap img{transform:scale(1.06);}
+    .p-badge{position:absolute;top:12px;left:12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:5px 11px;border-radius:6px;font-family:'Rajdhani',sans-serif;}
+    .p-badge.verified{background:var(--green);color:#fff;}
+    .p-badge.unverified{background:var(--warn);color:#fff;}
+    .p-badge.fake{background:var(--danger);color:#fff;}
+    .p-blockchain{position:absolute;bottom:10px;left:10px;right:10px;background:rgba(5,46,22,.88);border-radius:7px;padding:7px 10px;font-family:monospace;font-size:9px;color:#86efac;opacity:0;transition:opacity .3s;}
+    .product-card:hover .p-blockchain{opacity:1;}
+    .product-body{padding:16px;}
+    .p-cat{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:5px;}
+    .p-name{font-weight:700;font-size:14px;color:var(--dark);margin-bottom:8px;line-height:1.35;}
+    .p-verify-bar{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+    .pv-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+    .pv-dot.g{background:var(--green);}
+    .pv-dot.y{background:var(--warn);}
+    .pv-dot.r{background:var(--danger);}
+    .pv-text{font-size:11px;font-weight:700;}
+    .pv-text.g{color:var(--green);}
+    .pv-text.y{color:var(--warn);}
+    .pv-text.r{color:var(--danger);}
+    .p-hash{font-family:monospace;font-size:9px;color:#a3c4ac;margin-bottom:12px;}
+    .p-footer{display:flex;align-items:center;justify-content:space-between;}
+    .p-price{font-size:17px;font-weight:800;color:var(--dark);font-family:'Rajdhani',sans-serif;}
+    .verify-btn{display:flex;align-items:center;gap:5px;padding:8px 14px;background:var(--green-bg2);color:var(--green);border:1.5px solid var(--border);border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Space Grotesk',sans-serif;}
+    .verify-btn:hover{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 4px 14px rgba(22,163,74,.25);}
+
+    /* ── HOW IT WORKS ── */
+    .how-section{padding:80px 32px;background:var(--dark);}
+    .how-section .section-title{color:#fff;}
+    .how-section .section-label{color:#86efac;}
+    .how-section .section-sub{color:#4d9966;}
+    .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;margin-top:50px;}
+    .how-card{background:rgba(255,255,255,.05);border:1px solid rgba(134,239,172,.15);border-radius:16px;padding:28px 22px;text-align:center;transition:all .3s;}
+    .how-card:hover{background:rgba(22,163,74,.12);border-color:rgba(34,197,94,.4);transform:translateY(-4px);}
+    .how-num{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;color:#86efac;letter-spacing:.12em;margin-bottom:14px;}
+    .how-icon{width:64px;height:64px;background:rgba(22,163,74,.15);border:1px solid rgba(22,163,74,.3);border-radius:16px;display:grid;place-items:center;font-size:28px;margin:0 auto 18px;transition:all .3s;}
+    .how-card:hover .how-icon{background:rgba(22,163,74,.25);box-shadow:0 0 20px rgba(22,163,74,.2);}
+    .how-title{color:#fff;font-weight:700;font-size:15px;margin-bottom:8px;}
+    .how-desc{color:#4d9966;font-size:13px;line-height:1.65;}
+
+    /* ── ABOUT ── */
+    .about-section{padding:80px 32px;background:#fff;}
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+    .about-img-wrap{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(22,163,74,.15);}
+    .about-img-wrap img{width:100%;height:400px;object-fit:cover;display:block;}
+    .about-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,46,22,.65) 0%,transparent 55%);}
+    .about-img-stat{position:absolute;bottom:22px;left:22px;right:22px;background:rgba(255,255,255,.95);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-around;backdrop-filter:blur(10px);}
+    .ais-val{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--green);text-align:center;}
+    .ais-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;text-align:center;}
+    .about-chip{display:inline-flex;gap:6px;align-items:center;background:var(--green-bg2);color:var(--green);border:1.5px solid var(--border);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border-radius:99px;margin-bottom:16px;}
+    .about-points{margin-top:28px;display:flex;flex-direction:column;gap:16px;}
+    .about-point{display:flex;gap:14px;align-items:flex-start;}
+    .ap-icon{width:36px;height:36px;flex-shrink:0;background:var(--green-bg2);border:1.5px solid var(--border);border-radius:10px;display:grid;place-items:center;font-size:16px;margin-top:2px;}
+    .ap-text strong{font-weight:700;font-size:14px;color:var(--dark);display:block;margin-bottom:2px;}
+    .ap-text span{font-size:13px;color:var(--muted);line-height:1.55;}
+
+    /* ── CONTACT ── */
+    .contact-section{padding:80px 32px;background:var(--green-bg);}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;margin-top:48px;}
+    .contact-info{display:flex;flex-direction:column;gap:20px;}
+    .contact-item{display:flex;gap:16px;align-items:flex-start;}
+    .ci-icon{width:46px;height:46px;flex-shrink:0;background:#fff;border:2px solid var(--border);border-radius:12px;display:grid;place-items:center;font-size:20px;}
+    .ci-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700;font-family:'Rajdhani',sans-serif;}
+    .ci-val{font-size:14px;font-weight:600;color:var(--dark);margin-top:2px;}
+    .contact-form{display:flex;flex-direction:column;gap:14px;background:#fff;padding:32px;border-radius:18px;border:1.5px solid var(--border);}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .form-field{display:flex;flex-direction:column;gap:6px;}
+    .form-field label{font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.1em;font-family:'Rajdhani',sans-serif;}
+    .form-field input,.form-field textarea,.form-field select{padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--dark);background:var(--green-bg);outline:none;transition:border-color .2s;}
+    .form-field input:focus,.form-field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.1);}
+    .form-field textarea{resize:vertical;min-height:110px;}
+    .submit-btn{padding:14px;background:var(--green);color:#fff;border:none;border-radius:9px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
+    .submit-btn:hover{background:var(--dark2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(22,163,74,.3);}
+
+    /* ── LOGIN ── */
+    .login-section{padding:80px 32px;background:#fff;border-top:2px solid var(--border);}
+    .login-cards{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:48px;max-width:820px;}
+    .login-card{background:var(--green-bg);border:2px solid var(--border);border-radius:20px;padding:40px 32px;text-align:center;transition:all .3s;text-decoration:none;}
+    .login-card:hover{transform:translateY(-8px);border-color:var(--green);box-shadow:0 24px 60px rgba(22,163,74,.15);background:#fff;}
+    .lc-icon{width:72px;height:72px;margin:0 auto 20px;border-radius:18px;display:grid;place-items:center;font-size:32px;}
+    .lc-icon.user{background:var(--green-bg2);border:2px solid var(--border);}
+    .lc-icon.admin{background:var(--dark);border:2px solid var(--dark2);}
+    .lc-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:.04em;}
+    .lc-desc{color:var(--muted);font-size:13px;margin-bottom:26px;line-height:1.6;}
+    .lc-btn{display:block;padding:13px 24px;border-radius:9px;font-size:12px;font-weight:700;transition:all .2s;font-family:'Rajdhani',sans-serif;letter-spacing:.08em;}
+    .lc-btn.user{background:var(--green);color:#fff;box-shadow:0 4px 16px rgba(22,163,74,.25);}
+    .lc-btn.user:hover{background:var(--dark2);}
+    .lc-btn.admin{background:var(--dark);color:#fff;}
+    .lc-btn.admin:hover{background:var(--dark2);}
+
+    /* ── FOOTER ── */
+    footer{background:var(--dark);padding:56px 32px 24px;border-top:3px solid var(--green);}
+    .footer-inner{max-width:1280px;margin:0 auto;}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:44px;border-bottom:1px solid rgba(134,239,172,.12);margin-bottom:24px;}
+    .footer-brand p{color:#4d9966;font-size:13px;line-height:1.7;margin-top:14px;max-width:260px;}
+    .footer-col h4{font-family:'Rajdhani',sans-serif;color:#86efac;font-size:12px;letter-spacing:.1em;margin-bottom:18px;text-transform:uppercase;}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+    .footer-col a{color:#4d9966;text-decoration:none;font-size:13px;transition:color .2s;}
+    .footer-col a:hover{color:#86efac;}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .footer-bottom p{color:#4d9966;font-size:12px;}
+    .footer-socials{display:flex;gap:10px;}
+    .social-btn{width:36px;height:36px;background:rgba(22,163,74,.1);border:1px solid rgba(134,239,172,.2);border-radius:8px;display:grid;place-items:center;font-size:15px;cursor:pointer;transition:all .2s;text-decoration:none;}
+    .social-btn:hover{background:var(--green);}
+
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+    @media(max-width:960px){
+      .hero{grid-template-columns:1fr;}
+      .hero-gif-side{min-height:320px;padding:40px;}
+      .hero-gif-side::after{display:none;}
+      .hero-title-side{padding:40px 28px;}
+      .about-grid,.contact-grid,.login-cards{grid-template-columns:1fr;}
+      .footer-grid{grid-template-columns:1fr 1fr;}
+      nav{padding:0 16px;}
+      .nav-links{display:none;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">🔗 Blockchain-Powered Product Authentication &nbsp;|&nbsp;<b>LIVE ON CHAIN</b></div>
+
+<!-- HEADER -->
+<header>
+  <nav>
+    <a class="logo" href="#">
+      <div class="logo-icon">🔗</div>
+      <span class="logo-text">Chain<span>Verify</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/user/login" class="btn-outline">User Login</a>
+      <a href="/admin/login" class="btn-fill">Admin Login</a>
+    </div>
+  </nav>
+</header>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+
+  <!-- LEFT: GIF -->
+  <div class="hero-gif-side">
+    <div class="gif-live"><div class="pulse"></div> Blockchain Active</div>
+
+    <div class="gif-bubble">
+      <!-- ✅ YOUR GIF IS USED HERE -->
+      <img src="/mnt/user-data/uploads/image.gif" alt="ChainVerify Animation">
+    </div>
+
+    <div class="gif-badge">
+      <div class="gb-icon">🔗</div>
+      <div>
+        <div class="gb-label">Blocks Verified Today</div>
+        <div class="gb-val">14,820+ Verified</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Title -->
+  <div class="hero-title-side">
+    <div class="hero-eyebrow">🛡️ Decentralized · Tamper-Proof · Real-Time</div>
+
+    <h1 class="hero-main-title">
+      <span class="hmt-line1">Fake Product</span>
+      <span class="hmt-line2">Identification</span>
+      <span class="hmt-using">Using</span>
+      <span class="hmt-blockchain">Blockchain</span>
+    </h1>
+
+    <div class="hero-divider"></div>
+
+    <p class="hero-sub">Scan any product's QR code or enter its unique token ID to instantly verify authenticity on an immutable blockchain ledger — covering electronics, fashion, medicine, auto parts, FMCG and more.</p>
+
+    <div class="status-row">
+      <span class="sp ok">✔ Genuine Detected</span>
+      <span class="sp bad">✗ Counterfeit Found</span>
+      <span class="sp pend">⏳ Pending Verify</span>
+    </div>
+
+    <div class="hero-cta">
+      <a href="#products" class="cta-main">🔍 Verify a Product</a>
+      <a href="#how" class="cta-sec">How It Works →</a>
+    </div>
+
+    <div class="hero-stats">
+      <div><div class="stat-val">2.4M+</div><div class="stat-lbl">Products Verified</div></div>
+      <div><div class="stat-val">18K+</div><div class="stat-lbl">Fakes Detected</div></div>
+      <div><div class="stat-val">99.8%</div><div class="stat-lbl">Accuracy Rate</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- CATEGORIES -->
+<div class="categories">
+  <div class="cat-scroll">
+    <a class="cat-pill active" href="#">⚡ Electronics</a>
+    <a class="cat-pill" href="#">👗 Fashion & Apparel</a>
+    <a class="cat-pill" href="#">💊 Medicines & Pharma</a>
+    <a class="cat-pill" href="#">🧴 Cosmetics</a>
+    <a class="cat-pill" href="#">🔧 Auto Parts</a>
+    <a class="cat-pill" href="#">🥤 FMCG & Food</a>
+    <a class="cat-pill" href="#">💎 Luxury Goods</a>
+    <a class="cat-pill" href="#">📦 All Products</a>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products-section" id="products">
+  <div class="section-inner">
+    <div class="products-header">
+      <div>
+        <div class="section-label">🔍 Product Registry</div>
+        <div class="section-title">Verify Any <span class="hl">Product</span></div>
+        <p class="section-sub">Each listing is registered on-chain. Click "Verify" to check authenticity in real-time.</p>
+      </div>
+      <a href="#" class="view-all">View Full Registry →</a>
+    </div>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop" alt="Headphones">
+          <span class="p-badge verified">✔ Verified</span>
+          <div class="p-blockchain">Token: 0xA3F8...B19C · Block #14819</div>
+        </div>
+        <div class="product-body">
+          <div class="p-cat">Electronics</div>
+          <div class="p-name">Sony WH-1000XM5 Headphones</div>
+          <div class="p-verify-bar"><div class="pv-dot g"></div><div class="pv-text g">Blockchain Verified · Genuine</div></div>
+          <div class="p-hash">0xA3F8b91c...d82e · Chain ID: 1</div>
+          <div class="p-footer"><span class="p-price">₹29,990</span><button class="verify-btn" onclick="this.textContent='✔ Verified'">🔗 Verify</button></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop" alt="Shoes">
+          <span class="p-badge fake">✗ FAKE</span>
+          <div class="p-blockchain">Token: INVALID · Chain mismatch</div>
+        </div>
+        <div class="product-body">
+          <div class="p-cat">Fashion</div>
+          <div class="p-name">Nike Air Max 270 (Counterfeit)</div>
+          <div class="p-verify-bar"><div class="pv-dot r"></div><div class="pv-text r">Counterfeit Detected — Do Not Buy</div></div>
+          <div class="p-hash">Token mismatch · No valid block entry</div>
+          <div class="p-footer"><span class="p-price">₹2,499</span><button class="verify-btn" onclick="this.textContent='✗ Fake!'">🔗 Verify</button></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&h=400&fit=crop" alt="Perfume">
+          <span class="p-badge verified">✔ Verified</span>
+          <div class="p-blockchain">Token: 0xC9D1...44FA · Block #14751</div>
+        </div>
+        <div class="product-body">
+          <div class="p-cat">Cosmetics</div>
+          <div class="p-name">Dior Sauvage Eau de Parfum 100ml</div>
+          <div class="p-verify-bar"><div class="pv-dot g"></div><div class="pv-text g">Blockchain Verified · Genuine</div></div>
+          <div class="p-hash">0xC9D14...44FA · Chain ID: 1</div>
+          <div class="p-footer"><span class="p-price">₹8,500</span><button class="verify-btn" onclick="this.textContent='✔ Verified'">🔗 Verify</button></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=400&fit=crop" alt="Laptop">
+          <span class="p-badge unverified">⚠ Pending</span>
+          <div class="p-blockchain">Token: 0xE2B7...90AC · Confirming</div>
+        </div>
+        <div class="product-body">
+          <div class="p-cat">Electronics</div>
+          <div class="p-name">Apple MacBook Air M2 13"</div>
+          <div class="p-verify-bar"><div class="pv-dot y"></div><div class="pv-text y">Pending Manufacturer Confirmation</div></div>
+          <div class="p-hash">0xE2B7a...90AC · Awaiting block</div>
+          <div class="p-footer"><span class="p-price">₹1,14,900</span><button class="verify-btn" onclick="this.textContent='⏳ Pending'">🔗 Verify</button></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop" alt="Medicine">
+          <span class="p-badge verified">✔ Verified</span>
+          <div class="p-blockchain">Token: 0xD5C2...87EF · Block #14811</div>
+        </div>
+        <div class="product-body">
+          <div class="p-cat">Pharmaceutical</div>
+          <div class="p-name">Cipla Azithromycin 500mg Strip</div>
+          <div class="p-verify-bar"><div class="pv-dot g"></div><div class="pv-text g">Blockchain Verified · Genuine</div></div>
+          <div class="p-hash">0xD5C2f...87EF · Chain ID: 1</div>
+          <div class="p-footer"><span class="p-price">₹89</span><button class="verify-btn" onclick="this.textContent='✔ Verified'">🔗 Verify</button></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop" alt="Watch">
+          <span class="p-badge fake">✗ FAKE</span>
+          <div class="p-blockchain">Token: INVALID · Not registered</div>
+        </div>
+        <div class="product-body">
+          <div class="p-cat">Luxury Goods</div>
+          <div class="p-name">Rolex Submariner (Clone)</div>
+          <div class="p-verify-bar"><div class="pv-dot r"></div><div class="pv-text r">Counterfeit Detected — Unregistered</div></div>
+          <div class="p-hash">No blockchain record found</div>
+          <div class="p-footer"><span class="p-price">₹4,999</span><button class="verify-btn" onclick="this.textContent='✗ Fake!'">🔗 Verify</button></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop" alt="Camera">
+          <span class="p-badge verified">✔ Verified</span>
+          <div class="p-blockchain">Token: 0xF0A3...22CB · Block #14802</div>
+        </div>
+        <div class="product-body">
+          <div class="p-cat">Electronics</div>
+          <div class="p-name">Canon EOS R50 Mirrorless Camera</div>
+          <div class="p-verify-bar"><div class="pv-dot g"></div><div class="pv-text g">Blockchain Verified · Genuine</div></div>
+          <div class="p-hash">0xF0A3b...22CB · Chain ID: 1</div>
+          <div class="p-footer"><span class="p-price">₹67,495</span><button class="verify-btn" onclick="this.textContent='✔ Verified'">🔗 Verify</button></div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=400&fit=crop" alt="Sneakers">
+          <span class="p-badge verified">✔ Verified</span>
+          <div class="p-blockchain">Token: 0xB8E6...13DA · Block #14820</div>
+        </div>
+        <div class="product-body">
+          <div class="p-cat">Fashion</div>
+          <div class="p-name">Adidas Ultraboost 22 Running Shoes</div>
+          <div class="p-verify-bar"><div class="pv-dot g"></div><div class="pv-text g">Blockchain Verified · Genuine</div></div>
+          <div class="p-hash">0xB8E6c...13DA · Chain ID: 1</div>
+          <div class="p-footer"><span class="p-price">₹14,999</span><button class="verify-btn" onclick="this.textContent='✔ Verified'">🔗 Verify</button></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-inner">
+    <div class="section-label">⚙️ Process</div>
+    <div class="section-title">How <span class="hl">ChainVerify</span> Works</div>
+    <p class="section-sub">A four-step decentralized verification process that makes counterfeiting impossible.</p>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">STEP 01</div>
+        <div class="how-icon">🏭</div>
+        <div class="how-title">Manufacturer Registration</div>
+        <div class="how-desc">Verified manufacturers register each product on-chain with a unique cryptographic token at point of production.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">STEP 02</div>
+        <div class="how-icon">🏷️</div>
+        <div class="how-title">QR / NFC Tagging</div>
+        <div class="how-desc">Every authentic product is embedded with a tamper-proof QR or NFC tag linked to its immutable blockchain record.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">STEP 03</div>
+        <div class="how-icon">📱</div>
+        <div class="how-title">Consumer Scan</div>
+        <div class="how-desc">Buyers scan the tag using the ChainVerify app or web portal. The system queries the blockchain in real-time.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">STEP 04</div>
+        <div class="how-icon">✅</div>
+        <div class="how-title">Instant Verdict</div>
+        <div class="how-desc">Results show GENUINE, COUNTERFEIT, or PENDING with full chain history — block number, timestamp, and hash.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-img-wrap">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&h=500&fit=crop" alt="Blockchain">
+        <div class="about-img-overlay"></div>
+        <div class="about-img-stat">
+          <div class="ais-item"><div class="ais-val">200+</div><div class="ais-lbl">Brands</div></div>
+          <div class="ais-item"><div class="ais-val">50+</div><div class="ais-lbl">Categories</div></div>
+          <div class="ais-item"><div class="ais-val">99.8%</div><div class="ais-lbl">Accuracy</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="about-chip">🔗 Est. 2024 · Madurai, Tamil Nadu</div>
+        <div class="section-title">Why <span class="hl">Blockchain</span><br>Cannot Be Faked</div>
+        <p class="section-sub">Our decentralized ledger creates an immutable, transparent record for every registered product. Once written, no block can be altered — making counterfeiting cryptographically impossible.</p>
+        <div class="about-points">
+          <div class="about-point"><div class="ap-icon">🔒</div><div class="ap-text"><strong>Immutable Records</strong><span>Every product entry is permanently written to the chain. No authority can alter or delete it.</span></div></div>
+          <div class="about-point"><div class="ap-icon">⚡</div><div class="ap-text"><strong>Real-Time Verification</strong><span>Query results in under 2 seconds — no waiting, no third-party delays.</span></div></div>
+          <div class="about-point"><div class="ap-icon">🌐</div><div class="ap-text"><strong>Decentralized & Transparent</strong><span>No single point of failure. Distributed across thousands of nodes globally.</span></div></div>
+          <div class="about-point"><div class="ap-icon">📦</div><div class="ap-text"><strong>All Product Categories</strong><span>Electronics, fashion, pharma, FMCG, auto parts, luxury goods — every category.</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-inner">
+    <div class="section-label">📡 Contact</div>
+    <div class="section-title">Get In <span class="hl">Touch</span></div>
+    <p class="section-sub">Partner with us, report a counterfeit, or integrate ChainVerify into your supply chain.</p>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-item"><div class="ci-icon">📍</div><div><div class="ci-lbl">Address</div><div class="ci-val">42, Tech Park, Madurai – 625020, Tamil Nadu</div></div></div>
+        <div class="contact-item"><div class="ci-icon">📞</div><div><div class="ci-lbl">Phone</div><div class="ci-val">+91 98765 43210</div></div></div>
+        <div class="contact-item"><div class="ci-icon">✉️</div><div><div class="ci-lbl">Email</div><div class="ci-val">verify@chainverify.in</div></div></div>
+        <div class="contact-item"><div class="ci-icon">🔗</div><div><div class="ci-lbl">Blockchain Network</div><div class="ci-val">Ethereum Mainnet · Chain ID: 1</div></div></div>
+      </div>
+      <div class="contact-form">
+        <div class="form-row">
+          <div class="form-field"><label>Name</label><input type="text" placeholder="Your Name"></div>
+          <div class="form-field"><label>Email</label><input type="email" placeholder="you@email.com"></div>
+        </div>
+        <div class="form-field">
+          <label>Reason</label>
+          <select>
+            <option>Report a Counterfeit Product</option>
+            <option>Manufacturer Partnership</option>
+            <option>API / Integration Request</option>
+            <option>General Inquiry</option>
+          </select>
+        </div>
+        <div class="form-field"><label>Message</label><textarea placeholder="Describe the product or your query..."></textarea></div>
+        <button class="submit-btn">🔗 Submit to ChainVerify</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGIN -->
+<section class="login-section" id="login">
+  <div class="section-inner">
+    <div class="section-label">🔐 Portal Access</div>
+    <div class="section-title">Secure <span class="hl">Login</span></div>
+    <p class="section-sub">Access the verification portal as a consumer or manage the blockchain registry as an admin.</p>
+    <div class="login-cards">
+      <a class="login-card" href="/user/login">
+        <div class="lc-icon user">👤</div>
+        <div class="lc-title">User Login</div>
+        <p class="lc-desc">Verify products, view your scan history, report counterfeits, and track authenticity records.</p>
+        <span class="lc-btn user">ACCESS USER PORTAL</span>
+      </a>
+      <a class="login-card" href="/admin/login">
+        <div class="lc-icon admin">🛡️</div>
+        <div class="lc-title">Admin Login</div>
+        <p class="lc-desc">Manage the product registry, review manufacturer registrations, and monitor chain activity.</p>
+        <span class="lc-btn admin">ACCESS ADMIN PANEL</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="logo" href="#"><div class="logo-icon">🔗</div><span class="logo-text">Chain<span>Verify</span></span></a>
+        <p>Decentralized product authentication powered by blockchain. Fighting counterfeits across all industries.</p>
+      </div>
+      <div class="footer-col"><h4>Verify</h4><ul><li><a href="#">Electronics</a></li><li><a href="#">Fashion</a></li><li><a href="#">Pharmaceuticals</a></li><li><a href="#">Luxury Goods</a></li><li><a href="#">Auto Parts</a></li></ul></div>
+      <div class="footer-col"><h4>Platform</h4><ul><li><a href="#">About Us</a></li><li><a href="#">How It Works</a></li><li><a href="#">For Manufacturers</a></li><li><a href="#">API Docs</a></li><li><a href="#">Whitepaper</a></li></ul></div>
+      <div class="footer-col"><h4>Support</h4><ul><li><a href="#">Report Fake</a></li><li><a href="#">FAQ</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Use</a></li><li><a href="#contact">Contact Us</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 ChainVerify. All rights reserved. Built on Ethereum · Made in Madurai.</p>
+      <div class="footer-socials">
+        <a class="social-btn" href="#">🐙</a>
+        <a class="social-btn" href="#">🐦</a>
+        <a class="social-btn" href="#">💼</a>
+        <a class="social-btn" href="#">💬</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.cat-pill').forEach(pill => {
+    pill.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    });
+  });
+</script>
 </body>
 </html>
