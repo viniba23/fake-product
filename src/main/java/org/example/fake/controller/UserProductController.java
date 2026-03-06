@@ -166,18 +166,35 @@ public class UserProductController {
                 address,
                 ""
         );
-     // Example blockchain hash
+     // product hash example
+     // convert product image to base64
+        String base64Image = "";
+
+        if (product.getImages() != null && !product.getImages().isEmpty()) {
+            base64Image = Base64.getEncoder()
+                    .encodeToString(product.getImages().get(0).getImageData());
+        }
+
+        // get real blockchain hash if exists
         String hash = "HASH-" + product.getId();
 
-        // Send email
+        Optional<BlockchainProduct> bcOpt =
+                blockchainRepo.findByProduct_Id(productId);
+
+        if (bcOpt.isPresent()) {
+            hash = bcOpt.get().getProductHash();
+        }
+
+        // send email
         emailService.sendPurchaseEmail(
                 user.getEmail(),
+                customerName,
                 product.getProductName(),
                 hash,
                 totalAmount,
-                paymentMethod
+                paymentMethod,
+                address
         );
-
         model.addAttribute("message", "Payment Successful ✅");
 
         return "user-payment-success";

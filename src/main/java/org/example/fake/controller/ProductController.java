@@ -10,6 +10,10 @@ import org.example.fake.model.ProductImage;
 import org.example.fake.service.ProductService;
 import org.example.fake.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -152,6 +157,22 @@ public class ProductController {
         return "redirect:/admin/products";
     }
 
+    @GetMapping("/product/image/{id}")
+    @ResponseBody
+    public ResponseEntity<byte[]> getProductImage(@PathVariable Long id) {
 
+        Product product = productService.getProductById(id);
+
+        if(product == null || product.getImages().isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        byte[] image = product.getImages().get(0).getImageData();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+
+        return new ResponseEntity<>(image, headers, HttpStatus.OK);
+    }
 
 }
