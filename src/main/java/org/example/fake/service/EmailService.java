@@ -20,4 +20,30 @@ public class EmailService {
 	                       "If you didn't request this, please ignore this email.");
 	        mailSender.send(message);
 	    }
+	    
+	    public void sendPurchaseEmail(
+	            String toEmail,
+	            String productName,
+	            String productHash,
+	            double amount,
+	            String paymentMethod
+	    ) {
+
+	        SimpleMailMessage message = new SimpleMailMessage();
+
+	        message.setTo(toEmail);
+	        message.setSubject("Payment Successful - Product Purchase");
+
+	        message.setText(
+	                "Payment Successful!\n\n" +
+	                "Product Name: " + productName + "\n" +
+	                "Blockchain Hash: " + productHash + "\n" +
+	                "Payment Method: " + paymentMethod + "\n" +
+	                "Total Amount: ₹" + amount + "\n\n" +
+	                "Thank you for purchasing authentic products.\n" +
+	                "Fake Product Identification System"
+	        );
+
+	        mailSender.send(message);
+	    }
 }

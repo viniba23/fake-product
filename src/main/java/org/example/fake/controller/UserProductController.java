@@ -16,6 +16,7 @@ import org.example.fake.model.VerificationHistory;
 import org.example.fake.repo.BlockchainProductRepository;
 import org.example.fake.repo.ProductQRCodeRepository;
 import org.example.fake.service.CartService;
+import org.example.fake.service.EmailService;
 import org.example.fake.service.ProductService;
 import org.example.fake.service.PurchaseService;
 import org.example.fake.service.ReviewService;
@@ -54,6 +55,9 @@ public class UserProductController {
 	private VerificationHistoryService verificationHistoryService;
 	@Autowired
 	private BlockchainProductRepository blockchainRepo;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	
     @GetMapping("/dashboard")
@@ -161,6 +165,17 @@ public class UserProductController {
                 mobileNumber,
                 address,
                 ""
+        );
+     // Example blockchain hash
+        String hash = "HASH-" + product.getId();
+
+        // Send email
+        emailService.sendPurchaseEmail(
+                user.getEmail(),
+                product.getProductName(),
+                hash,
+                totalAmount,
+                paymentMethod
         );
 
         model.addAttribute("message", "Payment Successful ✅");
