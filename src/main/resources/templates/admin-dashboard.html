@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -78,25 +78,25 @@
 
 <body>
 
-<!-- Header -->
+Header
 <div class="header">
 
     Fake Product Identification System – Admin Panel
 
     <div style="float:right; position:relative;">
 
-        <!-- Notification Icon -->
+        Notification Icon
         <span onclick="toggleNotifications()" style="cursor:pointer; font-size:20px;">
             🔔
         </span>
 
-        <!-- Notification Count -->
+        Notification Count
         <span th:if="${notificationCount > 0}"
               style="background:red;color:white;border-radius:50%;padding:3px 8px;font-size:12px;">
             <span th:text="${notificationCount}"></span>
         </span>
 
-        <!-- Notification Dropdown -->
+        Notification Dropdown
         <div id="notificationBox"
              style="display:none;position:absolute;right:0;background:white;width:300px;
              box-shadow:0 0 10px rgba(0,0,0,0.2);padding:10px;color:black;">
@@ -127,7 +127,7 @@
 
 <div class="wrapper">
 
-    <!-- Sidebar -->
+    Sidebar
   
 
 <div class="sidebar">
@@ -146,7 +146,7 @@
 
     <a href="/admin/verification-logs">Verification Monitoring</a>
 
-    <!-- NEW SECTION -->
+    NEW SECTION
     <a href="/admin/cart-details">User Cart Details</a>
     <a href="/admin/purchase-details">User Purchase Details</a>
     <a href="/admin/reviews">Product Reviews</a>
@@ -158,7 +158,7 @@
 </div>
 
 
-    <!-- Main Content -->
+    Main Content
     <div class="content">
         <div class="card">
             <h2>Welcome to Admin Dashboard</h2>
@@ -169,7 +169,7 @@
 
 </div>
 
-<!-- Footer -->
+Footer
 <div class="footer">
     © 2026 Fake Product Identification System | Admin Module
 </div>
@@ -184,5 +184,873 @@ function toggleNotifications() {
     }
 }
 </script>
+</body>
+</html>
+ -->
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard – ChainVerify</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange:        #f97316;
+      --orange-dark:   #c2410c;
+      --orange-light:  #fb923c;
+      --orange-pale:   #ffedd5;
+      --orange-bg:     #fff7ed;
+      --orange-mid:    #fed7aa;
+      --white:         #ffffff;
+      --dark:          #1c0a00;
+      --dark2:         #431407;
+      --text:          #292524;
+      --muted:         #78716c;
+      --border:        #fed7aa;
+      --sidebar-bg:    #1a0800;
+      --sidebar-hover: #2d1200;
+      --success:       #16a34a;
+      --danger:        #dc2626;
+      --warn:          #d97706;
+
+      --header-h: 64px;
+      --footer-h: 48px;
+      --sidebar-w: 240px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    /* ── ROOT LAYOUT: no body scroll ── */
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--orange-bg);
+      color: var(--text);
+    }
+
+    /* ══════════════════════════════════
+       HEADER — FIXED TOP
+    ══════════════════════════════════ */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 400;
+      height: var(--header-h);
+      background: linear-gradient(135deg, var(--dark2) 0%, #6b1a00 50%, var(--dark2) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: 0 4px 20px rgba(249,115,22,0.25);
+      border-bottom: 2px solid rgba(249,115,22,0.3);
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top:0; left:0; right:0; height:3px;
+      background: linear-gradient(90deg, var(--orange-dark), var(--orange), #f59e0b, var(--orange-light));
+    }
+
+    /* brand */
+    .header-brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .header-logo {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+      border-radius: 10px;
+      display: grid; place-items: center;
+      font-size: 19px;
+      box-shadow: 0 4px 12px rgba(249,115,22,0.4);
+    }
+    .header-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px; font-weight: 700;
+      color: var(--white); letter-spacing:.04em; line-height:1.2;
+    }
+    .header-title span { color: var(--orange-light); }
+    .header-sub {
+      font-size: 9px; color: rgba(255,255,255,0.4);
+      text-transform: uppercase; letter-spacing:.1em;
+    }
+
+    /* center title */
+    .header-center {
+      position: absolute;
+      left: 50%; transform: translateX(-50%);
+      text-align: center;
+      margin-right:500px;
+    }
+    .hc-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px; font-weight: 700;
+      color: var(--white); letter-spacing:.06em;
+    }
+    .hc-title span { color: var(--orange-light); }
+    .hc-bread {
+      font-size: 10px; color: rgba(255,255,255,0.35);
+      letter-spacing:.04em;
+    }
+    .hc-bread a {
+      color: rgba(249,115,22,0.7);
+      text-decoration: none;
+    }
+    .hc-bread a:hover { color: var(--orange-light); }
+
+    /* header right */
+    .header-right {
+      display: flex; align-items: center; gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .live-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(22,163,74,0.15);
+      border: 1px solid rgba(22,163,74,0.3);
+      color: #86efac;
+      font-size: 10px; font-weight: 700;
+      padding: 5px 11px; border-radius: 99px;
+      letter-spacing:.06em;
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: #22c55e; border-radius: 50%;
+      animation: livePulse 1.4s infinite;
+    }
+    @keyframes livePulse {
+      0%,100%{opacity:1;transform:scale(1)}
+      50%{opacity:.4;transform:scale(1.5)}
+    }
+
+    /* notif */
+    .notif-wrap { position: relative; }
+    .notif-btn {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      display: grid; place-items: center;
+      font-size: 17px; cursor: pointer;
+      transition: all .2s; position: relative;
+    }
+    .notif-btn:hover {
+      background: rgba(249,115,22,0.2);
+      border-color: rgba(249,115,22,0.4);
+    }
+    .notif-count {
+      position: absolute; top:-6px; right:-6px;
+      background: var(--danger); color: var(--white);
+      font-size: 9px; font-weight: 700;
+      width: 17px; height: 17px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      border: 2px solid var(--dark2);
+      animation: bounceIn .4s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes bounceIn { from{transform:scale(0)} to{transform:scale(1)} }
+
+    .notif-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px); right: 0;
+      width: 300px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.18);
+      z-index: 600; overflow: hidden;
+      animation: dropDown .25s ease;
+    }
+    @keyframes dropDown {
+      from{opacity:0;transform:translateY(-8px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    .notif-dropdown.open { display: block; }
+    .notif-header {
+      background: linear-gradient(135deg, var(--orange-pale), var(--orange-mid));
+      padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .notif-header h4 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--dark2); letter-spacing:.04em;
+    }
+    .notif-clear {
+      font-size: 11px; color: var(--orange-dark);
+      cursor: pointer; font-weight: 600;
+    }
+    .notif-body { max-height: 260px; overflow-y: auto; }
+    .notif-body::-webkit-scrollbar { width:3px; }
+    .notif-body::-webkit-scrollbar-thumb { background:var(--orange-mid); border-radius:3px; }
+    .notif-item {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--orange-pale);
+      display: flex; gap: 10px; align-items: flex-start;
+      transition: background .2s;
+    }
+    .notif-item:hover { background: var(--orange-bg); }
+    .notif-icon { font-size: 18px; flex-shrink:0; margin-top:2px; }
+    .notif-name { font-size:13px; font-weight:700; color:var(--dark); margin-bottom:2px; }
+    .notif-msg { font-size:11px; color:var(--muted); }
+    .notif-action {
+      display:inline-block; margin-top:4px;
+      font-size:11px; font-weight:700;
+      color:var(--orange); text-decoration:none;
+    }
+    .notif-empty { padding:24px; text-align:center; color:var(--muted); font-size:13px; }
+    .notif-footer {
+      padding:9px 16px;
+      background:var(--orange-bg);
+      border-top:1px solid var(--border);
+      text-align:center;
+    }
+    .notif-footer a { font-size:12px; color:var(--orange); font-weight:600; text-decoration:none; }
+
+    /* admin profile */
+    .admin-profile {
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; padding: 5px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: all .2s;
+    }
+    .admin-profile:hover { background: rgba(255,255,255,0.07); }
+    .admin-avatar {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--orange-light), var(--orange));
+      border-radius: 8px;
+      display: grid; place-items: center; font-size: 15px;
+    }
+    .admin-name { font-size:13px; font-weight:700; color:var(--white); }
+    .admin-role { font-size:9px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:.08em; }
+
+    .logout-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 7px 14px;
+      background: rgba(220,38,38,0.15);
+      border: 1px solid rgba(220,38,38,0.3);
+      border-radius: 8px; color: #fca5a5;
+      text-decoration: none; font-size: 12px; font-weight: 700;
+      transition: all .2s;
+    }
+    .logout-btn:hover {
+      background: rgba(220,38,38,0.3);
+      color: var(--white); border-color: rgba(220,38,38,0.6);
+    }
+
+    /* ══════════════════════════════════
+       FOOTER — FIXED BOTTOM
+    ══════════════════════════════════ */
+    .footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 400;
+      height: var(--footer-h);
+      background: var(--dark2);
+      border-top: 2px solid rgba(249,115,22,0.25);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      gap: 10px;
+    }
+    .footer-left { display:flex; align-items:center; gap:9px; }
+    .footer-logo {
+      width: 26px; height: 26px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+      border-radius: 7px;
+      display: grid; place-items: center; font-size:13px;
+    }
+    .footer-text { font-size:11px; color:rgba(255,255,255,0.38); white-space:nowrap; }
+    .footer-text b { color:var(--orange-light); }
+    .footer-links { display:flex; gap:16px; }
+    .footer-links a {
+      font-size:11px; color:rgba(255,255,255,0.28);
+      text-decoration:none; transition:color .2s; white-space:nowrap;
+    }
+    .footer-links a:hover { color:var(--orange-light); }
+
+    /* ══════════════════════════════════
+       MAIN LAYOUT BODY
+       — sits between fixed header & footer
+    ══════════════════════════════════ */
+    .layout {
+      position: fixed;
+      top: var(--header-h);
+      bottom: var(--footer-h);
+      left: 0; right: 0;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ══════════════════════════════════
+       SIDEBAR — FIXED LEFT, SCROLLABLE
+    ══════════════════════════════════ */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      padding: 16px 0 20px;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.25);
+      overflow-y: auto;     /* ← sidebar scrolls independently */
+      overflow-x: hidden;
+    }
+    .sidebar::-webkit-scrollbar { width:3px; }
+    .sidebar::-webkit-scrollbar-thumb { background:rgba(249,115,22,0.3); border-radius:3px; }
+
+    /* sidebar admin card */
+    .sidebar-admin {
+      margin: 0 14px 18px;
+      background: rgba(249,115,22,0.08);
+      border: 1px solid rgba(249,115,22,0.15);
+      border-radius: 14px; padding: 14px; text-align: center;
+    }
+    .sa-avatar {
+      width: 50px; height: 50px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+      border-radius: 14px;
+      display: grid; place-items: center; font-size: 23px;
+      margin: 0 auto 9px;
+      box-shadow: 0 4px 14px rgba(249,115,22,0.3);
+    }
+    .sa-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: var(--white); letter-spacing:.04em;
+    }
+    .sa-role {
+      font-size: 9px; color: rgba(255,255,255,0.35);
+      text-transform: uppercase; letter-spacing:.1em; margin-top:2px;
+    }
+    .sa-status {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 8px;
+      background: rgba(22,163,74,0.15);
+      border: 1px solid rgba(22,163,74,0.25);
+      color: #86efac; font-size: 9px; font-weight: 700;
+      padding: 3px 10px; border-radius: 99px;
+    }
+    .sa-status::before {
+      content:''; width:5px; height:5px;
+      background:#22c55e; border-radius:50%;
+    }
+
+    .sidebar-section {
+      padding: 10px 18px 4px;
+      font-size: 9px; font-weight: 700;
+      color: rgba(255,255,255,0.18);
+      text-transform: uppercase; letter-spacing:.14em;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .sidebar a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 18px;
+      color: rgba(255,255,255,0.48);
+      text-decoration: none; font-size: 13px; font-weight: 600;
+      border-left: 3px solid transparent;
+      transition: all .2s; margin: 1px 0;
+    }
+    .sidebar a:hover {
+      background: var(--sidebar-hover);
+      color: var(--white);
+      border-left-color: rgba(249,115,22,0.4);
+    }
+    .sidebar a.active {
+      background: rgba(249,115,22,0.12);
+      color: var(--orange-light);
+      border-left-color: var(--orange);
+    }
+    .sidebar a .s-icon { font-size:15px; flex-shrink:0; }
+
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 8px 14px;
+    }
+
+    .sidebar-logout {
+      margin: 16px 14px 0 !important;
+      background: rgba(220,38,38,0.1) !important;
+      border: 1px solid rgba(220,38,38,0.2) !important;
+      border-radius: 10px !important;
+      color: #fca5a5 !important;
+      border-left: 1px solid rgba(220,38,38,0.2) !important;
+      justify-content: center !important;
+      padding: 10px !important;
+    }
+    .sidebar-logout:hover {
+      background: rgba(220,38,38,0.25) !important;
+      color: var(--white) !important;
+      border-color: rgba(220,38,38,0.5) !important;
+    }
+
+    /* ══════════════════════════════════
+       CONTENT — SCROLLABLE ONLY HERE
+    ══════════════════════════════════ */
+    .content {
+      flex: 1;
+      overflow-y: auto;   /* ← only content scrolls */
+      overflow-x: hidden;
+      padding: 24px;
+      background: var(--orange-bg);
+    }
+    .content::-webkit-scrollbar { width:5px; }
+    .content::-webkit-scrollbar-thumb { background:var(--orange-mid); border-radius:5px; }
+    .content::-webkit-scrollbar-track { background:transparent; }
+
+    /* ── page header inside content ── */
+    .page-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px; flex-wrap: wrap; gap: 12px;
+    }
+    .page-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 26px; font-weight: 700;
+      color: var(--dark2); letter-spacing:.04em;
+    }
+    .page-title span { color: var(--orange); }
+    .page-breadcrumb { font-size:12px; color:var(--muted); margin-top:3px; }
+    .page-breadcrumb a { color:var(--orange); text-decoration:none; }
+    .page-breadcrumb a:hover { text-decoration:underline; }
+
+    /* ── stat cards ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px,1fr));
+      gap: 16px; margin-bottom: 22px;
+    }
+    .stat-card {
+      background: var(--white); border-radius: 16px;
+      padding: 18px 20px; border: 1.5px solid var(--border);
+      display: flex; align-items: center; gap: 14px;
+      transition: all .3s; position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    }
+    .stat-card.c1::before { background:linear-gradient(90deg,var(--orange),var(--orange-light)); }
+    .stat-card.c2::before { background:linear-gradient(90deg,#16a34a,#22c55e); }
+    .stat-card.c3::before { background:linear-gradient(90deg,var(--danger),#f87171); }
+    .stat-card.c4::before { background:linear-gradient(90deg,#7c3aed,#a78bfa); }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(249,115,22,0.1);
+      border-color: var(--orange-light);
+    }
+    .stat-icon {
+      width: 50px; height: 50px; border-radius: 13px;
+      display: grid; place-items: center;
+      font-size: 23px; flex-shrink: 0;
+    }
+    .stat-icon.c1{background:#ffedd5;} .stat-icon.c2{background:#dcfce7;}
+    .stat-icon.c3{background:#fee2e2;} .stat-icon.c4{background:#ede9fe;}
+    .stat-val {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 28px; font-weight: 700; color: var(--dark); line-height:1;
+    }
+    .stat-lbl { font-size:12px; color:var(--muted); margin-top:3px; }
+    .stat-trend { font-size:11px; font-weight:700; margin-top:4px; }
+    .stat-trend.up { color:var(--success); }
+    .stat-trend.down { color:var(--danger); }
+
+    /* ── card ── */
+    .card {
+      background: var(--white); border-radius: 18px;
+      padding: 24px; border: 1.5px solid var(--border);
+      box-shadow: 0 4px 24px rgba(249,115,22,0.05);
+      margin-bottom: 20px;
+    }
+    .card-header-row {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px; padding-bottom: 14px;
+      border-bottom: 1.5px solid var(--orange-pale);
+    }
+    .card-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px; font-weight: 700;
+      color: var(--dark2); letter-spacing:.04em;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-badge {
+      font-size: 10px; font-weight: 700;
+      padding: 3px 10px; border-radius: 99px;
+      text-transform: uppercase; letter-spacing:.08em;
+    }
+    .card-badge.orange { background:var(--orange-pale); color:var(--orange-dark); border:1px solid var(--orange-mid); }
+    .card-badge.green  { background:#dcfce7; color:#15803d; border:1px solid #bbf7d0; }
+
+    /* ── welcome banner ── */
+    .welcome-card {
+      background: linear-gradient(135deg, var(--dark2) 0%, #6b1a00 60%, #431407 100%);
+      border-radius: 18px; padding: 28px 32px;
+      margin-bottom: 20px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+      position: relative; overflow: hidden;
+    }
+    .welcome-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+      background:linear-gradient(90deg,var(--orange-dark),var(--orange),#f59e0b);
+    }
+    .welcome-card::after {
+      content:''; position:absolute;
+      width:280px; height:280px;
+      background:radial-gradient(circle,rgba(249,115,22,0.12) 0%,transparent 70%);
+      top:-70px; right:-50px; pointer-events:none;
+    }
+    .wc-text { position:relative; z-index:1; }
+    .wc-greeting { font-size:12px; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:.1em; margin-bottom:5px; }
+    .wc-title { font-family:'Rajdhani',sans-serif; font-size:27px; font-weight:700; color:var(--white); letter-spacing:.04em; margin-bottom:7px; }
+    .wc-title span { color:var(--orange-light); }
+    .wc-desc { color:rgba(255,255,255,0.45); font-size:13px; line-height:1.6; max-width:400px; }
+    .wc-emoji { font-size:64px; position:relative; z-index:1; }
+
+    /* ── quick links ── */
+    .quick-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+      gap: 12px;
+    }
+    .ql-item {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 9px;
+      padding: 18px 14px;
+      background: var(--orange-bg); border: 1.5px solid var(--border);
+      border-radius: 13px; text-decoration: none;
+      transition: all .25s; text-align: center;
+    }
+    .ql-item:hover {
+      background: var(--white); border-color: var(--orange);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(249,115,22,0.12);
+    }
+    .ql-icon {
+      width: 46px; height: 46px;
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 12px; display: grid; place-items: center;
+      font-size: 21px; transition: all .25s;
+    }
+    .ql-item:hover .ql-icon { background:var(--orange); border-color:var(--orange); }
+    .ql-label { font-size:12px; font-weight:700; color:var(--dark2); }
+
+    /* ── system status ── */
+    .status-row {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 11px 14px;
+      background: var(--orange-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+    .status-row:last-child { margin-bottom:0; }
+    .status-label { font-weight:600; font-size:13px; color:var(--dark); }
+    .status-pill {
+      background:#dcfce7; color:#15803d;
+      font-size:10px; font-weight:700;
+      padding:3px 12px; border-radius:99px;
+      border:1px solid #bbf7d0;
+    }
+
+    @media(max-width:860px){
+      .sidebar { display:none; }
+      .header-center { display:none; }
+      .stats-grid { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ FIXED HEADER ══ -->
+<div class="header">
+
+  <a class="header-brand" href="/admin/dashboard">
+    <div class="header-logo">🔗</div>
+    <div>
+      <div class="header-title">Chain<span>Verify</span></div>
+      <div class="header-sub">Admin Control Panel</div>
+    </div>
+  </a>
+
+  <!-- CENTER TITLE -->
+<!-- PAGE TITLE — left side after brand -->
+<div style="margin-right: 650px;">
+  <div style="
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: .06em;
+  ">Admin <span style="color: var(--orange-light);">Dashboard</span></div>
+  <div style="
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: .04em;
+    margin-top: 1px;
+  ">
+    <a href="/admin/dashboard" style="color:rgba(249,115,22,0.7); text-decoration:none;">🏠 Home</a>
+    &rsaquo; Dashboard
+  </div>
+</div>
+
+  <!-- RIGHT -->
+  <div class="header-right">
+
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      BLOCKCHAIN LIVE
+    </div>
+
+    <!-- Notification -->
+    <div class="notif-wrap">
+      <div class="notif-btn" onclick="toggleNotif()">
+        🔔
+        <span class="notif-count"
+          th:if="${notificationCount != null and notificationCount > 0}"
+          th:text="${notificationCount}">
+        </span>
+      </div>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-header">
+          <h4>🔔 Notifications</h4>
+          <span class="notif-clear" onclick="toggleNotif()">✕ Close</span>
+        </div>
+        <div class="notif-body">
+          <div th:if="${outOfStockProducts == null or outOfStockProducts.isEmpty()}" class="notif-empty">
+            ✅ No new notifications
+          </div>
+          <div th:each="p : ${outOfStockProducts}" class="notif-item">
+            <div class="notif-icon">⚠️</div>
+            <div>
+              <div class="notif-name" th:text="${p.productName}">Product</div>
+              <div class="notif-msg">This product is out of stock.</div>
+              <a class="notif-action" th:href="@{/admin/products/edit/{id}(id=${p.id})}">→ Restock Now</a>
+            </div>
+          </div>
+        </div>
+        <div class="notif-footer">
+          <a href="/admin/products">View All Products →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div class="admin-profile">
+      <div class="admin-avatar">🛡️</div>
+      <div>
+        <div class="admin-name">Admin</div>
+        <div class="admin-role">Super Admin</div>
+      </div>
+    </div>
+
+    <a href="/logout" class="logout-btn">🚪 Logout</a>
+
+  </div>
+</div>
+
+<!-- ══ FIXED LAYOUT (between header & footer) ══ -->
+<div class="layout">
+
+  <!-- ══ FIXED SIDEBAR (scrolls independently) ══ -->
+  <div class="sidebar">
+<!-- 
+    <div class="sidebar-admin">
+      <div class="sa-avatar">🛡️</div>
+      <div class="sa-name">Admin Panel</div>
+      <div class="sa-role">ChainVerify System</div>
+      <div class="sa-status">Online</div>
+    </div> -->
+
+    <div class="sidebar-section">Main</div>
+    <a href="/admin/dashboard" class="active">
+      <span class="s-icon">🏠</span> Dashboard
+    </a>
+    <a href="/admin/users">
+      <span class="s-icon">👥</span> User Management
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">Products</div>
+    <a href="/admin/products/add">
+      <span class="s-icon">➕</span> Product Registration
+    </a>
+    <a href="/admin/products">
+      <span class="s-icon">📦</span> Manage Products
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">Blockchain</div>
+    <a href="/admin/blockchain">
+      <span class="s-icon">⛓️</span> Blockchain Enrollment
+    </a>
+    <a href="/admin/qr">
+      <span class="s-icon">📱</span> QR Code Generation
+    </a>
+    <a href="/admin/verification-logs">
+      <span class="s-icon">🔍</span> Verification Monitoring
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">Orders & Reviews</div>
+    <a href="/admin/cart-details">
+      <span class="s-icon">🛒</span> User Cart Details
+    </a>
+    <a href="/admin/purchase-details">
+      <span class="s-icon">💳</span> Purchase Details
+    </a>
+    <a href="/admin/reviews">
+      <span class="s-icon">⭐</span> Product Reviews
+    </a>
+    <a href="/admin/reviews/approved">
+      <span class="s-icon">✅</span> Approved Reviews
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <a href="/logout" class="sidebar-logout">
+      <span class="s-icon">🚪</span> Logout
+    </a>
+
+  </div>
+
+  <!-- ══ SCROLLABLE CONTENT ONLY ══ -->
+  <div class="content">
+
+    <!-- Page header inside content -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">Admin <span>Dashboard</span></div>
+        <div class="page-breadcrumb">
+          <a href="/admin/dashboard">🏠 Home</a> › Dashboard
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome Banner -->
+ <!--    <div class="welcome-card">
+      <div class="wc-text">
+        <div class="wc-greeting">👋 Welcome Back</div>
+        <div class="wc-title">Fake Product <span>Identification</span> System</div>
+        <div class="wc-desc">You have successfully logged in as an admin. Use the sidebar to manage users, products, blockchain enrollment, QR codes, and verification logs.</div>
+      </div>
+      <div class="wc-emoji">🛡️</div>
+    </div> -->
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card c1">
+        <div class="stat-icon c1">📦</div>
+        <div>
+          <div class="stat-val">480</div>
+          <div class="stat-lbl">Total Products</div>
+          <div class="stat-trend up">↑ +12 this week</div>
+        </div>
+      </div>
+      <div class="stat-card c2">
+        <div class="stat-icon c2">✅</div>
+        <div>
+          <div class="stat-val">2.4M</div>
+          <div class="stat-lbl">Verified Products</div>
+          <div class="stat-trend up">↑ +320 today</div>
+        </div>
+      </div>
+      <div class="stat-card c3">
+        <div class="stat-icon c3">🚨</div>
+        <div>
+          <div class="stat-val">18K</div>
+          <div class="stat-lbl">Fakes Detected</div>
+          <div class="stat-trend down">↑ +45 today</div>
+        </div>
+      </div>
+      <div class="stat-card c4">
+        <div class="stat-icon c4">👥</div>
+        <div>
+          <div class="stat-val">1,240</div>
+          <div class="stat-lbl">Registered Users</div>
+          <div class="stat-trend up">↑ +8 today</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="card-header-row">
+        <div class="card-title">⚡ Quick Actions <span class="card-badge orange">Admin</span></div>
+      </div>
+      <div class="quick-links">
+        <a class="ql-item" href="/admin/products/add"><div class="ql-icon">➕</div><div class="ql-label">Add Product</div></a>
+        <a class="ql-item" href="/admin/blockchain"><div class="ql-icon">⛓️</div><div class="ql-label">Blockchain Enroll</div></a>
+        <a class="ql-item" href="/admin/qr"><div class="ql-icon">📱</div><div class="ql-label">Generate QR</div></a>
+        <a class="ql-item" href="/admin/users"><div class="ql-icon">👥</div><div class="ql-label">Manage Users</div></a>
+        <a class="ql-item" href="/admin/verification-logs"><div class="ql-icon">🔍</div><div class="ql-label">Verify Logs</div></a>
+        <a class="ql-item" href="/admin/purchase-details"><div class="ql-icon">💳</div><div class="ql-label">Purchases</div></a>
+        <a class="ql-item" href="/admin/reviews"><div class="ql-icon">⭐</div><div class="ql-label">Reviews</div></a>
+        <a class="ql-item" href="/logout"><div class="ql-icon">🚪</div><div class="ql-label">Logout</div></a>
+      </div>
+    </div>
+
+    <!-- System Status -->
+    <div class="card">
+      <div class="card-header-row">
+        <div class="card-title">🔗 System Status <span class="card-badge green">All Systems Operational</span></div>
+      </div>
+      <div class="status-row"><span class="status-label">⛓️ Blockchain Network</span><span class="status-pill">● LIVE</span></div>
+      <div class="status-row"><span class="status-label">📱 QR Verification Service</span><span class="status-pill">● ACTIVE</span></div>
+      <div class="status-row"><span class="status-label">🗄️ Database Connection</span><span class="status-pill">● CONNECTED</span></div>
+      <div class="status-row"><span class="status-label">🔒 SSL Certificate</span><span class="status-pill">● VALID</span></div>
+    </div>
+
+  </div><!-- end .content -->
+
+</div><!-- end .layout -->
+
+<!-- ══ FIXED FOOTER ══ -->
+<div class="footer">
+  <div class="footer-left">
+    <div class="footer-logo">🔗</div>
+    <div class="footer-text">
+      © 2026 <b>ChainVerify</b> — Fake Product Identification System · Admin Module
+    </div>
+  </div>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Use</a>
+    <a href="/admin/verification-logs">Audit Logs</a>
+    <a href="/logout">Logout</a>
+  </div>
+</div>
+
+<script>
+  function toggleNotif() {
+    document.getElementById('notifDropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    const wrap = document.querySelector('.notif-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById('notifDropdown').classList.remove('open');
+    }
+  });
+  const links = document.querySelectorAll('.sidebar a');
+  links.forEach(link => {
+    if (link.href === window.location.href) {
+      links.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    }
+  });
+</script>
+
 </body>
 </html>
