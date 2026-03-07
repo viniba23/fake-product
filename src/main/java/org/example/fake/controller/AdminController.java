@@ -34,6 +34,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
     
+    
     @Autowired
     private UserRepository userRepository;
     
@@ -62,21 +63,31 @@ public class AdminController {
         return "admin-login";
     }
     
-    @GetMapping("/dashboard")
-    public String showDashboard() {
-        return "admin-dashboard";
-    }
+//    @GetMapping("/dashboard")
+//    public String showDashboard() {
+//        return "admin-dashboard";
+//    }
 
+//    @PostMapping("/login")
+//    public String login(@RequestParam String email,
+//                       @RequestParam String password,
+//                       Model model) {
+//        if (adminService.authenticate(email, password) != null) {
+//            return "admin-dashboard";
+//        }
+//        return "redirect:/admin/login?error=true";
+//    }
     @PostMapping("/login")
     public String login(@RequestParam String email,
                        @RequestParam String password,
                        Model model) {
+
         if (adminService.authenticate(email, password) != null) {
-            return "admin-dashboard";
+            return "redirect:/admin/dashboard";
         }
+
         return "redirect:/admin/login?error=true";
     }
-    
     @GetMapping("/forgot-password")
     public String showAdminForgotPasswordForm(Model model) {
         model.addAttribute("message", null);
@@ -310,5 +321,19 @@ public class AdminController {
         model.addAttribute("userMap", userMap);
 
         return "admin-verification-logs";
+    }
+    @GetMapping("/dashboard")
+    public String adminDashboard(Model model) {
+
+        List<Product> outOfStockProducts = productService.getOutOfStockProducts();
+
+        if(outOfStockProducts == null){
+            outOfStockProducts = new java.util.ArrayList<>();
+        }
+
+        model.addAttribute("outOfStockProducts", outOfStockProducts);
+        model.addAttribute("notificationCount", outOfStockProducts.size());
+
+        return "admin-dashboard";
     }
 }

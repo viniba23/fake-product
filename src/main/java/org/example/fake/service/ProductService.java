@@ -81,6 +81,8 @@ public class ProductService {
 //        productImageRepository.deleteByIdIn(imageIds);
 //    }
 
-    
+    public List<Product> getOutOfStockProducts() {
+        return productRepository.findByQuantityLessThanEqual(0);
+    }
     
 }

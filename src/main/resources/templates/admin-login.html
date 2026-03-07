@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -51,4 +51,622 @@
     </div>
 </body>
 </html>
- 
+  -->
+  
+  <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login – ChainVerify</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange:        #f97316;
+      --orange-dark:   #c2410c;
+      --orange-light:  #fb923c;
+      --orange-pale:   #ffedd5;
+      --orange-bg:     #fff7ed;
+      --orange-mid:    #fed7aa;
+      --white:         #ffffff;
+      --dark:          #1c0a00;
+      --dark2:         #431407;
+      --text:          #292524;
+      --muted:         #78716c;
+      --border:        #fed7aa;
+      --red:           #dc2626;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+      background: var(--orange-bg);
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    /* ══════════════════════════════════
+       LEFT PANEL
+    ══════════════════════════════════ */
+    .left-panel {
+      flex: 1;
+      background: linear-gradient(160deg, #fff7ed 0%, #ffedd5 50%, #fde8c8 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* big soft glow behind gif */
+    .left-panel::after {
+      content: '';
+      position: absolute;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(249,115,22,0.18) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* rotating dashed rings */
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(249,115,22,0.2);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .ring.r1 { width:320px; height:320px; animation: spin 18s linear infinite; }
+    .ring.r2 { width:450px; height:450px; animation: spin 28s linear infinite reverse; border-style:dotted; }
+    .ring.r3 { width:200px; height:200px; animation: spin 12s linear infinite; border-color:rgba(249,115,22,0.3); }
+    @keyframes spin { to { transform:translate(-50%,-50%) rotate(360deg); } }
+
+    /* floating emoji icons around the gif */
+    .float-icon {
+      position: absolute;
+      font-size: 22px;
+      animation: floatBounce ease-in-out infinite alternate;
+      z-index: 3;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    }
+    .fi1 { top:14%; left:14%; animation-duration:3.2s; }
+    .fi2 { top:18%; right:12%; animation-duration:4.1s; animation-delay:.6s; }
+    .fi3 { bottom:22%; left:10%; animation-duration:3.7s; animation-delay:.3s; }
+    .fi4 { bottom:18%; right:14%; animation-duration:4.4s; animation-delay:1s; }
+    .fi5 { top:50%; left:5%; animation-duration:3.9s; animation-delay:.8s; }
+    .fi6 { top:50%; right:5%; animation-duration:3.5s; animation-delay:.4s; }
+
+    @keyframes floatBounce {
+      from { transform:translateY(0) scale(1); }
+      to   { transform:translateY(-14px) scale(1.15); }
+    }
+
+    /* Brand top-left */
+    .brand-tag {
+      position: absolute;
+      top: 26px; left: 28px;
+      display: flex; align-items: center; gap: 9px;
+      text-decoration: none; z-index: 10;
+    }
+    .brand-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+      border-radius: 9px;
+      display: grid; place-items: center;
+      font-size: 17px;
+      box-shadow: 0 4px 12px rgba(249,115,22,0.35);
+    }
+    .brand-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px; font-weight: 700;
+      color: var(--dark2); letter-spacing:.04em;
+    }
+    .brand-name span { color: var(--orange); }
+
+    /* ── GIF IMAGE ── */
+    .gif-card {
+      position: relative;
+      z-index: 4;
+      background: var(--white);
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow:
+        0 24px 60px rgba(249,115,22,0.18),
+        0 0 0 6px rgba(249,115,22,0.08),
+        0 0 0 12px rgba(249,115,22,0.04);
+      animation: popIn .9s cubic-bezier(.34,1.56,.64,1) both;
+      border: 2px solid rgba(249,115,22,0.15);
+    }
+    @keyframes popIn {
+      from { transform:scale(0.6) rotate(-6deg); opacity:0; }
+      to   { transform:scale(1) rotate(0deg); opacity:1; }
+    }
+
+    .gif-card img {
+      width: 280px;
+      height: 280px;
+      object-fit: contain;
+      display: block;
+      border-radius: 16px;
+    }
+
+    /* warning label on gif card */
+    .gif-label {
+      position: absolute;
+      top: -14px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--red);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      padding: 5px 16px;
+      border-radius: 99px;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(220,38,38,0.3);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .blink-dot {
+      width: 6px; height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      animation: blink 1.2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* text below gif */
+    .left-text {
+      position: relative; z-index: 4;
+      text-align: center;
+      margin-top: 28px;
+      animation: fadeUp .7s .4s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .left-text h2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 26px; font-weight: 700;
+      color: var(--dark2); letter-spacing:.03em;
+      margin-bottom: 7px;
+    }
+    .left-text h2 span { color: var(--orange); }
+    .left-text p {
+      color: var(--muted);
+      font-size: 13px; line-height: 1.65;
+      max-width: 290px;
+    }
+
+    /* stats */
+    .left-stats {
+      display: flex; gap: 14px;
+      margin-top: 24px;
+      position: relative; z-index: 4;
+      animation: fadeUp .7s .5s ease both;
+    }
+    .ls-item {
+      text-align: center;
+      background: rgba(255,255,255,0.85);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      backdrop-filter: blur(8px);
+    }
+    .ls-val {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px; font-weight: 700;
+      color: var(--orange);
+    }
+    .ls-lbl {
+      font-size: 9px; color: var(--muted);
+      text-transform: uppercase; letter-spacing:.08em;
+    }
+
+    /* panel divider */
+    .panel-divider {
+      width: 1px; flex-shrink: 0;
+      background: linear-gradient(180deg, transparent, var(--orange-mid), var(--border), transparent);
+    }
+
+    /* ══════════════════════════════════
+       RIGHT PANEL — FORM
+    ══════════════════════════════════ */
+    .right-panel {
+      width: 480px; flex-shrink: 0;
+      background: var(--white);
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 52px 46px;
+      position: relative;
+      box-shadow: -8px 0 48px rgba(249,115,22,0.07);
+      overflow-y: auto;
+    }
+
+    /* top color bar */
+    .right-panel::before {
+      content: '';
+      position: absolute;
+      top:0; left:0; right:0; height:4px;
+      background: linear-gradient(90deg,
+        var(--orange-dark), var(--orange),
+        #f59e0b, var(--orange-light));
+      animation: glowBar 3s ease-in-out infinite alternate;
+    }
+    @keyframes glowBar {
+      from { opacity:.8; }
+      to   { opacity:1; box-shadow:0 0 14px rgba(249,115,22,0.5); }
+    }
+
+    /* form header */
+    .form-header { margin-bottom: 32px; animation: slideIn .6s ease both; }
+    @keyframes slideIn {
+      from { opacity:0; transform:translateX(22px); }
+      to   { opacity:1; transform:translateX(0); }
+    }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--orange-pale);
+      border: 1.5px solid var(--orange-mid);
+      color: var(--orange-dark);
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing:.12em;
+      padding: 5px 14px; border-radius: 99px;
+      margin-bottom: 16px;
+    }
+
+    .form-header h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 38px; font-weight: 700;
+      color: var(--dark); letter-spacing:.04em;
+      line-height: 1.1; margin-bottom: 7px;
+    }
+    .form-header h1 span { color: var(--orange); }
+    .form-header p { color: var(--muted); font-size: 13px; line-height:1.6; }
+
+    /* error */
+    .error-box {
+      background: #fef2f2;
+      border: 1.5px solid #fca5a5;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 9px;
+      animation: shake .4s cubic-bezier(.36,.07,.19,.97);
+    }
+    @keyframes shake {
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-8px)}
+      40%{transform:translateX(8px)}
+      60%{transform:translateX(-5px)}
+      80%{transform:translateX(5px)}
+    }
+    .error-box span { font-size:13px; color:#dc2626; font-weight:600; }
+
+    /* form fields */
+    .form-group {
+      margin-bottom: 18px;
+      animation: fadeRight .5s ease both;
+    }
+    .form-group:nth-child(1){ animation-delay:.2s; }
+    .form-group:nth-child(2){ animation-delay:.3s; }
+    @keyframes fadeRight {
+      from { opacity:0; transform:translateX(18px); }
+      to   { opacity:1; transform:translateX(0); }
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11px; font-weight: 700;
+      color: var(--orange-dark);
+      text-transform: uppercase; letter-spacing:.12em;
+      margin-bottom: 7px;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .input-wrap { position: relative; display: flex; align-items: center; }
+
+    .input-icon {
+      position: absolute; left: 14px;
+      font-size: 17px; pointer-events: none; z-index: 1;
+      transition: transform .3s;
+    }
+    .form-group:focus-within .input-icon {
+      transform: scale(1.2) rotate(-5deg);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 13px 44px;
+      background: var(--orange-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 11px;
+      color: var(--dark);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: all .3s;
+    }
+    .form-group input::placeholder { color: #c4b5b0; }
+    .form-group input:focus {
+      background: var(--white);
+      border-color: var(--orange);
+      box-shadow: 0 0 0 4px rgba(249,115,22,0.1);
+    }
+
+    .pwd-toggle {
+      position: absolute; right: 14px;
+      background: none; border: none;
+      cursor: pointer; font-size: 17px;
+      color: #c4b5b0; transition: color .2s; padding:0; z-index:1;
+    }
+    .pwd-toggle:hover { color: var(--orange); }
+
+    /* remember row */
+    .remember-row {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      animation: fadeRight .5s .35s ease both;
+    }
+    .remember-label {
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; font-size: 13px;
+      color: var(--muted); font-weight: 500;
+    }
+    .remember-label input[type="checkbox"] {
+      width:16px; height:16px;
+      accent-color: var(--orange); cursor:pointer;
+    }
+    .forgot-link {
+      color: var(--orange); text-decoration: none;
+      font-size: 13px; font-weight: 600; transition: color .2s;
+    }
+    .forgot-link:hover { color: var(--orange-dark); text-decoration:underline; }
+
+    /* submit */
+    .submit-btn {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--orange-light), var(--orange), var(--orange-dark));
+      color: var(--white); border: none;
+      border-radius: 12px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px; font-weight: 700;
+      letter-spacing:.1em; text-transform:uppercase;
+      cursor: pointer; transition: all .3s;
+      position: relative; overflow: hidden;
+      box-shadow: 0 6px 24px rgba(249,115,22,.35);
+      animation: fadeRight .5s .45s ease both;
+    }
+    .submit-btn::before {
+      content:'';
+      position:absolute; top:0; left:-100%;
+      width:100%; height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+      transition:left .5s;
+    }
+    .submit-btn:hover { transform:translateY(-2px); box-shadow:0 12px 36px rgba(249,115,22,.45); }
+    .submit-btn:hover::before { left:100%; }
+    .submit-btn:active { transform:translateY(0); }
+
+    .submit-btn .btn-text { transition:opacity .2s; }
+    .submit-btn .btn-loader { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s; }
+    .submit-btn.loading .btn-text { opacity:0; }
+    .submit-btn.loading .btn-loader { opacity:1; }
+    .spinner { width:20px; height:20px; border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spinA .7s linear infinite; }
+    @keyframes spinA { to{transform:rotate(360deg)} }
+
+    /* divider */
+    .form-divider {
+      display:flex; align-items:center; gap:12px;
+      margin: 22px 0 18px;
+      animation: fadeRight .5s .5s ease both;
+    }
+    .form-divider hr { flex:1; border:none; height:1px; background:var(--border); }
+    .form-divider span { color:#c4b5b0; font-size:11px; text-transform:uppercase; letter-spacing:.1em; white-space:nowrap; }
+
+    /* back home */
+    .back-home {
+      display: flex; align-items: center;
+      justify-content: center; gap: 8px;
+      padding: 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 11px;
+      color: var(--muted); text-decoration: none;
+      font-size: 14px; font-weight: 600;
+      transition: all .2s;
+      animation: fadeRight .5s .55s ease both;
+    }
+    .back-home:hover {
+      background: var(--orange-bg);
+      border-color: var(--orange-light);
+      color: var(--orange-dark);
+    }
+
+    /* security badge */
+    .sec-badge {
+      display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+      margin-top: 24px; color:#c4b5b0;
+      font-size: 11px; letter-spacing:.05em;
+      animation: fadeRight .5s .6s ease both;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:860px){
+      body { flex-direction:column; overflow-y:auto; }
+      .left-panel { min-height:400px; padding:40px 24px 32px; }
+      .right-panel { width:100%; padding:40px 24px; }
+      .panel-divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--border),transparent); }
+      .gif-card img { width:220px; height:220px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ LEFT PANEL ══ -->
+<div class="left-panel">
+
+  <!-- Brand -->
+  <a class="brand-tag" href="/">
+    <div class="brand-icon">🔗</div>
+    <span class="brand-name">Chain<span>Verify</span></span>
+  </a>
+
+  <!-- Rings -->
+  <div class="ring r1"></div>
+  <div class="ring r2"></div>
+  <div class="ring r3"></div>
+
+  <!-- Floating icons -->
+  <div class="float-icon fi1">🔒</div>
+  <div class="float-icon fi2">🛡️</div>
+  <div class="float-icon fi3">⛓️</div>
+  <div class="float-icon fi4">🔐</div>
+  <div class="float-icon fi5">💻</div>
+  <div class="float-icon fi6">🔍</div>
+
+  <!-- GIF Card -->
+  <div class="gif-card">
+    <div class="gif-label">
+      <div class="blink-dot"></div>
+      Threat Detection Active
+    </div>
+    <!-- ✅ YOUR HACKER GIF -->
+    <img
+      src="/images/Locked.gif"
+      alt="Hacker Animation"
+      th:src="@{/images/Locked.gif}"
+    >
+  </div>
+
+  <!-- Text -->
+  <div class="left-text">
+    <h2>Stop <span>Fake Products</span> Now</h2>
+    <p>Our blockchain system detects counterfeits in real-time. Admin access is restricted to authorized personnel only.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="left-stats">
+    <div class="ls-item">
+      <div class="ls-val">256-bit</div>
+      <div class="ls-lbl">Encryption</div>
+    </div>
+    <div class="ls-item">
+      <div class="ls-val">18K+</div>
+      <div class="ls-lbl">Fakes Blocked</div>
+    </div>
+    <div class="ls-item">
+      <div class="ls-val">99.9%</div>
+      <div class="ls-lbl">Uptime</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Panel Divider -->
+<div class="panel-divider"></div>
+
+<!-- ══ RIGHT PANEL ══ -->
+<div class="right-panel">
+
+  <div class="form-header">
+    <div class="eyebrow">🛡️ Restricted Access</div>
+    <h1>Admin <span>Login</span></h1>
+    <p>Enter your credentials to access the ChainVerify control panel.</p>
+  </div>
+
+  <!-- Error Message (Thymeleaf) -->
+  <div th:if="${error}" class="error-box">
+    <span>⚠️</span>
+    <span th:text="${error}"></span>
+  </div>
+
+  <!-- Login Form -->
+  <form action="/admin/login" method="post" id="loginForm">
+
+    <div class="form-group">
+      <label>Email Address</label>
+      <div class="input-wrap">
+        <span class="input-icon">✉️</span>
+        <input
+          type="email"
+          name="email"
+          placeholder="admin@chainverify.in"
+          required
+          autocomplete="email"
+        >
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-wrap">
+        <span class="input-icon">🔒</span>
+        <input
+          type="password"
+          name="password"
+          id="passwordField"
+          placeholder="Enter your password"
+          required
+          autocomplete="current-password"
+        >
+        <button type="button" class="pwd-toggle" id="toggleBtn" onclick="togglePwd()">👁️</button>
+      </div>
+    </div>
+
+    <div class="remember-row">
+      <label class="remember-label">
+        <input type="checkbox"> Remember me
+      </label>
+      <a href="/admin/forgot-password" class="forgot-link">Forgot password?</a>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">
+      <span class="btn-text">🔐 &nbsp;Access Admin Panel</span>
+      <span class="btn-loader"><div class="spinner"></div></span>
+    </button>
+
+  </form>
+
+  <div class="form-divider">
+    <hr><span>or go back</span><hr>
+  </div>
+
+  <a href="/" class="back-home">← Back to Home</a>
+
+  <div class="sec-badge">
+    🔒 SSL Secured &nbsp;·&nbsp; Blockchain Verified &nbsp;·&nbsp; GDPR Compliant
+  </div>
+
+</div>
+
+<script>
+  function togglePwd() {
+    const f = document.getElementById('passwordField');
+    const b = document.getElementById('toggleBtn');
+    if (f.type === 'password') {
+      f.type = 'text';
+      b.textContent = '🙈';
+    } else {
+      f.type = 'password';
+      b.textContent = '👁️';
+    }
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', function () {
+    document.getElementById('submitBtn').classList.add('loading');
+  });
+</script>
+
+</body>
+</html>
