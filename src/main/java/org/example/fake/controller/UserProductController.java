@@ -210,10 +210,14 @@ public class UserProductController {
         Map<Long, Product> productMap = new HashMap<>();
 
         for (Purchase p : purchases) {
-            Product product = productService.getProductById(p.getProductId());
-            productMap.put(p.getProductId(), product);
-        }
 
+            Product product = productService.getProductById(p.getProductId());
+
+            if(product != null){
+                productMap.put(p.getProductId(), product);
+            }
+
+        }
         model.addAttribute("purchases", purchases);
         model.addAttribute("productMap", productMap);
 
@@ -432,8 +436,13 @@ public class UserProductController {
         Map<Long, Product> productMap = new HashMap<>();
 
         for (Review r : reviews) {
+
             Product product = productService.getProductById(r.getProductId());
-            productMap.put(r.getProductId(), product);
+
+            if(product != null){
+                productMap.put(r.getProductId(), product);
+            }
+
         }
 
         model.addAttribute("reviews", reviews);
@@ -456,7 +465,9 @@ public class UserProductController {
             Product product =
                     productService.getProductById(h.getProductId());
 
-            productMap.put(h.getProductId(), product);
+            if(product != null){
+                productMap.put(h.getProductId(), product);
+            }
         }
 
         model.addAttribute("historyList", historyList);
@@ -531,7 +542,9 @@ public class UserProductController {
             Product product =
                     productService.getProductById(h.getProductId());
 
-            productMap.put(h.getProductId(), product);
+            if(product != null){
+                productMap.put(h.getProductId(), product);
+            }
         }
 
         model.addAttribute("hashList", hashList);

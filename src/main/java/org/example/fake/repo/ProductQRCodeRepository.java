@@ -9,4 +9,5 @@ public interface ProductQRCodeRepository extends JpaRepository<ProductQRCode, Lo
 	boolean existsByProductId(Long productId);
 
     Optional<ProductQRCode> findByProductId(Long productId);
+    void deleteByProduct_Id(Long productId);
 }

@@ -74,7 +74,7 @@ background:green;
 
 <td th:text="${r.id}"></td>
 
-<td th:text="${productMap[r.productId]?.productName}"></td>
+<td th:text="${productMap[r.productId] != null ? productMap[r.productId].productName : 'Deleted Product'}"></td>
 
 <td>
 <img th:if="${productMap[r.productId] != null 

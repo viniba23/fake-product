@@ -126,14 +126,18 @@ a:hover {
     <td th:text="${p.id}"></td>
 
     <!-- Product Name -->
-    <td th:text="${productMap[p.productId].productName}"></td>
+   <td th:text="${productMap[p.productId] != null ? productMap[p.productId].productName : 'Deleted Product'}"></td>
 <td th:text="${p.productId}"></td>
     <!-- Product Image -->
     <td>
         <img th:if="${productMap[p.productId] != null 
-                     and productMap[p.productId].images != null 
-                     and !productMap[p.productId].images.isEmpty()}"
-             th:src="'data:image/jpeg;base64,' + ${productMap[p.productId].images[0].base64Image}">
+and productMap[p.productId].images != null 
+and !productMap[p.productId].images.isEmpty()}"
+th:src="'data:image/jpeg;base64,' + ${productMap[p.productId].images[0].base64Image}" />
+
+<span th:if="${productMap[p.productId] == null}">
+Deleted
+</span>
     </td>
 
     <td th:text="${p.quantity}"></td>

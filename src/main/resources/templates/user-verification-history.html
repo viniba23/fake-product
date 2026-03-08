@@ -67,7 +67,7 @@ font-weight:bold;
 
 <td th:text="${h.id}"></td>
 
-<td th:text="${productMap[h.productId]?.productName}"></td>
+<td th:text="${productMap[h.productId] != null ? productMap[h.productId].productName : 'Deleted Product'}"></td>
 
 <td>
 <img th:if="${productMap[h.productId] != null 

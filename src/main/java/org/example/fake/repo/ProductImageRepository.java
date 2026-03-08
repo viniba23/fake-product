@@ -9,7 +9,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import jakarta.transaction.Transactional;
 
 public interface ProductImageRepository extends JpaRepository<ProductImage, Long>{
-//	@Modifying
-//    @Transactional
-//    void deleteByIdIn(List<Long> ids);
+	@Modifying
+    @Transactional
+    void deleteByIdIn(List<Long> ids);
+	void deleteByProduct_Id(Long productId);
 }

@@ -853,8 +853,11 @@ function toggleNotifications() {
       </div>
     </div>
 
-    <a href="/logout" class="logout-btn">🚪 Logout</a>
-
+    <!-- <a href="/logout" class="logout-btn">🚪 Logout</a> -->
+    <form action="/logout" method="post">
+<input type="hidden" name="logoutType" value="admin">
+<button type="submit" class="logout-btn">🚪 Logout</button>
+</form>
   </div>
 </div>
 
@@ -920,9 +923,13 @@ function toggleNotifications() {
 
     <div class="sidebar-divider"></div>
 
-    <a href="/logout" class="sidebar-logout">
+ <!--    <a href="/logout" class="sidebar-logout">
       <span class="s-icon">🚪</span> Logout
-    </a>
+    </a> -->
+<form action="/logout" method="post">
+<input type="hidden" name="logoutType" value="admin">
+<button type="submit" class="logout-btn">🚪 Logout</button>
+</form>
 
   </div>
 
@@ -998,7 +1005,11 @@ function toggleNotifications() {
         <a class="ql-item" href="/admin/verification-logs"><div class="ql-icon">🔍</div><div class="ql-label">Verify Logs</div></a>
         <a class="ql-item" href="/admin/purchase-details"><div class="ql-icon">💳</div><div class="ql-label">Purchases</div></a>
         <a class="ql-item" href="/admin/reviews"><div class="ql-icon">⭐</div><div class="ql-label">Reviews</div></a>
-        <a class="ql-item" href="/logout"><div class="ql-icon">🚪</div><div class="ql-label">Logout</div></a>
+        <!-- <a class="ql-item" href="/logout"><div class="ql-icon">🚪</div><div class="ql-label">Logout</div></a> -->
+       <form action="/logout" method="post">
+<input type="hidden" name="logoutType" value="admin">
+<button type="submit" class="logout-btn">🚪 Logout</button>
+</form>
       </div>
     </div>
 
@@ -1029,7 +1040,10 @@ function toggleNotifications() {
     <a href="#">Privacy Policy</a>
     <a href="#">Terms of Use</a>
     <a href="/admin/verification-logs">Audit Logs</a>
-    <a href="/logout">Logout</a>
+   <!--  <a href="/logout">Logout</a> -->
+    <form th:action="@{/logout}" method="post">
+    <button type="submit" class="logout-btn">🚪 Logout</button>
+</form>
   </div>
 </div>
 

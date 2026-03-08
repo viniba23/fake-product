@@ -11,4 +11,5 @@ public interface BlockchainProductRepository
     Optional<BlockchainProduct> findByProduct_Id(Long productId);
 
     boolean existsByProductId(Long productId);
+    void deleteByProduct_Id(Long productId);
 }

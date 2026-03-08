@@ -40,19 +40,20 @@
 </p>
 
     <div class="container">
+    <p th:if="${param.sessionExpired}" style="color:red;">
+Your session expired because another login occurred.
+</p>
         <h2>User Login</h2>
         <p th:if="${error}" class="error" th:text="${error}"></p>
         <p th:if="${message}" class="message" th:text="${message}"></p>
-       <form action="/user/login" method="post">
-    <div class="form-group">
-        <label>Email:</label>
-        <input type="email" name="username" required> <!-- Note: name="username" not "email" -->
-    </div>
-    <div class="form-group">
-        <label>Password:</label>
-        <input type="password" name="password" required>
-    </div>
-    <button type="submit">Login</button>
+       <form action="/login" method="post">
+
+<input type="email" name="username" required>
+
+<input type="password" name="password" required>
+
+<button type="submit">Login</button>
+
 </form>
 
         <p><a href="/user/forgot-password">Forgot password?</a></p>

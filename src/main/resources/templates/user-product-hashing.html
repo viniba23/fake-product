@@ -64,7 +64,7 @@ cursor:pointer;
 
 <td th:text="${h.id}"></td>
 
-<td th:text="${productMap[h.productId] != null ? productMap[h.productId].productName : 'Unknown'}"></td>
+<td th:text="${productMap[h.productId] != null ? productMap[h.productId].productName : 'Deleted Product'}"></td>
 
 <td th:text="${h.productId}"></td>
 
@@ -75,7 +75,6 @@ cursor:pointer;
 <button>Download</button>
 </a>
 </td>
-
 </tr>
 
 </table>

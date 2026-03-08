@@ -119,10 +119,13 @@ body {
         <a href="/user/my-purchases">My Purchases</a>
 <a href="/user/cart">My Cart</a>
 <a href="/user/my-reviews">My Reviews</a>
-        <a href="/user/products">View Products</a>
+
         <a href="/user/history">Verification History</a>
         <a href="/user/product-hashes">Product Hash Details</a>
-        <a href="/logout">Logout</a>
+     <form action="/logout" method="post">
+<input type="hidden" name="logoutType" value="user">
+<button type="submit">Logout</button>
+</form>
     </div>
 
     <!-- CONTENT -->

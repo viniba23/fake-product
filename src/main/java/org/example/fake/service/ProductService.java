@@ -2,9 +2,14 @@ package org.example.fake.service;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 import org.example.fake.model.Product;
+import org.example.fake.model.ProductImage;
+import org.example.fake.repo.BlockchainProductRepository;
+import org.example.fake.repo.CartRepository;
 import org.example.fake.repo.ProductImageRepository;
+import org.example.fake.repo.ProductQRCodeRepository;
 import org.example.fake.repo.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +20,15 @@ import jakarta.transaction.Transactional;
 public class ProductService {
 	@Autowired
     private ProductRepository productRepository;
+	@Autowired
+	private ProductQRCodeRepository productQRCodeRepository;
 	
 	@Autowired
     private ProductImageRepository productImageRepository ;
+	@Autowired
+	private CartRepository cartRepository;
+	@Autowired
+	private BlockchainProductRepository blockchainProductRepository;
 
     public Product saveProduct(Product product) {
         return productRepository.save(product);
@@ -57,12 +68,17 @@ public class ProductService {
         return products;
     }
 
-    // ✅ USED BY VIEW / EDIT PAGES
     public Product getProductById(Long id) {
 
-        Product product = productRepository.findById(id).orElseThrow();
+        Optional<Product> optional = productRepository.findById(id);
 
-        if (product.getImages() != null) {
+        if(optional.isEmpty()){
+            return null;
+        }
+
+        Product product = optional.get();
+
+        if(product.getImages() != null){
             product.getImages().forEach(img -> {
                 img.setBase64Image(
                     Base64.getEncoder().encodeToString(img.getImageData())
@@ -72,11 +88,26 @@ public class ProductService {
 
         return product;
     }
+//    public void deleteProduct(Long id) {
+//        productRepository.deleteById(id);
+//    }
     public void deleteProduct(Long id) {
+
+        // delete cart items
+        cartRepository.deleteByProduct_Id(id);
+
+        // delete qr codes
+        productQRCodeRepository.deleteByProduct_Id(id);
+
+        // delete blockchain records
+        blockchainProductRepository.deleteByProduct_Id(id);
+
+        // delete images
+        productImageRepository.deleteByProduct_Id(id);
+
+        // finally delete product
         productRepository.deleteById(id);
     }
-    
-
 //    public void deleteImagesByIds(List<Long> imageIds) {
 //        productImageRepository.deleteByIdIn(imageIds);
 //    }
