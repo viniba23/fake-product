@@ -95,19 +95,37 @@ public class AdminController {
         return "admin-forgot-password";
     }
 
+//    @PostMapping("/forgot-password")
+//    public String processAdminForgotPassword(@RequestParam("email") String email, Model model) {
+//        try {
+//            adminService.initiateAdminPasswordReset(email);
+//            model.addAttribute("email", email);
+//            model.addAttribute("message", "We have sent a password reset OTP to your email");
+//            return "admin-verify-otp";
+//        } catch (Exception e) {
+//            model.addAttribute("error", e.getMessage());
+//            return "admin-forgot-password";
+//        }
+//    }
+
     @PostMapping("/forgot-password")
     public String processAdminForgotPassword(@RequestParam("email") String email, Model model) {
+
         try {
             adminService.initiateAdminPasswordReset(email);
+
             model.addAttribute("email", email);
-            model.addAttribute("message", "We have sent a password reset OTP to your email");
+            model.addAttribute("message", "OTP sent to your email");
+
             return "admin-verify-otp";
+
         } catch (Exception e) {
+
             model.addAttribute("error", e.getMessage());
             return "admin-forgot-password";
         }
     }
-
+    
     @GetMapping("/verify-otp")
     public String showAdminVerifyOtpForm(@RequestParam(value = "email", required = false) String email, Model model) {
         if (email != null) {
@@ -116,52 +134,107 @@ public class AdminController {
         return "admin-verify-otp";
     }
 
+//    @PostMapping("/verify-otp")
+//    public String processAdminVerifyOtp(
+//            @RequestParam("token") String token,
+//            @RequestParam("email") String email,
+//            Model model) {
+//        
+//        if (adminService.validateAdminResetToken(token, email)) {
+//            model.addAttribute("token", token);
+//            model.addAttribute("email", email);
+//            return "admin-reset-password";
+//        }
+//        
+//        model.addAttribute("error", "Invalid or expired OTP");
+//        model.addAttribute("email", email);
+//        return "admin-verify-otp";
+//    }
     @PostMapping("/verify-otp")
     public String processAdminVerifyOtp(
             @RequestParam("token") String token,
             @RequestParam("email") String email,
             Model model) {
-        
-        if (adminService.validateAdminResetToken(token, email)) {
-            model.addAttribute("token", token);
-            model.addAttribute("email", email);
-            return "admin-reset-password";
+
+        boolean valid = adminService.validateAdminResetToken(token, email);
+
+        if (valid) {
+
+            return "redirect:/admin/reset-password?token=" + token + "&email=" + email;
+
         }
-        
+
         model.addAttribute("error", "Invalid or expired OTP");
         model.addAttribute("email", email);
+
         return "admin-verify-otp";
     }
+//    @GetMapping("/reset-password")
+//    public String showAdminResetPasswordForm(
+//            @RequestParam("token") String token,
+//            @RequestParam("email") String email,
+//            Model model) {
+//        model.addAttribute("token", token);
+//        model.addAttribute("email", email);
+//        return "admin-reset-password";
+//    }
 
     @GetMapping("/reset-password")
     public String showAdminResetPasswordForm(
-            @RequestParam("token") String token,
-            @RequestParam("email") String email,
+            @RequestParam(required = false) String token,
+            @RequestParam(required = false) String email,
             Model model) {
+
+        if(token == null || email == null){
+            return "redirect:/admin/login";
+        }
+
         model.addAttribute("token", token);
         model.addAttribute("email", email);
+
         return "admin-reset-password";
     }
-
+//    @PostMapping("/reset-password")
+//    public String processAdminResetPassword(
+//            @RequestParam("token") String token,
+//            @RequestParam("email") String email,
+//            @RequestParam("password") String password,
+//            Model model) {
+//        
+//        try {
+//            adminService.resetAdminPassword(token, email, password);
+//            model.addAttribute("message", "Password reset successfully. Please login with your new password");
+//            return "redirect:/admin/login";
+//        } catch (Exception e) {
+//            model.addAttribute("error", e.getMessage());
+//            model.addAttribute("token", token);
+//            model.addAttribute("email", email);
+//            return "admin-reset-password";
+//        }
+//    }
+//    
     @PostMapping("/reset-password")
     public String processAdminResetPassword(
             @RequestParam("token") String token,
             @RequestParam("email") String email,
             @RequestParam("password") String password,
             Model model) {
-        
+
         try {
+
             adminService.resetAdminPassword(token, email, password);
-            model.addAttribute("message", "Password reset successfully. Please login with your new password");
-            return "redirect:/admin/login";
+
+            return "redirect:/admin/login?resetSuccess";
+
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+
+            model.addAttribute("error", "Password reset failed");
             model.addAttribute("token", token);
             model.addAttribute("email", email);
+
             return "admin-reset-password";
         }
     }
-    
     @GetMapping("/users")
     public String viewUsers(Model model) {
         model.addAttribute("users", userRepository.findAll());

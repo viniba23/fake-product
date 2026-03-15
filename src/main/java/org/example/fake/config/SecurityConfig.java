@@ -228,22 +228,45 @@ public class SecurityConfig {
         http
         .csrf(csrf -> csrf.disable())
 
+//        .authorizeHttpRequests(auth -> auth
+//
+//            .requestMatchers("/", "/images/**", "/css/**", "/js/**").permitAll()
+//
+//            .requestMatchers("/user/login","/user/register",
+//                    "/user/forgot-password","/user/reset-password").permitAll()
+//
+//            .requestMatchers("/admin/login",
+//                    "/admin/forgot-password","/admin/reset-password").permitAll()
+//
+//            .requestMatchers("/admin/**").hasRole("ADMIN")
+//            .requestMatchers("/user/**").hasRole("USER")
+//            .requestMatchers("/admin/logout").hasRole("ADMIN")
+//            .requestMatchers("/user/logout").hasRole("USER")
+//
+//            .anyRequest().authenticated()
+//        )
         .authorizeHttpRequests(auth -> auth
 
-            .requestMatchers("/", "/images/**", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/", "/images/**", "/css/**", "/js/**").permitAll()
 
-            .requestMatchers("/user/login","/user/register",
-                    "/user/forgot-password","/user/reset-password").permitAll()
+                .requestMatchers(
+                        "/user/login",
+                        "/user/register",
+                        "/user/forgot-password",
+                        "/user/reset-password"
+                ).permitAll()
 
-            .requestMatchers("/admin/login",
-                    "/admin/forgot-password","/admin/reset-password").permitAll()
+                .requestMatchers(
+                        "/admin/login",
+                        "/admin/forgot-password",
+                        "/admin/verify-otp",
+                        "/admin/reset-password"
+                ).permitAll()
 
-            .requestMatchers("/admin/**").hasRole("ADMIN")
-            .requestMatchers("/user/**").hasRole("USER")
-            .requestMatchers("/admin/logout").hasRole("ADMIN")
-            .requestMatchers("/user/logout").hasRole("USER")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user/**").hasRole("USER")
 
-            .anyRequest().authenticated()
+                .anyRequest().authenticated()
         )
 
         .formLogin(form -> form

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -44,5 +44,688 @@
             <button type="submit">Verify OTP</button>
         </form>
     </div>
+</body>
+</html>
+ -->
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify OTP – ChainVerify</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --maroon:       #6b0f1a;
+      --maroon-dark:  #3d0008;
+      --maroon-light: #b91c1c;
+      --gold:         #f59e0b;
+      --gold-light:   #fcd34d;
+      --white:        #ffffff;
+      --dark:         #1a0000;
+      --muted:        rgba(255,255,255,0.4);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; overflow:hidden; font-family:'Space Grotesk',sans-serif; }
+
+    /* ══ BACKGROUND ══ */
+    .bg-wrap {
+      position: fixed; inset: 0; z-index: 0;
+    }
+    .bg-gradient {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg,
+        #1a0000 0%, #3d0008 30%, #6b0f1a 55%, #3d0008 80%, #1a0000 100%);
+      animation: bgShift 10s ease-in-out infinite alternate;
+    }
+    @keyframes bgShift {
+      from { filter: brightness(1); }
+      to   { filter: brightness(1.15); }
+    }
+
+    /* grid */
+    .bg-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(245,158,11,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,158,11,0.05) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    /* orbs */
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); pointer-events: none;
+      animation: floatOrb ease-in-out infinite alternate;
+    }
+    .orb1 { width:400px;height:400px; background:rgba(107,15,26,0.6); top:-100px;left:-100px; animation-duration:9s; }
+    .orb2 { width:300px;height:300px; background:rgba(185,28,28,0.3); bottom:-80px;right:-80px; animation-duration:11s;animation-delay:2s; }
+    .orb3 { width:220px;height:220px; background:rgba(245,158,11,0.1); top:35%;right:8%; animation-duration:7s;animation-delay:1s; }
+    @keyframes floatOrb {
+      from{transform:translate(0,0) scale(1);}
+      to{transform:translate(18px,18px) scale(1.1);}
+    }
+
+    /* particles */
+    .particle {
+      position: absolute; bottom:-20px; border-radius:50%;
+      background: rgba(245,158,11,0.5);
+      animation: rise linear infinite; pointer-events:none;
+    }
+    @keyframes rise {
+      0%  {transform:translateY(0) scale(1);opacity:.6;}
+      100%{transform:translateY(-110vh) scale(.3);opacity:0;}
+    }
+
+    /* ══ PAGE GRID ══ */
+    .page {
+      position: relative; z-index: 10;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      align-items: center;
+    }
+
+    /* ══ LEFT PANEL ══ */
+    .left-panel {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 48px 40px;
+      animation: fadeLeft .9s ease both;
+    }
+    @keyframes fadeLeft {
+      from{opacity:0;transform:translateX(-28px);}
+      to{opacity:1;transform:translateX(0);}
+    }
+
+    /* brand */
+    .brand {
+      display:flex;align-items:center;gap:13px;
+      margin-bottom:36px;text-decoration:none;
+    }
+    .brand-icon {
+      width:50px;height:50px;
+      background:linear-gradient(135deg,var(--gold),#d97706);
+      border-radius:13px;display:grid;place-items:center;
+      font-size:25px;box-shadow:0 6px 20px rgba(245,158,11,0.4);
+    }
+    .brand-name {
+      font-family:'Rajdhani',sans-serif;
+      font-size:25px;font-weight:700;
+      color:var(--white);letter-spacing:.05em;
+    }
+    .brand-name span{color:var(--gold);}
+
+    /* ── GIF CARD ── */
+    .gif-wrap {
+      position: relative;
+      margin-bottom: 32px;
+      animation: gifPop .9s .2s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes gifPop {
+      from{transform:scale(.5) rotate(-8deg);opacity:0;}
+      to{transform:scale(1) rotate(0);opacity:1;}
+    }
+
+    /* rotating rings behind gif */
+    .gif-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(245,158,11,0.2);
+      top:50%;left:50%;
+      transform:translate(-50%,-50%);
+    }
+    .gr1{width:310px;height:310px;animation:spinR 18s linear infinite;}
+    .gr2{width:370px;height:370px;animation:spinR 26s linear infinite reverse;border-style:dotted;}
+    .gr3{width:240px;height:240px;animation:spinR 12s linear infinite;border-color:rgba(245,158,11,0.3);}
+    @keyframes spinR{to{transform:translate(-50%,-50%) rotate(360deg);}}
+
+    .gif-card {
+      position: relative; z-index: 2;
+      width: 240px; height: 240px;
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(245,158,11,0.25);
+      border-radius: 50%;
+      display: grid; place-items: center;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 8px rgba(245,158,11,0.06),
+        0 0 0 16px rgba(245,158,11,0.03),
+        0 24px 60px rgba(0,0,0,0.5);
+      animation: gifGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes gifGlow {
+      from{box-shadow:0 0 0 8px rgba(245,158,11,0.06),0 24px 60px rgba(0,0,0,.5);}
+      to  {box-shadow:0 0 0 16px rgba(245,158,11,0.12),0 24px 60px rgba(107,15,26,.7);}
+    }
+
+    .gif-card img {
+      width: 100%; height: 100%;
+      object-fit: cover; border-radius: 50%;
+    }
+
+    /* badge on gif */
+    .gif-badge {
+      position: absolute;
+      bottom: -6px; left:50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));
+      color: var(--white);
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing:.1em;
+      padding: 5px 16px; border-radius: 99px;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(107,15,26,0.5);
+      display: flex; align-items: center; gap: 5px;
+      z-index: 3;
+      border: 1px solid rgba(245,158,11,0.3);
+    }
+    .blink-dot {
+      width:6px;height:6px;background:var(--gold);
+      border-radius:50%;animation:blink 1.2s infinite;
+    }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+    /* floating icons */
+    .fi {
+      position: absolute; font-size:22px;
+      animation: floatIcon ease-in-out infinite alternate;
+      z-index:3;
+      filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));
+    }
+    .fi1{top:10px;left:10px;animation-duration:3.4s;}
+    .fi2{top:15px;right:5px;animation-duration:4s;animation-delay:.5s;}
+    .fi3{bottom:25px;left:0px;animation-duration:3.8s;animation-delay:.8s;}
+    .fi4{bottom:20px;right:10px;animation-duration:4.2s;animation-delay:.3s;}
+    @keyframes floatIcon{
+      from{transform:translateY(0) scale(1);}
+      to{transform:translateY(-12px) scale(1.15);}
+    }
+
+    /* left text */
+    .left-text{text-align:center;}
+    .left-text h2{
+      font-family:'Rajdhani',sans-serif;
+      font-size:27px;font-weight:700;
+      color:var(--white);letter-spacing:.04em;margin-bottom:9px;
+    }
+    .left-text h2 span{color:var(--gold);}
+    .left-text p{color:var(--muted);font-size:13px;line-height:1.7;max-width:310px;}
+
+    /* info pills */
+    .info-pills{
+      display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;justify-content:center;
+    }
+    .pill{
+      display:flex;align-items:center;gap:7px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(245,158,11,0.2);
+      border-radius:10px;padding:9px 13px;
+    }
+    .pill-icon{font-size:16px;}
+    .pill-txt{font-size:11px;color:rgba(255,255,255,0.5);font-weight:600;}
+
+    /* ══ RIGHT PANEL ══ */
+    .right-panel {
+      display:flex;align-items:center;justify-content:center;
+      padding:32px 32px 32px 12px;
+      animation:fadeRight .9s .2s ease both;
+    }
+    @keyframes fadeRight{
+      from{opacity:0;transform:translateX(28px);}
+      to{opacity:1;transform:translateX(0);}
+    }
+
+    /* glass card */
+    .form-card {
+      width:100%;max-width:400px;
+      background:rgba(255,255,255,0.06);
+      backdrop-filter:blur(24px);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:24px;
+      padding:38px 34px;
+      position:relative;overflow:hidden;
+    }
+
+    /* shimmer border */
+    .form-card::before {
+      content:'';position:absolute;inset:0;border-radius:24px;padding:1.5px;
+      background:conic-gradient(
+        from 0deg,
+        transparent 0%,rgba(245,158,11,0.6) 25%,
+        transparent 50%,rgba(185,28,28,0.5) 75%,transparent 100%
+      );
+      -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+      -webkit-mask-composite:xor;mask-composite:exclude;
+      animation:shimmerBorder 4s linear infinite;pointer-events:none;
+    }
+    @keyframes shimmerBorder{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+    /* gold top line */
+    .form-card::after {
+      content:'';position:absolute;
+      top:0;left:10%;right:10%;height:2px;
+      background:linear-gradient(90deg,transparent,var(--gold),transparent);
+      border-radius:99px;
+      animation:topGlow 2.5s ease-in-out infinite alternate;
+    }
+    @keyframes topGlow{
+      from{opacity:.5;}
+      to{opacity:1;box-shadow:0 0 12px rgba(245,158,11,.6);}
+    }
+
+    /* corners */
+    .corner{position:absolute;width:16px;height:16px;border-color:rgba(245,158,11,.4);border-style:solid;}
+    .corner.tl{top:10px;left:10px;border-width:2px 0 0 2px;border-top-left-radius:4px;}
+    .corner.tr{top:10px;right:10px;border-width:2px 2px 0 0;border-top-right-radius:4px;}
+    .corner.bl{bottom:10px;left:10px;border-width:0 0 2px 2px;border-bottom-left-radius:4px;}
+    .corner.br{bottom:10px;right:10px;border-width:0 2px 2px 0;border-bottom-right-radius:4px;}
+
+    /* card top icon */
+    .card-icon {
+      width:66px;height:66px;
+      background:linear-gradient(135deg,var(--maroon-light),var(--maroon-dark));
+      border-radius:18px;
+      display:grid;place-items:center;font-size:28px;
+      margin:0 auto 18px;
+      box-shadow:0 0 0 6px rgba(185,28,28,.15),0 8px 24px rgba(0,0,0,.4);
+      animation:iconPop .8s .4s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    @keyframes iconPop{
+      from{transform:scale(0) rotate(-15deg);opacity:0;}
+      to{transform:scale(1) rotate(0);opacity:1;}
+    }
+
+    .card-eyebrow {
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(245,158,11,.12);
+      border:1px solid rgba(245,158,11,.25);
+      color:var(--gold-light);
+      font-size:10px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.12em;
+      padding:4px 12px;border-radius:99px;margin-bottom:10px;
+    }
+    .card-title {
+      font-family:'Rajdhani',sans-serif;
+      font-size:28px;font-weight:700;
+      color:var(--white);letter-spacing:.04em;
+      margin-bottom:5px;text-align:center;
+    }
+    .card-title span{color:var(--gold);}
+    .card-desc{
+      color:rgba(255,255,255,.4);font-size:12px;
+      line-height:1.65;text-align:center;margin-bottom:26px;
+    }
+
+    /* email chip */
+    .email-chip {
+      display:inline-flex;align-items:center;gap:7px;
+      background:rgba(245,158,11,.1);
+      border:1px solid rgba(245,158,11,.25);
+      color:var(--gold-light);
+      font-size:12px;font-weight:700;
+      padding:6px 14px;border-radius:99px;
+      margin-bottom:22px;
+    }
+
+    /* error */
+    .error-box {
+      background:rgba(220,38,38,.15);
+      border:1px solid rgba(220,38,38,.3);
+      border-radius:10px;
+      padding:11px 14px;margin-bottom:18px;
+      display:flex;align-items:center;gap:8px;
+      font-size:13px;font-weight:600;color:#fca5a5;
+      animation:shake .4s cubic-bezier(.36,.07,.19,.97);
+    }
+    @keyframes shake{
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-8px)} 40%{transform:translateX(8px)}
+      60%{transform:translateX(-5px)} 80%{transform:translateX(5px)}
+    }
+
+    /* ── OTP BOXES ── */
+    .otp-label {
+      font-size:11px;font-weight:700;
+      color:rgba(245,158,11,.8);
+      text-transform:uppercase;letter-spacing:.12em;
+      margin-bottom:12px;
+      font-family:'Rajdhani',sans-serif;
+    }
+
+    .otp-boxes {
+      display:flex;gap:10px;justify-content:center;
+      margin-bottom:22px;
+    }
+    .otp-box {
+      width:52px;height:58px;
+      background:rgba(255,255,255,.07);
+      border:1.5px solid rgba(255,255,255,.15);
+      border-radius:12px;
+      color:var(--white);
+      font-size:24px;font-weight:700;
+      text-align:center;outline:none;
+      font-family:'Rajdhani',sans-serif;
+      transition:all .25s;
+      letter-spacing:0;
+    }
+    .otp-box:focus {
+      background:rgba(255,255,255,.12);
+      border-color:var(--gold);
+      box-shadow:0 0 0 4px rgba(245,158,11,.15);
+      transform:translateY(-3px) scale(1.05);
+    }
+    .otp-box.filled {
+      border-color:rgba(245,158,11,.5);
+      background:rgba(245,158,11,.1);
+    }
+
+    /* hidden full input (for form submission) */
+    #otpHidden { display:none; }
+
+    /* timer */
+    .otp-timer {
+      text-align:center;margin-bottom:18px;
+      font-size:12px;color:rgba(255,255,255,.35);
+    }
+    .otp-timer span {
+      color:var(--gold);font-weight:700;font-size:14px;
+    }
+
+    /* submit */
+    .submit-btn {
+      width:100%;padding:14px;
+      background:linear-gradient(135deg,var(--maroon-light),var(--maroon),var(--maroon-dark));
+      color:var(--white);border:none;
+      border-radius:12px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:17px;font-weight:700;
+      letter-spacing:.1em;text-transform:uppercase;
+      cursor:pointer;transition:all .3s;
+      position:relative;overflow:hidden;
+      box-shadow:0 6px 24px rgba(107,15,26,.5);
+    }
+    .submit-btn::before {
+      content:'';position:absolute;top:0;left:-100%;
+      width:100%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+      transition:left .5s;
+    }
+    .submit-btn:hover {
+      transform:translateY(-2px);
+      box-shadow:0 12px 36px rgba(107,15,26,.65);
+      background:linear-gradient(135deg,#dc2626,var(--maroon-light),var(--maroon));
+    }
+    .submit-btn:hover::before{left:100%;}
+    .submit-btn:active{transform:translateY(0);}
+
+    .submit-btn .btn-text{transition:opacity .2s;}
+    .submit-btn .btn-loader{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+    .submit-btn.loading .btn-text{opacity:0;}
+    .submit-btn.loading .btn-loader{opacity:1;}
+    .spinner{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* divider */
+    .form-divider{
+      display:flex;align-items:center;gap:10px;margin:20px 0 16px;
+    }
+    .form-divider hr{flex:1;border:none;height:1px;background:rgba(255,255,255,.1);}
+    .form-divider span{font-size:10px;color:rgba(255,255,255,.22);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;}
+
+    .back-link {
+      display:flex;align-items:center;justify-content:center;gap:7px;
+      padding:11px;
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:11px;
+      color:rgba(255,255,255,.45);
+      text-decoration:none;font-size:13px;font-weight:600;
+      transition:all .2s;
+    }
+    .back-link:hover{
+      background:rgba(245,158,11,.08);
+      border-color:rgba(245,158,11,.3);
+      color:var(--gold-light);
+    }
+
+    .sec-note{
+      display:flex;align-items:center;justify-content:center;gap:5px;
+      margin-top:18px;color:rgba(255,255,255,.18);
+      font-size:10px;letter-spacing:.05em;
+    }
+
+    @media(max-width:800px){
+      .page{grid-template-columns:1fr;}
+      .left-panel{display:none;}
+      .right-panel{padding:24px;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ BACKGROUND ══ -->
+<div class="bg-wrap">
+  <div class="bg-gradient"></div>
+  <div class="bg-grid"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- ══ PAGE ══ -->
+<div class="page">
+
+  <!-- ══ LEFT PANEL ══ -->
+  <div class="left-panel">
+
+    <a class="brand" href="/">
+      <div class="brand-icon">🔗</div>
+      <span class="brand-name">Chain<span>Verify</span></span>
+    </a>
+
+    <!-- GIF with rings -->
+    <div class="gif-wrap">
+      <div class="gif-ring gr1"></div>
+      <div class="gif-ring gr2"></div>
+      <div class="gif-ring gr3"></div>
+
+      <div class="gif-card">
+        <!--
+          ✅ PUT YOUR GIF HERE
+          Place your gif in: src/main/resources/static/images/otp.gif
+          Then use: th:src="@{/images/otp.gif}"
+          OR use the hacker gif you already have:
+        -->
+        <img
+          src="/images/Email Marketing.gif"
+          th:src="@{/images/Email Marketing.gif}"
+          alt="OTP Verification"
+        >
+      </div>
+
+      <div class="gif-badge">
+        <div class="blink-dot"></div>
+        OTP Verification Active
+      </div>
+
+      <!-- floating icons -->
+      <div class="fi fi1">📧</div>
+      <div class="fi fi2">🔐</div>
+      <div class="fi fi3">⛓️</div>
+      <div class="fi fi4">✅</div>
+    </div>
+
+    <div class="left-text">
+      <h2>Enter Your <span>OTP</span></h2>
+      <p>We've sent a 6-digit one-time password to your registered admin email. Enter it to verify your identity.</p>
+    </div>
+
+    <div class="info-pills">
+      <div class="pill"><div class="pill-icon">⏱️</div><div class="pill-txt">Expires in 10 min</div></div>
+      <div class="pill"><div class="pill-icon">🔒</div><div class="pill-txt">Single use only</div></div>
+      <div class="pill"><div class="pill-icon">📧</div><div class="pill-txt">Check your inbox</div></div>
+    </div>
+
+  </div>
+
+  <!-- ══ RIGHT PANEL — FORM ══ -->
+  <div class="right-panel">
+    <div class="form-card">
+
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+
+      <div style="text-align:center;">
+        <div class="card-icon">🔐</div>
+        <div class="card-eyebrow">🛡️ Admin Security</div>
+        <div class="card-title">Verify <span>OTP</span></div>
+        <div class="card-desc">Enter the 6-digit code sent to your email address to complete verification.</div>
+
+        <!-- email chip (shows email from Thymeleaf) -->
+        <div class="email-chip">
+          📧 <span th:text="${email}">admin@chainverify.in</span>
+        </div>
+      </div>
+
+      <!-- ✅ ERROR (Thymeleaf) -->
+      <div th:if="${error}" class="error-box">
+        <span>⚠️</span>
+        <span th:text="${error}"></span>
+      </div>
+
+      <!-- ✅ FORM (Thymeleaf action + hidden email preserved) -->
+      <form th:action="@{/admin/verify-otp}" method="post" id="otpForm">
+        <input type="hidden" name="email" th:value="${email}">
+
+        <!-- hidden input that collects combined OTP -->
+        <input type="hidden" name="token" id="otpHidden">
+
+        <!-- OTP label -->
+        <div class="otp-label">Enter 6-Digit OTP</div>
+
+        <!-- 6 individual OTP boxes -->
+        <div class="otp-boxes">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp1" autocomplete="off">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp2" autocomplete="off">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp3" autocomplete="off">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp4" autocomplete="off">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp5" autocomplete="off">
+          <input class="otp-box" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" id="otp6" autocomplete="off">
+        </div>
+
+        <!-- countdown timer -->
+        <div class="otp-timer">
+          OTP expires in <span id="timerDisplay">10:00</span>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span class="btn-text">✅ &nbsp;Verify OTP</span>
+          <span class="btn-loader"><div class="spinner"></div></span>
+        </button>
+
+      </form>
+
+      <div class="form-divider">
+        <hr><span>or go back</span><hr>
+      </div>
+
+      <a th:href="@{/admin/forgot-password}" class="back-link">
+        ← Request a new OTP
+      </a>
+
+      <div class="sec-note">
+        🔒 Encrypted OTP &nbsp;·&nbsp; Single Use &nbsp;·&nbsp; Auto-Expires
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* ── PARTICLES ── */
+  (function(){
+    const bg = document.querySelector('.bg-wrap');
+    for(let i=0;i<30;i++){
+      const p=document.createElement('div');
+      p.className='particle';
+      const s=Math.random()*5+2;
+      p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${Math.random()*10+8}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*.5+.1};`;
+      bg.appendChild(p);
+    }
+  })();
+
+  /* ── OTP BOX NAVIGATION ── */
+  const boxes = document.querySelectorAll('.otp-box');
+
+  boxes.forEach((box, idx) => {
+    /* type → move to next */
+    box.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g,'');
+      if(this.value.length === 1) {
+        this.classList.add('filled');
+        if(idx < boxes.length - 1) boxes[idx+1].focus();
+      } else {
+        this.classList.remove('filled');
+      }
+    });
+
+    /* backspace → move to prev */
+    box.addEventListener('keydown', function(e) {
+      if(e.key === 'Backspace' && !this.value && idx > 0) {
+        boxes[idx-1].focus();
+        boxes[idx-1].classList.remove('filled');
+      }
+    });
+
+    /* paste → fill all boxes */
+    box.addEventListener('paste', function(e) {
+      e.preventDefault();
+      const paste = (e.clipboardData || window.clipboardData)
+                    .getData('text').replace(/[^0-9]/g,'').slice(0,6);
+      paste.split('').forEach((ch, i) => {
+        if(boxes[i]) {
+          boxes[i].value = ch;
+          boxes[i].classList.add('filled');
+        }
+      });
+      if(boxes[Math.min(paste.length, 5)]) {
+        boxes[Math.min(paste.length, 5)].focus();
+      }
+    });
+  });
+
+  /* ── COLLECT OTP ON SUBMIT ── */
+  document.getElementById('otpForm').addEventListener('submit', function(e) {
+    const otp = Array.from(boxes).map(b => b.value).join('');
+    if(otp.length < 6) {
+      e.preventDefault();
+      boxes[0].focus();
+      return;
+    }
+    document.getElementById('otpHidden').value = otp;
+    document.getElementById('submitBtn').classList.add('loading');
+  });
+
+  /* ── COUNTDOWN TIMER ── */
+  let totalSec = 10 * 60;
+  const display = document.getElementById('timerDisplay');
+  const timer = setInterval(() => {
+    if(totalSec <= 0) {
+      clearInterval(timer);
+      display.textContent = 'Expired';
+      display.style.color = '#f87171';
+      return;
+    }
+    totalSec--;
+    const m = String(Math.floor(totalSec/60)).padStart(2,'0');
+    const s = String(totalSec%60).padStart(2,'0');
+    display.textContent = `${m}:${s}`;
+    if(totalSec < 60) display.style.color = '#f87171';
+  }, 1000);
+</script>
+
 </body>
 </html>
